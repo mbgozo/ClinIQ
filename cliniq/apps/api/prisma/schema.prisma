@@ -206,7 +206,6 @@ model MentorProfile {
   acceptanceRate   Float    @default(0)
   totalAnswers     Int      @default(0)
   user             User     @relation(fields: [userId], references: [id])
-  requests         MentorRequest[]
 }
 
 model MentorRequest {
