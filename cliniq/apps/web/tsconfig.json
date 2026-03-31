@@ -1,7 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "jsx": "react-jsx",
+    "jsx": "preserve",
     "module": "ESNext",
     "moduleResolution": "Node",
     "allowJs": false,
@@ -9,13 +9,31 @@
     "noEmit": true,
     "baseUrl": ".",
     "paths": {
-      "@cliniq/shared-types": ["../../packages/shared-types/src"],
-      "@cliniq/ui": ["../../packages/ui/src"],
-      "@cliniq/config/*": ["../../packages/config/*"]
+      "@cliniq/shared-types": [
+        "../../packages/shared-types/src"
+      ],
+      "@cliniq/ui": [
+        "../../packages/ui/src"
+      ],
+      "@cliniq/config/*": [
+        "../../packages/config/*"
+      ]
     },
-    "types": ["node", "jest"]
+    "types": ["node"],
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
-
