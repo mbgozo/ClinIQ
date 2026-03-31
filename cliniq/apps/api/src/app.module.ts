@@ -6,6 +6,8 @@ import { GamificationModule } from "./gamification/gamification.module";
 import { MentorsModule } from "./mentors/mentors.module";
 import { ResourcesModule } from "./resources/resources.module";
 import { StudyGroupsModule } from "./study-groups/study-groups.module";
+import { ChatModule } from "./chat/chat.module";
+import { AdminModule } from "./admin/admin.module";
 
 @Module({
   imports: [
@@ -16,6 +18,8 @@ import { StudyGroupsModule } from "./study-groups/study-groups.module";
     MentorsModule,
     ResourcesModule,
     StudyGroupsModule,
+    ChatModule,
+    AdminModule,
   ],
   controllers: [],
   providers: [],

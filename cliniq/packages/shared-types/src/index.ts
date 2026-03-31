@@ -24,3 +24,5 @@ export * from "./gamification";
 export * from "./mentors";
 export * from "./resources";
 export * from "./study-groups";
+export * from "./chat";
+export * from "./admin";
