@@ -15,6 +15,7 @@ const AskQuestionSchema = z.object({
   title: z.string().min(5).max(120),
   categoryId: z.string().min(1),
   body: z.string().min(10),
+  tags: z.string().optional(),
   anonymous: z.boolean().default(false)
 });
 
@@ -32,7 +33,7 @@ export default function AskQuestionPage() {
   } = useForm<AskQuestionInput>({
     mode: "onChange",
     resolver: zodResolver(AskQuestionSchema),
-    defaultValues: { body: "", anonymous: false, categoryId: "" }
+    defaultValues: { body: "", anonymous: false, categoryId: "", tags: "" }
   });
 
   const body = watch("body");
@@ -84,9 +85,22 @@ export default function AskQuestionPage() {
           {errors.body && <p className="mt-1 text-xs text-red-600">{errors.body.message}</p>}
         </div>
 
+        <div>
+          <label className="mb-1 block text-sm font-medium">Tags (comma-separated)</label>
+          <input
+            className="w-full rounded border px-3 py-2 text-sm"
+            placeholder="maternal-health, pharmacology"
+            {...register("tags")}
+          />
+        </div>
+
+        <div className="rounded border border-dashed p-3 text-sm text-gray-600">
+          File/image upload will be enabled via R2 presigned upload in the resources/upload phase.
+        </div>
+
         <label className="flex items-center gap-2 text-sm text-gray-700">
           <input type="checkbox" {...register("anonymous")} />
-          Post anonymously
+          Post anonymously (your identity is hidden from students; moderators can still view it)
         </label>
 
         <button
