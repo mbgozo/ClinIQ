@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { acceptAnswer, createAnswer, getQuestion, getSimilarQuestions, voteAnswer } from "../api";
-import { AnsweredBadge } from "@cliniq/ui";
+import { AnsweredBadge, BadgePill, ReputationDisplay } from "@cliniq/ui";
 
 export default function QuestionDetailPage() {
   const params = useParams<{ id: string }>();
@@ -174,7 +174,7 @@ export default function QuestionDetailPage() {
           <h2 className="text-lg font-semibold">Answers ({question.answers?.length ?? 0})</h2>
           {(question.answers || []).map((answer) => (
             <article key={answer.id} className="rounded-lg border p-4">
-              <div className="mb-3 flex items-center justify-between">
+              <div className="mb-3 flex items-start justify-between">
                 <div className="flex items-center gap-3">
                   {answer.isAccepted && (
                     <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
@@ -189,6 +189,10 @@ export default function QuestionDetailPage() {
                     </span>
                   )}
                   <span className="text-sm text-gray-500">{answer.upvotes} upvotes</span>
+                </div>
+                {/* Mock user badges - replace with actual data */}
+                <div className="flex gap-1">
+                  <BadgePill type="FIRST_ANSWER" size="sm" />
                 </div>
               </div>
               <p className="whitespace-pre-wrap text-sm text-gray-700">{answer.body}</p>

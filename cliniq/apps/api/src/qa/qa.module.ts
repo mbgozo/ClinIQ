@@ -6,9 +6,10 @@ import { AnswersService } from "./answers.service";
 import { SearchService } from "./search.service";
 import { EmbeddingService } from "./embedding.service";
 import { NotificationsModule } from "../notifications/notifications.module";
+import { GamificationModule } from "../gamification/gamification.module";
 
 @Module({
-  imports: [forwardRef(() => NotificationsModule)],
+  imports: [forwardRef(() => NotificationsModule), forwardRef(() => GamificationModule)],
   controllers: [QuestionsController, AnswersController],
   providers: [QuestionsService, AnswersService, SearchService, EmbeddingService],
   exports: [QuestionsService, AnswersService],

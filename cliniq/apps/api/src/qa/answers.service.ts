@@ -8,6 +8,7 @@ import {
 import { PrismaClient } from "@prisma/client";
 import type { CreateAnswerDto } from "./dto/create-answer.dto";
 import { NotificationsService } from "../notifications/notifications.service";
+import { GamificationService } from "../gamification/gamification.service";
 
 @Injectable()
 export class AnswersService {
@@ -16,6 +17,8 @@ export class AnswersService {
   constructor(
     @Inject(forwardRef(() => NotificationsService))
     private readonly notificationsService: NotificationsService,
+    @Inject(forwardRef(() => GamificationService))
+    private readonly gamificationService: GamificationService,
   ) {}
 
   async create(questionId: string, userId: string, dto: CreateAnswerDto) {
@@ -52,6 +55,9 @@ export class AnswersService {
         answer.id,
       );
     }
+
+    // Check for badge awards
+    await this.gamificationService.checkAndAwardBadges(userId);
 
     return answer;
   }
@@ -113,6 +119,12 @@ export class AnswersService {
         question.title,
         answer.questionId,
       );
+    }
+
+    // Check for badge awards for both answer author and question owner
+    await this.gamificationService.checkAndAwardBadges(answer.userId);
+    if (answer.userId !== actorId) {
+      await this.gamificationService.checkAndAwardBadges(actorId);
     }
 
     return updatedAnswer;
