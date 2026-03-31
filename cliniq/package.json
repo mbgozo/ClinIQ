@@ -14,14 +14,14 @@
     "packages/*"
   ],
   "devDependencies": {
-    "turbo": "^2.0.3",
-    "typescript": "^5.6.3",
+    "cross-env": "^7.0.3",
     "eslint": "^9.5.0",
-    "prettier": "^3.3.2",
-    "lint-staged": "^15.2.0",
     "husky": "^9.0.11",
+    "lint-staged": "^15.2.0",
+    "prettier": "^3.3.2",
     "ts-node": "^10.9.2",
-    "cross-env": "^7.0.3"
+    "turbo": "^2.0.3",
+    "typescript": "^5.6.3"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,json,md}": [
@@ -30,5 +30,8 @@
     "*.{ts,tsx,js,jsx}": [
       "eslint --fix"
     ]
+  },
+  "dependencies": {
+    "socket.io-client": "^4.8.3"
   }
 }
