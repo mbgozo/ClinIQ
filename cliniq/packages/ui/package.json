@@ -1,0 +1,31 @@
+{
+  "name": "@cliniq/ui",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "lint": "eslint \"src/**/*.{ts,tsx}\"",
+    "test": "echo \"No tests yet\"",
+    "format": "prettier --write ."
+  },
+  "peerDependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "next": "^14.2.3"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3",
+    "eslint": "^9.5.0"
+  },
+  "eslintConfig": {
+    "extends": ["@cliniq/config/eslint-config-cliniq"]
+  },
+  "prettier": "@cliniq/config/prettier-config-cliniq"
+}
+

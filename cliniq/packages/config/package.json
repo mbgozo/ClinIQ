@@ -1,0 +1,12 @@
+{
+  "name": "@cliniq/config",
+  "version": "0.1.0",
+  "private": false,
+  "main": "index.js",
+  "exports": {
+    "./eslint-config-cliniq": "./eslint-config-cliniq/index.js",
+    "./prettier-config-cliniq": "./prettier-config-cliniq/index.cjs",
+    "./tailwind-config-cliniq": "./tailwind-config-cliniq/index.cjs"
+  }
+}
+
