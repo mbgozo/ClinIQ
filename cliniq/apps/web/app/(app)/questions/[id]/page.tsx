@@ -4,13 +4,8 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  acceptAnswer,
-  createAnswer,
-  getQuestion,
-  getSimilarQuestions,
-  voteAnswer
-} from "../api";
+import { acceptAnswer, createAnswer, getQuestion, getSimilarQuestions, voteAnswer } from "../api";
+import { AnsweredBadge } from "@cliniq/ui";
 
 export default function QuestionDetailPage() {
   const params = useParams<{ id: string }>();
@@ -20,12 +15,12 @@ export default function QuestionDetailPage() {
 
   const questionQuery = useQuery({
     queryKey: ["question", id],
-    queryFn: () => getQuestion(id)
+    queryFn: () => getQuestion(id),
   });
 
   const similarQuery = useQuery({
     queryKey: ["similar-questions", id],
-    queryFn: () => getSimilarQuestions(id)
+    queryFn: () => getSimilarQuestions(id),
   });
 
   const createAnswerMutation = useMutation({
@@ -33,22 +28,97 @@ export default function QuestionDetailPage() {
     onSuccess: () => {
       setAnswerBody("");
       queryClient.invalidateQueries({ queryKey: ["question", id] });
-    }
+    },
   });
 
   const voteMutation = useMutation({
     mutationFn: ({ answerId, value }: { answerId: string; value: 1 | -1 }) =>
       voteAnswer(answerId, value),
-    onSuccess: () => {
+    onMutate: async ({ answerId, value }) => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ["question", id] });
+
+      // Snapshot the previous value
+      const previousQuestion = queryClient.getQueryData(["question", id]);
+
+      // Optimistically update
+      queryClient.setQueryData(["question", id], (old: any) => {
+        if (!old?.data) return old;
+
+        const updatedAnswers = old.data.answers.map((answer: any) => {
+          if (answer.id === answerId) {
+            return {
+              ...answer,
+              upvotes: answer.upvotes + value,
+              downvotes: answer.downvotes + (value === -1 ? 1 : 0),
+            };
+          }
+          return answer;
+        });
+
+        return {
+          ...old,
+          data: {
+            ...old.data,
+            answers: updatedAnswers,
+          },
+        };
+      });
+
+      return { previousQuestion };
+    },
+    onError: (_err, _variables, context) => {
+      // If the mutation fails, use the context returned from onMutate to roll back
+      if (context?.previousQuestion) {
+        queryClient.setQueryData(["question", id], context.previousQuestion);
+      }
+    },
+    onSettled: () => {
+      // Always refetch after error or success
       queryClient.invalidateQueries({ queryKey: ["question", id] });
-    }
+    },
   });
 
   const acceptMutation = useMutation({
     mutationFn: (answerId: string) => acceptAnswer(answerId),
-    onSuccess: () => {
+    onMutate: async (answerId) => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ["question", id] });
+
+      // Snapshot the previous value
+      const previousQuestion = queryClient.getQueryData(["question", id]);
+
+      // Optimistically update
+      queryClient.setQueryData(["question", id], (old: any) => {
+        if (!old?.data) return old;
+
+        const updatedAnswers = old.data.answers.map((answer: any) => ({
+          ...answer,
+          isAccepted: answer.id === answerId,
+        }));
+
+        return {
+          ...old,
+          data: {
+            ...old.data,
+            answers: updatedAnswers,
+            answered: true,
+          },
+        };
+      });
+
+      return { previousQuestion };
+    },
+    onError: (_err, _variables, context) => {
+      // If the mutation fails, use the context returned from onMutate to roll back
+      if (context?.previousQuestion) {
+        queryClient.setQueryData(["question", id], context.previousQuestion);
+      }
+    },
+    onSettled: () => {
+      // Always refetch after error or success
       queryClient.invalidateQueries({ queryKey: ["question", id] });
-    }
+    },
   });
 
   if (questionQuery.isLoading) {
@@ -74,9 +144,9 @@ export default function QuestionDetailPage() {
         </Link>
 
         <article className="rounded-lg border p-5">
-          <div className="mb-2 flex items-center gap-3 text-xs text-gray-500">
-            <span>{question.answered ? "Answered" : "Unanswered"}</span>
-            <span>{question.upvotes} upvotes</span>
+          <div className="mb-3 flex items-center gap-3">
+            <AnsweredBadge answered={question.answered} />
+            <span className="text-sm text-gray-500">{question.upvotes} upvotes</span>
           </div>
           <h1 className="text-2xl font-semibold">{question.title}</h1>
           <p className="mt-4 whitespace-pre-wrap text-sm text-gray-700">{question.body}</p>
@@ -86,7 +156,7 @@ export default function QuestionDetailPage() {
           <h2 className="text-base font-semibold">Write an answer</h2>
           <textarea
             value={answerBody}
-            onChange={e => setAnswerBody(e.target.value)}
+            onChange={(e) => setAnswerBody(e.target.value)}
             className="min-h-28 w-full rounded border px-3 py-2 text-sm"
             placeholder="Share your answer..."
           />
@@ -102,33 +172,68 @@ export default function QuestionDetailPage() {
 
         <section className="space-y-3">
           <h2 className="text-lg font-semibold">Answers ({question.answers?.length ?? 0})</h2>
-          {(question.answers || []).map(answer => (
+          {(question.answers || []).map((answer) => (
             <article key={answer.id} className="rounded-lg border p-4">
-              <div className="mb-2 text-xs text-gray-500">
-                {answer.isAccepted ? "Accepted" : "Not accepted"} · {answer.upvotes} upvotes
+              <div className="mb-3 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  {answer.isAccepted && (
+                    <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
+                      <svg className="mr-1 h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                          fillRule="evenodd"
+                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                      Accepted
+                    </span>
+                  )}
+                  <span className="text-sm text-gray-500">{answer.upvotes} upvotes</span>
+                </div>
               </div>
               <p className="whitespace-pre-wrap text-sm text-gray-700">{answer.body}</p>
               <div className="mt-3 flex gap-2">
                 <button
                   type="button"
                   onClick={() => voteMutation.mutate({ answerId: answer.id, value: 1 })}
-                  className="rounded border px-2 py-1 text-xs"
+                  disabled={voteMutation.isPending}
+                  className={`rounded border px-3 py-1.5 text-xs font-medium transition-colors ${
+                    voteMutation.isPending
+                      ? "opacity-50 cursor-not-allowed"
+                      : "hover:bg-gray-50 hover:border-gray-300"
+                  }`}
                 >
-                  Upvote
+                  {voteMutation.isPending ? "Voting..." : "▲ Upvote"}
                 </button>
                 <button
                   type="button"
                   onClick={() => voteMutation.mutate({ answerId: answer.id, value: -1 })}
-                  className="rounded border px-2 py-1 text-xs"
+                  disabled={voteMutation.isPending}
+                  className={`rounded border px-3 py-1.5 text-xs font-medium transition-colors ${
+                    voteMutation.isPending
+                      ? "opacity-50 cursor-not-allowed"
+                      : "hover:bg-gray-50 hover:border-gray-300"
+                  }`}
                 >
-                  Downvote
+                  {voteMutation.isPending ? "Voting..." : "▼ Downvote"}
                 </button>
                 <button
                   type="button"
                   onClick={() => acceptMutation.mutate(answer.id)}
-                  className="rounded border px-2 py-1 text-xs"
+                  disabled={acceptMutation.isPending || answer.isAccepted}
+                  className={`rounded border px-3 py-1.5 text-xs font-medium transition-colors ${
+                    answer.isAccepted
+                      ? "bg-green-100 border-green-300 text-green-800 cursor-not-allowed"
+                      : acceptMutation.isPending
+                        ? "opacity-50 cursor-not-allowed"
+                        : "hover:bg-teal-50 hover:border-teal-300 text-teal-700"
+                  }`}
                 >
-                  Accept
+                  {acceptMutation.isPending
+                    ? "Accepting..."
+                    : answer.isAccepted
+                      ? "Accepted"
+                      : "✓ Accept"}
                 </button>
               </div>
             </article>
@@ -139,8 +244,10 @@ export default function QuestionDetailPage() {
       <aside className="rounded-lg border p-4">
         <h3 className="mb-2 text-sm font-semibold">Similar questions</h3>
         <div className="space-y-2">
-          {similar.length === 0 && <p className="text-sm text-gray-600">No similar questions yet.</p>}
-          {similar.map(item => (
+          {similar.length === 0 && (
+            <p className="text-sm text-gray-600">No similar questions yet.</p>
+          )}
+          {similar.map((item) => (
             <Link
               key={item.id}
               href={`/questions/${item.id}`}
@@ -154,4 +261,3 @@ export default function QuestionDetailPage() {
     </main>
   );
 }
-

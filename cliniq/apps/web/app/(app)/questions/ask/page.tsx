@@ -7,7 +7,9 @@ import dynamic from "next/dynamic";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQuery } from "@tanstack/react-query";
 import { createQuestion } from "../api";
+import { AIAssistPanel, useDebounce } from "@cliniq/ui";
 
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
 
@@ -16,7 +18,7 @@ const AskQuestionSchema = z.object({
   categoryId: z.string().min(1),
   body: z.string().min(10),
   tags: z.string().optional(),
-  anonymous: z.boolean().default(false)
+  anonymous: z.boolean().default(false),
 });
 
 type AskQuestionInput = z.infer<typeof AskQuestionSchema>;
@@ -29,14 +31,47 @@ export default function AskQuestionPage() {
     handleSubmit,
     setValue,
     watch,
-    formState: { errors, isValid }
+    formState: { errors, isValid },
   } = useForm<AskQuestionInput>({
     mode: "onChange",
     resolver: zodResolver(AskQuestionSchema),
-    defaultValues: { body: "", anonymous: false, categoryId: "", tags: "" }
+    defaultValues: { body: "", anonymous: false, categoryId: "", tags: "" },
   });
 
   const body = watch("body");
+  const title = watch("title");
+
+  // Debounce title for AI suggestions
+  const debouncedTitle = useDebounce(title, 800);
+  const [showAIAssist, setShowAIAssist] = useState(true);
+
+  // Mock AI suggestions (replace with actual API call when ready)
+  const { data: aiSuggestions, isLoading: aiLoading } = useQuery({
+    queryKey: ["ai-suggest", debouncedTitle],
+    queryFn: async () => {
+      if (!debouncedTitle || debouncedTitle.length < 10) return [];
+
+      // Mock response - replace with actual API call to /ai/suggest
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      return [
+        {
+          id: "1",
+          title: "Understanding vital signs monitoring",
+          snippet:
+            "Learn how to properly measure and interpret blood pressure, heart rate, temperature, and respiratory rate in clinical settings...",
+          relevance: 0.85,
+        },
+        {
+          id: "2",
+          title: "Common nursing assessment techniques",
+          snippet:
+            "Essential assessment skills every nursing student should master, including head-to-toe assessment fundamentals...",
+          relevance: 0.72,
+        },
+      ];
+    },
+    enabled: debouncedTitle.length >= 10,
+  });
 
   const onSubmit = async (values: AskQuestionInput) => {
     setSubmitting(true);
@@ -64,6 +99,17 @@ export default function AskQuestionPage() {
           {errors.title && <p className="mt-1 text-xs text-red-600">{errors.title.message}</p>}
         </div>
 
+        {/* AI Assist Panel */}
+        {title && (
+          <AIAssistPanel
+            query={title}
+            suggestions={aiSuggestions}
+            loading={aiLoading}
+            onDismiss={() => setShowAIAssist(false)}
+            onOpenFullChat={() => router.push("/ai")}
+          />
+        )}
+
         <div>
           <label className="mb-1 block text-sm font-medium">Category</label>
           <select className="w-full rounded border px-3 py-2 text-sm" {...register("categoryId")}>
@@ -79,7 +125,7 @@ export default function AskQuestionPage() {
           <label className="mb-1 block text-sm font-medium">Question details</label>
           <MDEditor
             value={body}
-            onChange={value => setValue("body", value || "", { shouldValidate: true })}
+            onChange={(value) => setValue("body", value || "", { shouldValidate: true })}
             height={280}
           />
           {errors.body && <p className="mt-1 text-xs text-red-600">{errors.body.message}</p>}
@@ -114,4 +160,3 @@ export default function AskQuestionPage() {
     </main>
   );
 }
-

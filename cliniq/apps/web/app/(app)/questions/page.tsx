@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { getQuestions } from "./api";
+import { DebouncedInput, CategoryChip, AnsweredBadge } from "@cliniq/ui";
 
 export default function QuestionsFeedPage() {
   const [search, setSearch] = useState("");
@@ -23,25 +24,26 @@ export default function QuestionsFeedPage() {
         return undefined;
       }
       return allPages.length + 1;
-    }
+    },
   });
 
-  const questions = query.data?.pages.flatMap(page => page.data) ?? [];
+  const questions = query.data?.pages.flatMap((page) => page.data) ?? [];
 
   return (
     <main className="mx-auto grid max-w-6xl grid-cols-1 gap-6 px-4 py-8 lg:grid-cols-[280px_1fr]">
       <aside className="h-fit rounded-lg border p-4">
         <h2 className="mb-3 text-sm font-semibold">Filters</h2>
         <div className="space-y-3">
-          <input
-            placeholder="Search questions"
+          <DebouncedInput
+            placeholder="Search questions..."
             className="w-full rounded border px-3 py-2 text-sm"
             value={search}
-            onChange={e => setSearch(e.target.value)}
+            onValueChange={setSearch}
+            debounceMs={400}
           />
           <select
             value={categoryId}
-            onChange={e => setCategoryId(e.target.value)}
+            onChange={(e) => setCategoryId(e.target.value)}
             className="w-full rounded border px-3 py-2 text-sm"
           >
             <option value="">All categories</option>
@@ -49,7 +51,7 @@ export default function QuestionsFeedPage() {
           </select>
           <select
             value={answered}
-            onChange={e => setAnswered(e.target.value as "all" | "true" | "false")}
+            onChange={(e) => setAnswered(e.target.value as "all" | "true" | "false")}
             className="w-full rounded border px-3 py-2 text-sm"
           >
             <option value="all">All statuses</option>
@@ -60,11 +62,11 @@ export default function QuestionsFeedPage() {
             placeholder="Institution"
             className="w-full rounded border px-3 py-2 text-sm"
             value={institution}
-            onChange={e => setInstitution(e.target.value)}
+            onChange={(e) => setInstitution(e.target.value)}
           />
           <select
             value={sort}
-            onChange={e => setSort(e.target.value as "newest" | "votes" | "unanswered")}
+            onChange={(e) => setSort(e.target.value as "newest" | "votes" | "unanswered")}
             className="w-full rounded border px-3 py-2 text-sm"
           >
             <option value="newest">Newest</option>
@@ -83,19 +85,20 @@ export default function QuestionsFeedPage() {
         </div>
 
         <div className="grid gap-4">
-          {questions.map(question => (
+          {questions.map((question) => (
             <Link
               key={question.id}
               href={`/questions/${question.id}`}
               className="rounded-lg border p-4 hover:bg-gray-50"
             >
-              <div className="mb-2 flex items-center gap-3 text-xs text-gray-500">
-                <span className="rounded-full bg-gray-100 px-2 py-0.5">
-                  {question.answered ? "Answered" : "Unanswered"}
+              <div className="mb-3 flex items-center gap-3 flex-wrap">
+                <AnsweredBadge answered={question.answered} />
+                <CategoryChip category={question.category} />
+                <span className="text-xs text-gray-500">{question.upvotes} upvotes</span>
+                <span className="text-xs text-gray-500">
+                  {new Date(question.createdAt).toLocaleString()}
                 </span>
-                <span>{question.upvotes} upvotes</span>
-                <span>{new Date(question.createdAt).toLocaleString()}</span>
-                <span>{question.user?.name || "Anonymous"}</span>
+                <span className="text-xs text-gray-500">{question.user?.name || "Anonymous"}</span>
               </div>
               <h2 className="text-lg font-medium">{question.title}</h2>
               <p className="mt-2 line-clamp-2 text-sm text-gray-600">{question.body}</p>
@@ -120,4 +123,3 @@ export default function QuestionsFeedPage() {
     </main>
   );
 }
-
