@@ -21,3 +21,4 @@ export type RegisterInput = z.infer<typeof RegisterSchema>;
 
 export * from "./notifications";
 export * from "./gamification";
+export * from "./mentors";
