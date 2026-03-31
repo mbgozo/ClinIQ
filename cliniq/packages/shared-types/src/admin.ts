@@ -241,14 +241,14 @@ export const ADMIN_ROLE_DEFINITIONS = {
   [AdminRole.SUPER_ADMIN]: {
     name: "Super Admin",
     description: "Full system access and control",
-    icon: "👑",
+    icon: "crown",
     color: "#DC2626",
     permissions: Object.values(Permission),
   },
   [AdminRole.ADMIN]: {
     name: "Admin",
     description: "Administrative access to most features",
-    icon: "⚡",
+    icon: "bolt",
     color: "#F59E0B",
     permissions: [
       Permission.VIEW_USERS,
@@ -267,7 +267,7 @@ export const ADMIN_ROLE_DEFINITIONS = {
   [AdminRole.MODERATOR]: {
     name: "Moderator",
     description: "Content moderation and user management",
-    icon: "🛡️",
+    icon: "shield",
     color: "#10B981",
     permissions: [
       Permission.VIEW_USERS,
@@ -284,7 +284,7 @@ export const ADMIN_ROLE_DEFINITIONS = {
   [AdminRole.ANALYST]: {
     name: "Analyst",
     description: "Analytics and reporting access",
-    icon: "📊",
+    icon: "chart-bar",
     color: "#6366F1",
     permissions: [
       Permission.VIEW_USERS,
@@ -401,37 +401,37 @@ export const MODERATION_ACTION_DEFINITIONS = {
   [ModerationAction.APPROVE]: {
     name: "Approve",
     description: "Approve the reported content",
-    icon: "✅",
+    icon: "check-circle",
     color: "#10B981",
   },
   [ModerationAction.REJECT]: {
     name: "Reject",
     description: "Reject the report",
-    icon: "❌",
+    icon: "x-circle",
     color: "#EF4444",
   },
   [ModerationAction.DELETE]: {
     name: "Delete",
     description: "Delete the content",
-    icon: "🗑️",
+    icon: "trash",
     color: "#DC2626",
   },
   [ModerationAction.BAN]: {
     name: "Ban",
     description: "Ban the user",
-    icon: "🚫",
+    icon: "ban",
     color: "#DC2626",
   },
   [ModerationAction.WARNING]: {
     name: "Warning",
     description: "Issue a warning to the user",
-    icon: "⚠️",
+    icon: "alert-triangle",
     color: "#F59E0B",
   },
   [ModerationAction.SILENCE]: {
     name: "Silence",
     description: "Silence the user temporarily",
-    icon: "🔇",
+    icon: "volume-x",
     color: "#6B7280",
   },
 };
@@ -441,49 +441,49 @@ export const REPORT_REASON_DEFINITIONS = {
   [ReportReason.INAPPROPRIATE_CONTENT]: {
     name: "Inappropriate Content",
     description: "Content that violates community guidelines",
-    icon: "🚫",
+    icon: "ban",
     color: "#EF4444",
   },
   [ReportReason.SPAM]: {
     name: "Spam",
     description: "Unsolicited or repetitive content",
-    icon: "📧",
+    icon: "mail",
     color: "#F59E0B",
   },
   [ReportReason.HARASSMENT]: {
     name: "Harassment",
     description: "Bullying or harassing behavior",
-    icon: "😡",
+    icon: "alert-octagon",
     color: "#DC2626",
   },
   [ReportReason.MISINFORMATION]: {
     name: "Misinformation",
     description: "False or misleading information",
-    icon: "❓",
+    icon: "help-circle",
     color: "#8B5CF6",
   },
   [ReportReason.COPYRIGHT]: {
     name: "Copyright Violation",
     description: "Content that infringes copyright",
-    icon: "©️",
+    icon: "copyright",
     color: "#6B7280",
   },
   [ReportReason.OFF_TOPIC]: {
     name: "Off Topic",
     description: "Content not relevant to the platform",
-    icon: "📌",
+    icon: "pin",
     color: "#6B7280",
   },
   [ReportReason.DUPLICATE]: {
     name: "Duplicate",
     description: "Duplicate content",
-    icon: "🔄",
+    icon: "refresh-cw",
     color: "#6B7280",
   },
   [ReportReason.OTHER]: {
     name: "Other",
     description: "Other issues not covered above",
-    icon: "📝",
+    icon: "file-text",
     color: "#6B7280",
   },
 };
@@ -520,26 +520,26 @@ export function formatReportReason(reason: ReportReason): string {
 
 export function getContentTypeIcon(contentType: ContentType): string {
   const icons = {
-    [ContentType.QUESTION]: "❓",
-    [ContentType.ANSWER]: "💬",
-    [ContentType.RESOURCE]: "📎",
-    [ContentType.STUDY_GROUP]: "👥",
-    [ContentType.GROUP_POST]: "📝",
-    [ContentType.CHAT_MESSAGE]: "💭",
-    [ContentType.USER_PROFILE]: "👤",
+    [ContentType.QUESTION]: "help-circle",
+    [ContentType.ANSWER]: "message-circle",
+    [ContentType.RESOURCE]: "paperclip",
+    [ContentType.STUDY_GROUP]: "users",
+    [ContentType.GROUP_POST]: "file-text",
+    [ContentType.CHAT_MESSAGE]: "message-square",
+    [ContentType.USER_PROFILE]: "user",
   };
-  return icons[contentType] || "📄";
+  return icons[contentType] || "file";
 }
 
 export function getSystemAlertIcon(type: SystemAlertType): string {
   const icons = {
-    [SystemAlertType.INFO]: "ℹ️",
-    [SystemAlertType.WARNING]: "⚠️",
-    [SystemAlertType.ERROR]: "❌",
-    [SystemAlertType.SUCCESS]: "✅",
-    [SystemAlertType.MAINTENANCE]: "🔧",
+    [SystemAlertType.INFO]: "info",
+    [SystemAlertType.WARNING]: "alert-triangle",
+    [SystemAlertType.ERROR]: "x-circle",
+    [SystemAlertType.SUCCESS]: "check-circle",
+    [SystemAlertType.MAINTENANCE]: "settings",
   };
-  return icons[type] || "ℹ️";
+  return icons[type] || "info";
 }
 
 export function getSystemAlertColor(type: SystemAlertType): string {

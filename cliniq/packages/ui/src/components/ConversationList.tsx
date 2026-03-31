@@ -1,6 +1,49 @@
 import { useState } from "react";
 import { Conversation, OnlineStatus, formatChatTime, truncateMessage } from "@cliniq/shared-types";
 
+// SVG icon helpers
+const UserIcon = () => (
+  <svg className="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+  </svg>
+);
+
+const UsersIcon = () => (
+  <svg className="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+  </svg>
+);
+
+const SearchIcon = () => (
+  <svg className="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+  </svg>
+);
+
+const ChevronDownIcon = () => (
+  <svg className="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+  </svg>
+);
+
+// Status dot component — uses solid colored circles (CSS), not emoji
+const StatusDot = ({ status }: { status: OnlineStatus }) => {
+  const colorMap: Record<string, string> = {
+    [OnlineStatus.ONLINE]: "bg-green-500",
+    [OnlineStatus.AWAY]: "bg-yellow-400",
+    [OnlineStatus.BUSY]: "bg-red-500",
+    [OnlineStatus.OFFLINE]: "bg-gray-400",
+    [OnlineStatus.INVISIBLE]: "bg-gray-300",
+  };
+
+  return (
+    <span
+      className={`inline-block w-2.5 h-2.5 rounded-full flex-shrink-0 ${colorMap[status] || "bg-gray-400"}`}
+      aria-label={status.toLowerCase()}
+    />
+  );
+};
+
 interface ConversationListProps {
   conversations: Conversation[];
   activeConversationId?: string;
@@ -34,26 +77,26 @@ export function ConversationList({
     return user?.status || OnlineStatus.OFFLINE;
   };
 
-  const getStatusIcon = (status: OnlineStatus) => {
-    const icons = {
-      [OnlineStatus.ONLINE]: "🟢",
-      [OnlineStatus.AWAY]: "🟡",
-      [OnlineStatus.BUSY]: "🔴",
-      [OnlineStatus.OFFLINE]: "⚫",
-      [OnlineStatus.INVISIBLE]: "👁️‍🗨️",
-    };
-    return icons[status] || "⚫";
-  };
-
   const getStatusColor = (status: OnlineStatus) => {
-    const colors = {
+    const colors: Record<string, string> = {
       [OnlineStatus.ONLINE]: "bg-green-500",
-      [OnlineStatus.AWAY]: "bg-yellow-500",
+      [OnlineStatus.AWAY]: "bg-yellow-400",
       [OnlineStatus.BUSY]: "bg-red-500",
       [OnlineStatus.OFFLINE]: "bg-gray-400",
-      [OnlineStatus.INVISIBLE]: "bg-gray-400",
+      [OnlineStatus.INVISIBLE]: "bg-gray-300",
     };
     return colors[status] || "bg-gray-400";
+  };
+
+  const getStatusLabel = (status: OnlineStatus) => {
+    const labels: Record<string, string> = {
+      [OnlineStatus.ONLINE]: "Online",
+      [OnlineStatus.AWAY]: "Away",
+      [OnlineStatus.BUSY]: "Busy",
+      [OnlineStatus.OFFLINE]: "Offline",
+      [OnlineStatus.INVISIBLE]: "Invisible",
+    };
+    return labels[status] || "Offline";
   };
 
   const getConversationAvatar = (conversation: Conversation) => {
@@ -67,15 +110,14 @@ export function ConversationList({
       );
     }
 
-    // For direct messages, show online status indicator
     if (conversation.type === "DIRECT" && conversation.participantIds.length === 2) {
-      const otherUserId = conversation.participantIds.find((id) => id !== "current-user"); // This would be actual user ID
+      const otherUserId = conversation.participantIds.find((id) => id !== "current-user");
       const status = otherUserId ? getOnlineStatus(otherUserId) : OnlineStatus.OFFLINE;
 
       return (
         <div className="relative">
-          <div className="h-12 w-12 rounded-full bg-gray-300 flex items-center justify-center">
-            <span className="text-lg">👤</span>
+          <div className="h-12 w-12 rounded-full bg-gray-100 flex items-center justify-center">
+            <UserIcon />
           </div>
           <div
             className={`absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-white ${getStatusColor(status)}`}
@@ -85,28 +127,23 @@ export function ConversationList({
     }
 
     return (
-      <div className="h-12 w-12 rounded-full bg-gray-300 flex items-center justify-center">
-        <span className="text-lg">👥</span>
+      <div className="h-12 w-12 rounded-full bg-gray-100 flex items-center justify-center">
+        <UsersIcon />
       </div>
     );
   };
 
   const getConversationName = (conversation: Conversation) => {
     if (conversation.name) return conversation.name;
-
-    // For direct messages, this would show the other user's name
-    if (conversation.type === "DIRECT") {
-      return "Direct Message";
-    }
-
+    if (conversation.type === "DIRECT") return "Direct Message";
     return "Unnamed Conversation";
   };
 
-  const getStatusOptions = () => [
-    { value: OnlineStatus.ONLINE, label: "Online", icon: "🟢" },
-    { value: OnlineStatus.AWAY, label: "Away", icon: "🟡" },
-    { value: OnlineStatus.BUSY, label: "Busy", icon: "🔴" },
-    { value: OnlineStatus.INVISIBLE, label: "Invisible", icon: "👁️‍🗨️" },
+  const statusOptions = [
+    { value: OnlineStatus.ONLINE, label: "Online" },
+    { value: OnlineStatus.AWAY, label: "Away" },
+    { value: OnlineStatus.BUSY, label: "Busy" },
+    { value: OnlineStatus.INVISIBLE, label: "Invisible" },
   ];
 
   return (
@@ -121,15 +158,16 @@ export function ConversationList({
               onClick={() => setShowStatusMenu(!showStatusMenu)}
               className="flex items-center gap-2 p-2 hover:bg-gray-100 rounded-lg transition-colors"
             >
-              <span>{getStatusIcon(currentUserOnlineStatus)}</span>
+              <StatusDot status={currentUserOnlineStatus} />
               <span className="text-sm text-gray-600">
-                {getStatusOptions().find((s) => s.value === currentUserOnlineStatus)?.label}
+                {getStatusLabel(currentUserOnlineStatus)}
               </span>
+              <ChevronDownIcon />
             </button>
 
             {showStatusMenu && (
-              <div className="absolute right-0 top-full mt-1 bg-white border rounded-lg shadow-lg py-1 z-10">
-                {getStatusOptions().map((option) => (
+              <div className="absolute right-0 top-full mt-1 bg-white border rounded-lg shadow-lg py-1 z-10 min-w-[120px]">
+                {statusOptions.map((option) => (
                   <button
                     key={option.value}
                     onClick={() => {
@@ -138,7 +176,7 @@ export function ConversationList({
                     }}
                     className="w-full flex items-center gap-2 px-3 py-2 hover:bg-gray-100 text-left text-sm"
                   >
-                    <span>{option.icon}</span>
+                    <StatusDot status={option.value} />
                     <span>{option.label}</span>
                   </button>
                 ))}
@@ -154,9 +192,11 @@ export function ConversationList({
             placeholder="Search conversations..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:border-teal-500 focus:ring-1 focus:ring-teal-500 text-sm"
           />
-          <span className="absolute left-3 top-2.5 text-gray-400">🔍</span>
+          <span className="absolute left-3 top-2.5">
+            <SearchIcon />
+          </span>
         </div>
       </div>
 
@@ -164,7 +204,7 @@ export function ConversationList({
       <div className="flex-1 overflow-y-auto">
         {filteredConversations.length === 0 ? (
           <div className="p-4 text-center text-gray-500">
-            <div className="text-lg mb-2">No conversations</div>
+            <div className="text-base font-medium mb-1">No conversations</div>
             <p className="text-sm">
               {searchQuery ? "Try a different search term" : "Start a conversation to see it here"}
             </p>
@@ -198,7 +238,7 @@ export function ConversationList({
                           {getConversationName(conversation)}
                         </h3>
                         {conversation.lastMessageAt && (
-                          <span className="text-xs text-gray-500">
+                          <span className="text-xs text-gray-500 flex-shrink-0 ml-2">
                             {formatChatTime(conversation.lastMessageAt)}
                           </span>
                         )}
@@ -216,7 +256,7 @@ export function ConversationList({
                         </p>
 
                         {unreadCount > 0 && (
-                          <span className="inline-flex items-center justify-center w-5 h-5 text-xs font-medium text-white bg-red-500 rounded-full">
+                          <span className="inline-flex items-center justify-center w-5 h-5 text-xs font-medium text-white bg-red-500 rounded-full flex-shrink-0 ml-2">
                             {unreadCount > 99 ? "99+" : unreadCount}
                           </span>
                         )}

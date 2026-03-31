@@ -1,3 +1,28 @@
+// Generic user icon for avatar fallback
+const UserIcon = () => (
+  <svg className="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+  </svg>
+);
+
+const StarIcon = () => (
+  <svg className="h-4 w-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+  </svg>
+);
+
+const CheckBadgeIcon = () => (
+  <svg className="h-4 w-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+  </svg>
+);
+
+const TagIcon = () => (
+  <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-5 5a2 2 0 01-2.828 0l-7-7A2 2 0 013 9V4a1 1 0 011-1z" />
+  </svg>
+);
+
 interface MentorCardProps {
   mentor: {
     id: string;
@@ -25,28 +50,16 @@ interface MentorCardProps {
 
 export function MentorCard({ mentor, onRequestMentorship, className = '' }: MentorCardProps) {
   const isVerified = !!mentor.verifiedAt;
-  const expertiseAreaIcons: Record<string, string> = {
-    'MEDICAL_SURGICAL': '🏥',
-    'PEDIATRICS': '👶',
-    'OBSTETRICS_GYNECOLOGY': '🤱',
-    'MENTAL_HEALTH': '🧠',
-    'COMMUNITY_HEALTH': '🏘️',
-    'CRITICAL_CARE': '🚑',
-    'EMERGENCY_NURSING': '🆘',
-    'GERIATRICS': '👴',
-    'PHARMACOLOGY': '💊',
-    'PATHOPHYSIOLOGY': '🔬',
-    'NURSING_LEADERSHIP': '👔',
-    'RESEARCH_METHODS': '📊',
-    'HEALTH_ASSESSMENT': '🩺',
-  };
+
+  const formatExpertiseLabel = (area: string) =>
+    area.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
 
   return (
     <div className={`bg-white border rounded-lg p-6 hover:shadow-md transition-shadow ${className}`}>
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
-          <div className="h-12 w-12 rounded-full bg-gray-200 flex items-center justify-center">
+          <div className="h-12 w-12 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden">
             {mentor.user.avatarUrl ? (
               <img 
                 src={mentor.user.avatarUrl} 
@@ -54,7 +67,7 @@ export function MentorCard({ mentor, onRequestMentorship, className = '' }: Ment
                 className="h-12 w-12 rounded-full object-cover"
               />
             ) : (
-              <span className="text-lg">👤</span>
+              <UserIcon />
             )}
           </div>
           
@@ -62,8 +75,9 @@ export function MentorCard({ mentor, onRequestMentorship, className = '' }: Ment
             <div className="flex items-center gap-2">
               <h3 className="font-semibold text-gray-900">{mentor.user.name}</h3>
               {isVerified && (
-                <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-800">
-                  ✓ Verified
+                <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-800">
+                  <CheckBadgeIcon />
+                  Verified
                 </span>
               )}
             </div>
@@ -75,8 +89,8 @@ export function MentorCard({ mentor, onRequestMentorship, className = '' }: Ment
         {/* Rating */}
         <div className="text-right">
           <div className="flex items-center gap-1">
-            <span className="text-yellow-500">⭐</span>
-            <span className="font-medium">{mentor.mentorRating.toFixed(1)}</span>
+            <StarIcon />
+            <span className="font-medium text-sm">{mentor.mentorRating.toFixed(1)}</span>
           </div>
           <p className="text-xs text-gray-500">{mentor.mentorshipCount} mentorships</p>
         </div>
@@ -94,8 +108,8 @@ export function MentorCard({ mentor, onRequestMentorship, className = '' }: Ment
               key={area}
               className="inline-flex items-center gap-1 rounded-full bg-teal-100 px-2 py-1 text-xs font-medium text-teal-800"
             >
-              <span>{expertiseAreaIcons[area] || '📚'}</span>
-              {area.replace('_', ' ')}
+              <TagIcon />
+              {formatExpertiseLabel(area)}
             </span>
           ))}
           {mentor.expertiseAreas.length > 3 && (

@@ -1,6 +1,25 @@
 import { useState } from 'react';
 import { ResourceType, RESOURCE_TYPE_DEFINITIONS } from '@cliniq/shared-types';
 
+// SVG icon helpers
+const DocumentIcon = () => (
+  <svg className="h-8 w-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+  </svg>
+);
+
+const UploadIcon = () => (
+  <svg className="h-10 w-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+  </svg>
+);
+
+const CheckIcon = () => (
+  <svg className="h-4 w-4 text-teal-600" fill="currentColor" viewBox="0 0 20 20">
+    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+  </svg>
+);
+
 interface ResourceUploadProps {
   onSubmit: (data: FormData) => Promise<void>;
   onCancel: () => void;
@@ -25,7 +44,15 @@ export function ResourceUpload({ onSubmit, onCancel, isLoading = false }: Resour
     const selectedFile = e.target.files?.[0];
     if (selectedFile) {
       setFile(selectedFile);
-      // Set URL to empty when file is selected
+      setFormData(prev => ({ ...prev, url: '' }));
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLLabelElement>) => {
+    e.preventDefault();
+    const dropped = e.dataTransfer.files?.[0];
+    if (dropped) {
+      setFile(dropped);
       setFormData(prev => ({ ...prev, url: '' }));
     }
   };
@@ -33,10 +60,7 @@ export function ResourceUpload({ onSubmit, onCancel, isLoading = false }: Resour
   const handleAddTag = () => {
     const tag = tagInput.trim();
     if (tag && !formData.tags.includes(tag) && formData.tags.length < 10) {
-      setFormData(prev => ({
-        ...prev,
-        tags: [...prev.tags, tag]
-      }));
+      setFormData(prev => ({ ...prev, tags: [...prev.tags, tag] }));
       setTagInput('');
     }
   };
@@ -50,13 +74,8 @@ export function ResourceUpload({ onSubmit, onCancel, isLoading = false }: Resour
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     const submitData = new FormData();
-    
-    if (file) {
-      submitData.append('file', file);
-    }
-    
+    if (file) submitData.append('file', file);
     Object.entries(formData).forEach(([key, value]) => {
       if (key === 'tags') {
         submitData.append(key, JSON.stringify(value));
@@ -66,32 +85,7 @@ export function ResourceUpload({ onSubmit, onCancel, isLoading = false }: Resour
         submitData.append(key, String(value));
       }
     });
-
     await onSubmit(submitData);
-  };
-
-  const getFileTypeIcon = () => {
-    if (!file) return '📄';
-    
-    const extension = file.name.toLowerCase().slice(file.name.lastIndexOf('.'));
-    const typeMap: Record<string, string> = {
-      '.pdf': '📄',
-      '.doc': '📄',
-      '.docx': '📄',
-      '.ppt': '📊',
-      '.pptx': '📊',
-      '.mp4': '🎥',
-      '.avi': '🎥',
-      '.mov': '🎥',
-      '.jpg': '🖼️',
-      '.jpeg': '🖼️',
-      '.png': '🖼️',
-      '.gif': '🖼️',
-      '.mp3': '🎵',
-      '.wav': '🎵',
-    };
-    
-    return typeMap[extension] || '📄';
   };
 
   const formatFileSize = (bytes: number) => {
@@ -114,39 +108,46 @@ export function ResourceUpload({ onSubmit, onCancel, isLoading = false }: Resour
               File or URL
             </label>
             <div className="space-y-3">
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-4">
-                <input
-                  type="file"
-                  onChange={handleFileChange}
-                  className="hidden"
-                  id="file-upload"
-                />
-                <label
-                  htmlFor="file-upload"
-                  className="cursor-pointer flex flex-col items-center"
-                >
-                  <div className="text-3xl mb-2">{getFileTypeIcon()}</div>
-                  <span className="text-sm text-gray-600">
-                    {file ? file.name : 'Click to upload file'}
-                  </span>
-                  {file && (
-                    <span className="text-xs text-gray-500">
-                      {formatFileSize(file.size)}
-                    </span>
-                  )}
-                </label>
-              </div>
+              {/* Drop zone */}
+              <input
+                type="file"
+                onChange={handleFileChange}
+                className="hidden"
+                id="file-upload"
+              />
+              <label
+                htmlFor="file-upload"
+                onDrop={handleDrop}
+                onDragOver={(e) => e.preventDefault()}
+                className="cursor-pointer flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-6 hover:border-teal-400 transition-colors"
+              >
+                {file ? (
+                  <>
+                    <DocumentIcon />
+                    <span className="mt-2 text-sm font-medium text-gray-700">{file.name}</span>
+                    <span className="text-xs text-gray-500 mt-1">{formatFileSize(file.size)}</span>
+                  </>
+                ) : (
+                  <>
+                    <UploadIcon />
+                    <span className="mt-2 text-sm font-medium text-gray-700">Click to upload or drag and drop</span>
+                    <span className="text-xs text-gray-500 mt-1">PDF, DOC, DOCX, PPT, MP4, images, audio up to 20MB</span>
+                  </>
+                )}
+              </label>
               
-              <div className="flex items-center gap-2 text-sm text-gray-500">
-                <span>or</span>
+              <div className="flex items-center gap-2 text-sm text-gray-400">
+                <div className="flex-1 h-px bg-gray-200" />
+                <span>or paste a URL</span>
+                <div className="flex-1 h-px bg-gray-200" />
               </div>
               
               <input
                 type="url"
                 placeholder="https://example.com/resource"
                 value={formData.url}
-                onChange={(e) => setFormData(prev => ({ ...prev, url: e.target.value, file: null }))}
-                className="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
+                onChange={(e) => setFormData(prev => ({ ...prev, url: e.target.value }))}
+                className="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 disabled:bg-gray-50 disabled:text-gray-400"
                 disabled={!!file}
               />
             </div>
@@ -155,7 +156,7 @@ export function ResourceUpload({ onSubmit, onCancel, isLoading = false }: Resour
           {/* Title */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Title *
+              Title <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -172,7 +173,7 @@ export function ResourceUpload({ onSubmit, onCancel, isLoading = false }: Resour
           {/* Description */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Description *
+              Description <span className="text-red-500">*</span>
             </label>
             <textarea
               required
@@ -189,28 +190,23 @@ export function ResourceUpload({ onSubmit, onCancel, isLoading = false }: Resour
           {/* Category and Course */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Category
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
               <select
                 value={formData.categoryId}
                 onChange={(e) => setFormData(prev => ({ ...prev, categoryId: e.target.value }))}
                 className="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
               >
                 <option value="">Select category</option>
-                {/* Categories would be populated from API */}
-                <option value="1">Anatomy & Physiology</option>
+                <option value="1">Anatomy &amp; Physiology</option>
                 <option value="2">Pharmacology</option>
                 <option value="3">Medical-Surgical</option>
                 <option value="4">Pediatrics</option>
-                <option value="5">Obstetrics & Gynecology</option>
+                <option value="5">Obstetrics &amp; Gynecology</option>
               </select>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Course
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Course</label>
               <input
                 type="text"
                 value={formData.course}
@@ -223,9 +219,7 @@ export function ResourceUpload({ onSubmit, onCancel, isLoading = false }: Resour
 
           {/* Year */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Year
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Academic Year</label>
             <input
               type="number"
               min="1950"
@@ -240,7 +234,8 @@ export function ResourceUpload({ onSubmit, onCancel, isLoading = false }: Resour
           {/* Tags */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Tags * (1-10 tags)
+              Tags <span className="text-red-500">*</span>
+              <span className="text-gray-400 font-normal ml-1">(1–10 tags)</span>
             </label>
             <div className="space-y-2">
               <div className="flex gap-2">
@@ -248,8 +243,8 @@ export function ResourceUpload({ onSubmit, onCancel, isLoading = false }: Resour
                   type="text"
                   value={tagInput}
                   onChange={(e) => setTagInput(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddTag())}
-                  className="flex-1 rounded border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
+                  onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddTag())}
+                  className="flex-1 rounded border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 disabled:bg-gray-50"
                   placeholder="Add tag and press Enter"
                   disabled={formData.tags.length >= 10}
                 />
@@ -257,7 +252,7 @@ export function ResourceUpload({ onSubmit, onCancel, isLoading = false }: Resour
                   type="button"
                   onClick={handleAddTag}
                   disabled={!tagInput.trim() || formData.tags.length >= 10}
-                  className="rounded bg-gray-200 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-300 disabled:opacity-50"
+                  className="rounded bg-gray-200 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-300 disabled:opacity-50 transition-colors"
                 >
                   Add
                 </button>
@@ -274,7 +269,8 @@ export function ResourceUpload({ onSubmit, onCancel, isLoading = false }: Resour
                       <button
                         type="button"
                         onClick={() => handleRemoveTag(tag)}
-                        className="text-teal-600 hover:text-teal-800"
+                        className="text-teal-600 hover:text-teal-900 leading-none"
+                        aria-label={`Remove tag ${tag}`}
                       >
                         ×
                       </button>
@@ -287,14 +283,23 @@ export function ResourceUpload({ onSubmit, onCancel, isLoading = false }: Resour
 
           {/* Copyright Acknowledgment */}
           <div>
-            <label className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                required
-                checked={formData.copyrightAck}
-                onChange={(e) => setFormData(prev => ({ ...prev, copyrightAck: e.target.checked }))}
-                className="rounded border-gray-300 text-teal-600 focus:ring-teal-500"
-              />
+            <label className="flex items-start gap-3 cursor-pointer">
+              <div className="mt-0.5 relative">
+                <input
+                  type="checkbox"
+                  required
+                  checked={formData.copyrightAck}
+                  onChange={(e) => setFormData(prev => ({ ...prev, copyrightAck: e.target.checked }))}
+                  className="sr-only"
+                />
+                <div
+                  className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${
+                    formData.copyrightAck ? 'bg-teal-600 border-teal-600' : 'border-gray-300'
+                  }`}
+                >
+                  {formData.copyrightAck && <CheckIcon />}
+                </div>
+              </div>
               <span className="text-sm text-gray-700">
                 I have the right to share this resource and it complies with copyright laws
               </span>
@@ -302,19 +307,19 @@ export function ResourceUpload({ onSubmit, onCancel, isLoading = false }: Resour
           </div>
 
           {/* Actions */}
-          <div className="flex gap-3 pt-4">
+          <div className="flex gap-3 pt-4 border-t border-gray-100">
             <button
               type="button"
               onClick={onCancel}
               disabled={isLoading}
-              className="flex-1 rounded border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+              className="flex-1 rounded border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isLoading || (!file && !formData.url)}
-              className="flex-1 rounded bg-teal-600 px-4 py-2 text-sm font-medium text-white hover:bg-teal-700 disabled:opacity-50"
+              className="flex-1 rounded bg-teal-600 px-4 py-2 text-sm font-medium text-white hover:bg-teal-700 disabled:opacity-50 transition-colors"
             >
               {isLoading ? 'Uploading...' : 'Upload Resource'}
             </button>
