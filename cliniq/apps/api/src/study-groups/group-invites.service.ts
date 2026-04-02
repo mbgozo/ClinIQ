@@ -48,18 +48,20 @@ export class GroupInvitesService {
       }
     });
 
-    if (existingMember && existingMember.groupMemberships.length > 0) {
+    if (existingMember && existingMember.groupMemberships && existingMember.groupMemberships.length > 0) {
       throw new Error('User is already a member of this group');
     }
 
     // Create invite
     const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days from now
+    const inviteCode = generateInviteCode();
 
     const invite = await this.prisma.groupInvite.create({
       data: {
         groupId,
         inviterId,
         inviteeEmail: data.inviteeEmail,
+        inviteCode,
         message: data.message,
         status: 'PENDING',
         expiresAt,
@@ -144,7 +146,6 @@ export class GroupInvitesService {
             name: true,
             description: true,
             privacy: true,
-            memberCount: true,
           }
         }
       },
@@ -195,7 +196,7 @@ export class GroupInvitesService {
       where: { groupId: invite.groupId }
     });
 
-    if (memberCount >= invite.group.maxMembers) {
+    if (memberCount >= (invite.group as any).maxMembers) {
       throw new Error('Group is full');
     }
 
@@ -241,7 +242,7 @@ export class GroupInvitesService {
       ...updatedInvite,
       createdAt: updatedInvite.createdAt.toISOString(),
       expiresAt: updatedInvite.expiresAt.toISOString(),
-      respondedAt: updatedInvite.respondedAt.toISOString(),
+      respondedAt: updatedInvite.respondedAt?.toISOString() || null,
     };
   }
 
@@ -293,7 +294,7 @@ export class GroupInvitesService {
       ...updatedInvite,
       createdAt: updatedInvite.createdAt.toISOString(),
       expiresAt: updatedInvite.expiresAt.toISOString(),
-      respondedAt: updatedInvite.respondedAt.toISOString(),
+      respondedAt: updatedInvite.respondedAt?.toISOString() || null,
     };
   }
 
@@ -312,7 +313,6 @@ export class GroupInvitesService {
             description: true,
             privacy: true,
             maxMembers: true,
-            memberCount: true,
           }
         },
         inviter: {

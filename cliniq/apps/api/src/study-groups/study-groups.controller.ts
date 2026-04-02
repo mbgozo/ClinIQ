@@ -3,7 +3,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { StudyGroupsService } from './study-groups.service';
 import { GroupPostsService } from './group-posts.service';
 import { GroupInvitesService } from './group-invites.service';
-import { CreateGroupSchema, GroupFilterSchema, CreateGroupPostSchema, CreateGroupInviteSchema } from '@cliniq/shared-types';
+import { CreateGroupPostInput, CreateGroupInviteInput, CreateGroupSchema, GroupFilterSchema } from '@cliniq/shared-types';
 
 @Controller('study-groups')
 @UseGuards(JwtAuthGuard)
@@ -22,7 +22,7 @@ export class StudyGroupsController {
   }
 
   @Get('my-groups')
-  async getMyGroups(@Request() req) {
+  async getMyGroups(@Request() req: any) {
     const userId = req.user.sub;
     const groups = await this.studyGroupsService.getUserGroups(userId);
     return { data: groups };
@@ -35,7 +35,7 @@ export class StudyGroupsController {
   }
 
   @Post()
-  async createGroup(@Request() req, @Body() data: any) {
+  async createGroup(@Request() req: any, @Body() data: any) {
     const userId = req.user.sub;
     const validatedData = CreateGroupSchema.parse(data);
     const group = await this.studyGroupsService.createGroup(userId, validatedData);
@@ -43,28 +43,28 @@ export class StudyGroupsController {
   }
 
   @Put(':id')
-  async updateGroup(@Param('id') id: string, @Request() req, @Body() data: any) {
+  async updateGroup(@Param('id') id: string, @Request() req: any, @Body() data: any) {
     const userId = req.user.sub;
     const group = await this.studyGroupsService.updateGroup(id, userId, data);
     return { data: group };
   }
 
   @Delete(':id')
-  async deleteGroup(@Param('id') id: string, @Request() req) {
+  async deleteGroup(@Param('id') id: string, @Request() req: any) {
     const userId = req.user.sub;
     await this.studyGroupsService.deleteGroup(id, userId);
     return { message: 'Group deleted successfully' };
   }
 
   @Post(':id/join')
-  async joinGroup(@Param('id') id: string, @Body() body: { inviteCode?: string }, @Request() req) {
+  async joinGroup(@Param('id') id: string, @Body() body: { inviteCode?: string }, @Request() req: any) {
     const userId = req.user.sub;
     const member = await this.studyGroupsService.joinGroup(id, userId, body.inviteCode);
     return { data: member };
   }
 
   @Post(':id/leave')
-  async leaveGroup(@Param('id') id: string, @Request() req) {
+  async leaveGroup(@Param('id') id: string, @Request() req: any) {
     const userId = req.user.sub;
     await this.studyGroupsService.leaveGroup(id, userId);
     return { message: 'Left group successfully' };
@@ -78,7 +78,7 @@ export class StudyGroupsController {
   }
 
   @Post(':id/members')
-  async inviteMember(@Param('id') id: string, @Body() data: CreateGroupInviteSchema, @Request() req) {
+  async inviteMember(@Param('id') id: string, @Body() data: CreateGroupInviteInput, @Request() req: any) {
     const inviterId = req.user.sub;
     const invite = await this.groupInvitesService.createInvite(id, inviterId, data);
     return { data: invite };
@@ -89,7 +89,7 @@ export class StudyGroupsController {
     @Param('id') id: string,
     @Param('memberId') memberId: string,
     @Body() body: { role: string },
-    @Request() req
+    @Request() req: any
   ) {
     const adminId = req.user.sub;
     const member = await this.studyGroupsService.updateMemberRole(id, memberId, body.role, adminId);
@@ -97,7 +97,7 @@ export class StudyGroupsController {
   }
 
   @Delete(':id/members/:memberId')
-  async removeMember(@Param('id') id: string, @Param('memberId') memberId: string, @Request() req) {
+  async removeMember(@Param('id') id: string, @Param('memberId') memberId: string, @Request() req: any) {
     const adminId = req.user.sub;
     await this.studyGroupsService.removeMember(id, memberId, adminId);
     return { message: 'Member removed successfully' };
@@ -111,35 +111,35 @@ export class StudyGroupsController {
   }
 
   @Post(':id/posts')
-  async createGroupPost(@Param('id') id: string, @Body() data: CreateGroupPostSchema, @Request() req) {
+  async createGroupPost(@Param('id') id: string, @Body() data: CreateGroupPostInput, @Request() req: any) {
     const userId = req.user.sub;
     const post = await this.groupPostsService.createPost(id, userId, data);
     return { data: post };
   }
 
   @Put('posts/:postId')
-  async updateGroupPost(@Param('postId') postId: string, @Body() data: Partial<CreateGroupPostSchema>, @Request() req) {
+  async updateGroupPost(@Param('postId') postId: string, @Body() data: Partial<CreateGroupPostInput>, @Request() req: any) {
     const userId = req.user.sub;
     const post = await this.groupPostsService.updatePost(postId, userId, data);
     return { data: post };
   }
 
   @Delete('posts/:postId')
-  async deleteGroupPost(@Param('postId') postId: string, @Request() req) {
+  async deleteGroupPost(@Param('postId') postId: string, @Request() req: any) {
     const userId = req.user.sub;
     await this.groupPostsService.deletePost(postId, userId);
     return { message: 'Post deleted successfully' };
   }
 
   @Put('posts/:postId/pin')
-  async pinGroupPost(@Param('postId') postId: string, @Request() req) {
+  async pinGroupPost(@Param('postId') postId: string, @Request() req: any) {
     const userId = req.user.sub;
     const post = await this.groupPostsService.pinPost(postId, userId);
     return { data: post };
   }
 
   @Put('posts/:postId/unpin')
-  async unpinGroupPost(@Param('postId') postId: string, @Request() req) {
+  async unpinGroupPost(@Param('postId') postId: string, @Request() req: any) {
     const userId = req.user.sub;
     const post = await this.groupPostsService.unpinPost(postId, userId);
     return { data: post };
@@ -147,28 +147,28 @@ export class StudyGroupsController {
 
   // Group invites
   @Get('invites/sent')
-  async getSentInvites(@Request() req) {
+  async getSentInvites(@Request() req: any) {
     const userId = req.user.sub;
     const invites = await this.groupInvitesService.getSentInvites(userId);
     return { data: invites };
   }
 
   @Get('invites/received')
-  async getReceivedInvites(@Request() req) {
+  async getReceivedInvites(@Request() req: any) {
     const userId = req.user.sub;
     const invites = await this.groupInvitesService.getReceivedInvites(userId);
     return { data: invites };
   }
 
   @Post('invites/:inviteId/accept')
-  async acceptInvite(@Param('inviteId') inviteId: string, @Request() req) {
+  async acceptInvite(@Param('inviteId') inviteId: string, @Request() req: any) {
     const userId = req.user.sub;
     const invite = await this.groupInvitesService.acceptInvite(inviteId, userId);
     return { data: invite };
   }
 
   @Post('invites/:inviteId/reject')
-  async rejectInvite(@Param('inviteId') inviteId: string, @Request() req) {
+  async rejectInvite(@Param('inviteId') inviteId: string, @Request() req: any) {
     const userId = req.user.sub;
     const invite = await this.groupInvitesService.rejectInvite(inviteId, userId);
     return { data: invite };
