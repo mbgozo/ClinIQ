@@ -1,4 +1,5 @@
-import React from 'react';
+// React import removed due to modern Next.js/TS config
+
 
 interface CategoryChipProps {
   category?: { id: string; name: string } | null;

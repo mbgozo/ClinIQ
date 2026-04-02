@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { PrismaClient, Role, User } from "@prisma/client";
+import * as bcrypt from "bcrypt";
 import type { RegisterInput } from "@cliniq/shared-types";
 
 @Injectable()
@@ -27,20 +28,22 @@ export class AuthService {
     if (!user) {
       throw new UnauthorizedException("Invalid credentials");
     }
-    // Password hashing will be implemented in a later step.
-    if (user.passwordHash !== password) {
+    
+    const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
+    if (!isPasswordValid) {
       throw new UnauthorizedException("Invalid credentials");
     }
     return user;
   }
 
   async register(input: RegisterInput) {
+    const hashedPassword = await bcrypt.hash(input.password, 10);
     const user = await this.prisma.user.create({
       data: {
         name: input.name,
         email: input.email,
         phone: input.phone,
-        passwordHash: input.password, // bcrypt will replace this in a later step.
+        passwordHash: hashedPassword,
         institution: input.institution,
         year: input.year,
         program: input.program as any

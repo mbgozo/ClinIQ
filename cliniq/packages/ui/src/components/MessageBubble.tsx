@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Message, MessageType, MESSAGE_TYPE_DEFINITIONS } from '@cliniq/shared-types';
+import { Message, MessageType } from '@cliniq/shared-types';
 
 // SVG icon helpers
 const ReplyIcon = () => (

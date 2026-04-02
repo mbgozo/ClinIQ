@@ -362,7 +362,7 @@ export function getGroupActiveMembers(group: { members: any[] }): number {
   return group.members.length;
 }
 
-export function getGroupLastActivity(group: { posts: any[] }): string {
+export function getGroupLastActivity(group: { posts: any[]; createdAt: string }): string {
   if (group.posts.length === 0) {
     return group.createdAt;
   }

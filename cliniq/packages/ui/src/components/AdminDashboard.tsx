@@ -1,11 +1,8 @@
-import { useState } from 'react';
 import { 
   SystemStats, 
   SystemAlert, 
   AdminRole, 
-  Permission,
-  ADMIN_ROLE_DEFINITIONS,
-  PERMISSION_DEFINITIONS
+  Permission
 } from '@cliniq/shared-types';
 
 interface AdminDashboardProps {
@@ -90,12 +87,12 @@ const ActiveDotIcon = () => (
 export function AdminDashboard({ 
   stats, 
   alerts = [], 
-  userRole = AdminRole.ADMIN,
+  userRole: _userRole = AdminRole.ADMIN,
   userPermissions = [],
   className = ''
 }: AdminDashboardProps) {
-  const [selectedAlert, setSelectedAlert] = useState<SystemAlert | null>(null);
-  const [showAlertModal, setShowAlertModal] = useState(false);
+  // const [_selectedAlert, _setSelectedAlert] = useState<SystemAlert | null>(null);
+  // const [_showAlertModal, _setShowAlertModal] = useState(false);
 
   const hasPermission = (permission: Permission) => {
     return userPermissions.includes(permission);

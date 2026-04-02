@@ -360,15 +360,8 @@ export function getFileIcon(fileName: string): string {
   return iconMap[extension || ''] || '📎';
 }
 
-export function formatFileSize(bytes: number): string {
-  if (bytes === 0) return '0 Bytes';
-  
-  const k = 1024;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-}
+// formatFileSize removed to avoid duplication with resources.ts
+
 
 export function getConversationName(conversation: Conversation, userId: string): string {
   if (conversation.name) return conversation.name;
@@ -403,7 +396,7 @@ export function canSendMessage(conversation: Conversation, userId: string): bool
   return conversation.participantIds.includes(userId);
 }
 
-export function getUnreadCount(conversation: Conversation, userId: string): number {
+export function getUnreadCount(conversation: Conversation, _userId: string): number {
   // This would be calculated based on user's last read message
   // For now, return the stored unread count
   return conversation.unreadCount || 0;

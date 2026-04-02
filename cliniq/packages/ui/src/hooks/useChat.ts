@@ -5,10 +5,8 @@ import {
   Conversation, 
   Message, 
   CreateConversationInput, 
-  CreateMessageInput,
   OnlineStatus,
   TypingIndicator,
-  SocketEvent,
   MessageType
 } from '@cliniq/shared-types';
 

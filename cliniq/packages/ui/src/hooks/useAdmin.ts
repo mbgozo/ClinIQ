@@ -3,9 +3,6 @@ import {
   SystemStats, 
   SystemAlert, 
   AdminUser, 
-  ModerationQueue,
-  AdminRole,
-  Permission,
   ModerationAction,
   CreateAdminUserInput,
   UpdateAdminUserInput,
@@ -441,22 +438,8 @@ export function useDeleteAnswer() {
   });
 }
 
-export function useDeleteResource() {
-  const queryClient = useQueryClient();
-  
-  return useMutation({
-    mutationFn: async (id: string) => {
-      const response = await fetch(`${API_BASE}/content/resources/${id}`, {
-        method: 'DELETE',
-      });
-      if (!response.ok) throw new Error('Failed to delete resource');
-      return response.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin', 'resources'] });
-    },
-  });
-}
+// useDeleteResource removed from useAdmin as it is duplicated in useResources
+
 
 export function useApproveResource() {
   const queryClient = useQueryClient();

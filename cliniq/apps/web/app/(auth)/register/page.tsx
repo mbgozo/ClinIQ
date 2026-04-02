@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RegisterSchema, type RegisterInput } from "@cliniq/shared-types";
+import { useRouter } from "next/navigation";
+import { useRegister } from "../../../hooks/useAuth";
 
 type Step = 1 | 2 | 3;
 
@@ -16,10 +18,14 @@ const institutions = [
 ];
 
 export default function RegisterPage() {
+  const router = useRouter();
+  const registerMutation = useRegister();
   const [step, setStep] = useState<Step>(1);
+
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors, isValid, isSubmitting },
     watch
   } = useForm<RegisterInput>({
@@ -35,8 +41,13 @@ export default function RegisterPage() {
       setStep(prev => (prev + 1) as Step);
       return;
     }
-    // API integration will be wired in a later step.
-    console.log("register", data);
+    
+    try {
+      await registerMutation.mutateAsync(data);
+      router.push("/questions"); // Redirect into the main application
+    } catch (error: any) {
+      setError("root", { type: "manual", message: error.message || "Failed to create account. Please try again." });
+    }
   };
 
   const password = watch("password");
@@ -49,6 +60,12 @@ export default function RegisterPage() {
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        {errors.root && (
+          <div className="rounded border border-red-200 bg-red-50 p-3 text-sm text-red-600">
+            {errors.root.message}
+          </div>
+        )}
+
         {step === 1 && (
           <div className="space-y-4">
             <div>
@@ -193,10 +210,14 @@ export default function RegisterPage() {
           </button>
           <button
             type="submit"
-            className="rounded bg-teal-600 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
-            disabled={!isValid || isSubmitting}
+            className="flex justify-center items-center gap-2 rounded bg-teal-600 px-4 py-2 text-sm font-medium text-white hover:bg-teal-700 disabled:opacity-50 transition-colors"
+            disabled={!isValid || isSubmitting || registerMutation.isPending}
           >
-            {step === 3 ? "Create account" : "Continue"}
+            {(isSubmitting || registerMutation.isPending) ? (
+              <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+            ) : (
+              step === 3 ? "Create account" : "Continue"
+            )}
           </button>
         </div>
       </form>

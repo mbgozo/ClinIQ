@@ -1,4 +1,5 @@
-import React from 'react';
+// Unused React import removed
+
 
 interface AnsweredBadgeProps {
   answered: boolean;

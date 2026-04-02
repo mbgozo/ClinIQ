@@ -27,7 +27,7 @@ export function DebouncedInput({
   useEffect(() => {
     if (isDebouncing) {
       const timer = setTimeout(() => {
-        onValueChange(value);
+        onValueChange(value as string);
         setIsDebouncing(false);
       }, debounceMs);
 

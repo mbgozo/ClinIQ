@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ResourceType, RESOURCE_TYPE_DEFINITIONS } from '@cliniq/shared-types';
+// Unused imports from shared-types removed
 
 // SVG icon helpers
 const DocumentIcon = () => (
