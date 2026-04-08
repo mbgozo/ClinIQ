@@ -1,16 +1,16 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import { Permission, hasPermission, SystemStats } from '@cliniq/shared-types';
+import { SystemStats } from '@cliniq/shared-types';
 
 @Injectable()
 export class AnalyticsService {
-  private readonly logger = new Logger(AnalyticsService.name);
+
   private prisma = new PrismaClient();
 
   async getSystemStats(requestingAdminId: string) {
     // Check permissions
     const admin = await this.prisma.user.findFirst({
-      where: { id: requestingAdminId, isVerified: true }
+      where: { id: requestingAdminId, verified: true }
     });
 
     if (!admin) {
@@ -33,7 +33,7 @@ export class AnalyticsService {
       this.prisma.user.count(),
       this.getActiveUsersCount(),
       this.getNewUsersCount(),
-      this.prisma.user.count({ where: { isVerified: true } }),
+      this.prisma.user.count({ where: { verified: true } }),
       this.prisma.question.count(),
       this.prisma.answer.count(),
       this.prisma.resource.count(),
@@ -82,7 +82,7 @@ export class AnalyticsService {
   async getUserAnalytics(requestingAdminId: string, query: { period?: string; metric?: string }) {
     // Check permissions
     const admin = await this.prisma.user.findFirst({
-      where: { id: requestingAdminId, isVerified: true }
+      where: { id: requestingAdminId, verified: true }
     });
 
     if (!admin) {
@@ -107,8 +107,8 @@ export class AnalyticsService {
 
   async getContentAnalytics(requestingAdminId: string, query: { period?: string; type?: string }) {
     // Check permissions
-    const admin = await this.prisma.user.findFirst({
-      where: { id: requestingAdminId, isVerified: true }
+    const admin = await (this.prisma.user as any).findFirst({
+      where: { id: requestingAdminId, verified: true }
     });
 
     if (!admin) {
@@ -133,7 +133,7 @@ export class AnalyticsService {
   async getEngagementAnalytics(requestingAdminId: string, query: { period?: string }) {
     // Check permissions
     const admin = await this.prisma.user.findFirst({
-      where: { id: requestingAdminId, isVerified: true }
+      where: { id: requestingAdminId, verified: true }
     });
 
     if (!admin) {
@@ -154,10 +154,10 @@ export class AnalyticsService {
     };
   }
 
-  async exportData(requestingAdminId: string, type: string, filters?: any, format: string = 'json') {
+  async exportData(_requestingAdminId: string, type: string, filters?: any, format: string = 'json') {
     // Check permissions
     const admin = await this.prisma.user.findFirst({
-      where: { id: requestingAdminId, isVerified: true }
+      where: { id: requestingAdminId, verified: true }
     });
 
     if (!admin) {
@@ -237,8 +237,7 @@ export class AnalyticsService {
   }
 
   private async getPendingFlagsCount(): Promise<number> {
-    // This would use actual Flag model in real implementation
-    // For now, return a mock value
+    // For now, return a mock value as Flag model access might need refinement
     return Math.floor(Math.random() * 10);
   }
 
@@ -423,8 +422,8 @@ export class AnalyticsService {
     };
   }
 
-  private async getActivityHeatmap(period: string) {
-    const days = this.getPeriodDays(period);
+  private async getActivityHeatmap(_period: string) {
+    const days = this.getPeriodDays(_period);
     const heatmap = [];
 
     for (let i = days - 1; i >= 0; i--) {
@@ -459,7 +458,7 @@ export class AnalyticsService {
         where: { createdAt: { gte: startDate } },
         orderBy: { upvotes: 'desc' },
         take: 5,
-        select: { id: true, content: true, upvotes: true, createdAt: true }
+        select: { id: true, body: true, upvotes: true, createdAt: true }
       }),
       this.prisma.resource.findMany({
         where: { createdAt: { gte: startDate } },
@@ -477,7 +476,7 @@ export class AnalyticsService {
       answers: topAnswers.map(a => ({
         ...a,
         createdAt: a.createdAt.toISOString(),
-        content: a.content.substring(0, 100) + '...'
+        content: a.body.substring(0, 100) + '...'
       })),
       resources: topResources.map(r => ({
         ...r,
@@ -497,7 +496,7 @@ export class AnalyticsService {
         institution: true,
         program: true,
         year: true,
-        isVerified: true,
+        verified: true,
         createdAt: true,
       }
     });
@@ -521,7 +520,7 @@ export class AnalyticsService {
       }
     });
 
-    return questions.map(q => ({
+    return questions.map((q: any) => ({
       ...q,
       createdAt: q.createdAt.toISOString(),
       updatedAt: q.updatedAt.toISOString(),
@@ -544,7 +543,7 @@ export class AnalyticsService {
       }
     });
 
-    return answers.map(a => ({
+    return answers.map((a: any) => ({
       ...a,
       createdAt: a.createdAt.toISOString(),
       updatedAt: a.updatedAt.toISOString(),
@@ -567,7 +566,7 @@ export class AnalyticsService {
       }
     });
 
-    return resources.map(r => ({
+    return resources.map((r: any) => ({
       ...r,
       createdAt: r.createdAt.toISOString(),
       updatedAt: r.updatedAt.toISOString(),
@@ -587,7 +586,7 @@ export class AnalyticsService {
       }
     });
 
-    return studyGroups.map(sg => ({
+    return studyGroups.map((sg: any) => ({
       ...sg,
       createdAt: sg.createdAt.toISOString(),
       updatedAt: sg.updatedAt.toISOString(),

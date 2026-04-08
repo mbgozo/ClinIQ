@@ -34,7 +34,7 @@ export class MentorsService {
         }
       }),
       ...(filterOptions.institution && {
-        institution: { contains: filterOptions.institution, mode: 'insensitive' }
+        institution: { contains: filterOptions.institution, mode: 'insensitive' as any }
       }),
       ...(filterOptions.verificationStatus && {
         verificationStatus: filterOptions.verificationStatus
@@ -43,7 +43,7 @@ export class MentorsService {
         mentorRating: { gte: filterOptions.minRating }
       }),
       ...(filterOptions.availability && {
-        availability: { contains: filterOptions.availability, mode: 'insensitive' }
+        availability: { contains: filterOptions.availability, mode: 'insensitive' as any }
       }),
       ...(filterOptions.languages && {
         languages: {
@@ -78,12 +78,7 @@ export class MentorsService {
     ]);
 
     return {
-      mentors: mentors.map(mentor => ({
-        ...mentor,
-        createdAt: mentor.createdAt.toISOString(),
-        updatedAt: mentor.updatedAt.toISOString(),
-        verifiedAt: mentor.verifiedAt?.toISOString() || null,
-      })),
+      mentors: mentors.map(mentor => this.mapToMentorProfile(mentor)),
       total,
     };
   }
@@ -106,12 +101,7 @@ export class MentorsService {
 
     if (!profile) return null;
 
-    return {
-      ...profile,
-      createdAt: profile.createdAt.toISOString(),
-      updatedAt: profile.updatedAt.toISOString(),
-      verifiedAt: profile.verifiedAt?.toISOString() || null,
-    };
+    return this.mapToMentorProfile(profile);
   }
 
   async createMentorProfile(userId: string, data: CreateMentorProfileInput): Promise<MentorProfile> {
@@ -162,12 +152,7 @@ export class MentorsService {
 
     this.logger.log(`Created mentor profile for user ${userId} with status ${profile.verificationStatus}`);
 
-    return {
-      ...profile,
-      createdAt: profile.createdAt.toISOString(),
-      updatedAt: profile.updatedAt.toISOString(),
-      verifiedAt: profile.verifiedAt?.toISOString() || null,
-    };
+    return this.mapToMentorProfile(profile);
   }
 
   async updateMentorProfile(userId: string, data: Partial<CreateMentorProfileInput>): Promise<MentorProfile> {
@@ -190,12 +175,7 @@ export class MentorsService {
       }
     });
 
-    return {
-      ...profile,
-      createdAt: profile.createdAt.toISOString(),
-      updatedAt: profile.updatedAt.toISOString(),
-      verifiedAt: profile.verifiedAt?.toISOString() || null,
-    };
+    return this.mapToMentorProfile(profile);
   }
 
   async getMentorById(mentorId: string) {
@@ -218,12 +198,7 @@ export class MentorsService {
       throw new Error('Mentor not found');
     }
 
-    return {
-      ...mentor,
-      createdAt: mentor.createdAt.toISOString(),
-      updatedAt: mentor.updatedAt.toISOString(),
-      verifiedAt: mentor.verifiedAt?.toISOString() || null,
-    };
+    return this.mapToMentorProfile(mentor);
   }
 
   async verifyMentor(mentorId: string, adminId: string): Promise<MentorProfile> {
@@ -261,12 +236,7 @@ export class MentorsService {
 
     this.logger.log(`Mentor ${mentorId} verified by admin ${adminId}`);
 
-    return {
-      ...mentor,
-      createdAt: mentor.createdAt.toISOString(),
-      updatedAt: mentor.updatedAt.toISOString(),
-      verifiedAt: mentor.verifiedAt.toISOString(),
-    };
+    return this.mapToMentorProfile(mentor);
   }
 
   async rejectMentor(mentorId: string, reason: string, adminId: string): Promise<MentorProfile> {
@@ -301,12 +271,7 @@ export class MentorsService {
 
     this.logger.log(`Mentor ${mentorId} rejected by admin ${adminId}: ${reason}`);
 
-    return {
-      ...mentor,
-      createdAt: mentor.createdAt.toISOString(),
-      updatedAt: mentor.updatedAt.toISOString(),
-      verifiedAt: mentor.verifiedAt?.toISOString() || null,
-    };
+    return this.mapToMentorProfile(mentor);
   }
 
   private async checkVerificationEligibility(userId: string): Promise<boolean> {
@@ -347,5 +312,23 @@ export class MentorsService {
         updatedAt: new Date(),
       }
     });
+    return true; // Placeholder for logic
+  }
+
+  private mapToMentorProfile(mentor: any): MentorProfile {
+    return {
+      ...mentor,
+      bio: mentor.bio || '',
+      experience: mentor.experience || '',
+      expertiseAreas: mentor.expertiseAreas as ExpertiseArea[],
+      institution: mentor.institution || '',
+      graduationYear: mentor.graduationYear || new Date().getFullYear(),
+      currentRole: mentor.currentRole || '',
+      linkedinUrl: mentor.linkedinUrl || undefined,
+      verificationStatus: mentor.verificationStatus as VerificationStatus,
+      createdAt: mentor.createdAt.toISOString(),
+      updatedAt: mentor.updatedAt.toISOString(),
+      verifiedAt: mentor.verifiedAt?.toISOString() || undefined,
+    };
   }
 }

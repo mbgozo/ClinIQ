@@ -9,7 +9,7 @@ export class NotificationsController {
   constructor(private readonly notificationsService: NotificationsService) {}
 
   @Get()
-  async getNotifications(@Request() req, @Query() filters: any) {
+  async getNotifications(@Request() req: any, @Query() filters: any) {
     const validatedFilters = NotificationFilterSchema.parse(filters);
     const userId = req.user.sub;
 
@@ -19,21 +19,21 @@ export class NotificationsController {
   }
 
   @Get("unread-count")
-  async getUnreadCount(@Request() req) {
+  async getUnreadCount(@Request() req: any) {
     const userId = req.user.sub;
     const count = await this.notificationsService.getUnreadCount(userId);
     return { data: { count } };
   }
 
   @Patch(":id/read")
-  async markAsRead(@Request() req, @Param("id") id: string) {
+  async markAsRead(@Request() req: any, @Param("id") id: string) {
     const userId = req.user.sub;
     const notification = await this.notificationsService.markAsRead(userId, id);
     return { data: notification };
   }
 
   @Patch("read-all")
-  async markAllAsRead(@Request() req) {
+  async markAllAsRead(@Request() req: any) {
     const userId = req.user.sub;
     const updated = await this.notificationsService.markAllAsRead(userId);
     return { data: { updated } };

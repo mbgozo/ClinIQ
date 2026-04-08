@@ -12,7 +12,7 @@ export const BADGE_RULES = {
       where: { userId },
       select: { upvotes: true }
     });
-    return answers.some(a => a.upvotes >= 5);
+    return answers.some((a: any) => a.upvotes >= 5);
   },
 
   [BadgeType.ACCEPTED]: async (userId: string, prisma: any) => {
@@ -48,7 +48,7 @@ export const BADGE_RULES = {
       where: { userId }
     });
 
-    return nightAnswers.some(answer => {
+    return nightAnswers.some((answer: any) => {
       const hour = answer.createdAt.getUTCHours(); // Ghana time is GMT+0
       return hour >= 22 || hour < 6;
     });
@@ -60,7 +60,7 @@ export const BADGE_RULES = {
       where: { userId }
     });
 
-    return morningAnswers.some(answer => {
+    return morningAnswers.some((answer: any) => {
       const hour = answer.createdAt.getUTCHours();
       return hour >= 6 && hour < 9;
     });
@@ -71,7 +71,7 @@ export const BADGE_RULES = {
       where: { userId },
       select: { upvotes: true }
     });
-    return questions.some(q => q.upvotes >= 10);
+    return questions.some((q: any) => q.upvotes >= 10);
   },
 
   [BadgeType.COMMUNITY_LEADER]: async (userId: string, prisma: any) => {
@@ -100,11 +100,11 @@ export const BADGE_RULES = {
       take: 10
     });
 
-    const userRank = topContributors.findIndex(u => u.id === userId);
+    const userRank = topContributors.findIndex((u: any) => u.id === userId);
     return userRank >= 0 && userRank < 10;
   },
 
-  [BadgeType.AMBASSADOR]: async (userId: string, prisma: any) => {
+  [BadgeType.AMBASSADOR]: async (_userId: string, _prisma: any) => {
     // Manually awarded - return false for automatic checking
     return false;
   }

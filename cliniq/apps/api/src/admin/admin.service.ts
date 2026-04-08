@@ -21,7 +21,7 @@ export class AdminService {
       where: {
         // This would be filtered by actual admin role in real implementation
         // For now, we'll assume verified users have some admin access
-        isVerified: true,
+        verified: true,
       },
       select: {
         id: true,
@@ -54,7 +54,7 @@ export class AdminService {
         program: user.program,
         year: user.year,
         reputation: 0, // Default value
-        isVerified: user.isVerified,
+        verified: user.verified,
         isBanned: false, // Default value
         createdAt: user.createdAt.toISOString(),
       },
@@ -85,7 +85,7 @@ export class AdminService {
         program: "NURSING",
         year: 1,
         reputation: 0,
-        isVerified: true,
+        verified: true,
         isBanned: false,
         createdAt: new Date().toISOString(),
       },
@@ -113,7 +113,7 @@ export class AdminService {
         program: "NURSING",
         year: 1,
         reputation: 0,
-        isVerified: true,
+        verified: true,
         isBanned: false,
         createdAt: new Date().toISOString(),
       },
@@ -126,8 +126,8 @@ export class AdminService {
   }
 
   async getRegularUsers(
-    requestingAdminId: string,
-    query: { page?: number; limit?: number; search?: string; status?: string },
+    _requestingAdminId: string,
+    _query: { page?: number; limit?: number; search?: string; status?: string },
   ) {
     const { page = 1, limit = 20, search, status } = query;
     const skip = (page - 1) * limit;
@@ -149,7 +149,7 @@ export class AdminService {
           institution: true,
           program: true,
           year: true,
-          isVerified: true,
+          verified: true,
           createdAt: true,
         },
         orderBy: { createdAt: "desc" },
@@ -208,8 +208,8 @@ export class AdminService {
 
   // Content Management Methods (simplified)
   async getQuestions(
-    requestingAdminId: string,
-    query: { page?: number; limit?: number; status?: string; flagged?: boolean },
+    _requestingAdminId: string,
+    _query: { page?: number; limit?: number; status?: string; flagged?: boolean },
   ) {
     const { page = 1, limit = 20 } = query;
     const skip = (page - 1) * limit;
@@ -254,8 +254,8 @@ export class AdminService {
 
   // Simplified stub methods for other content types
   async getAnswers(
-    requestingAdminId: string,
-    query: { page?: number; limit?: number; status?: string; flagged?: boolean },
+    _requestingAdminId: string,
+    _query: { page?: number; limit?: number; status?: string; flagged?: boolean },
   ) {
     return { answers: [], total: 0, page: 1, limit: 20 };
   }
@@ -265,8 +265,8 @@ export class AdminService {
   }
 
   async getResources(
-    requestingAdminId: string,
-    query: { page?: number; limit?: number; status?: string; flagged?: boolean },
+    _requestingAdminId: string,
+    _query: { page?: number; limit?: number; status?: string; flagged?: boolean },
   ) {
     return { resources: [], total: 0, page: 1, limit: 20 };
   }
@@ -280,8 +280,8 @@ export class AdminService {
   }
 
   async getStudyGroups(
-    requestingAdminId: string,
-    query: { page?: number; limit?: number; status?: string },
+    _requestingAdminId: string,
+    _query: { page?: number; limit?: number; status?: string },
   ) {
     return { groups: [], total: 0, page: 1, limit: 20 };
   }
@@ -291,8 +291,8 @@ export class AdminService {
   }
 
   async getChatLogs(
-    requestingAdminId: string,
-    query: { page?: number; limit?: number; conversationId?: string; userId?: string },
+    _requestingAdminId: string,
+    _query: { page?: number; limit?: number; conversationId?: string; userId?: string },
   ) {
     return { logs: [], total: 0, page: 1, limit: 20 };
   }

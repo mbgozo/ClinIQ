@@ -37,7 +37,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     private readonly messagesService: MessagesService,
   ) {}
 
-  afterInit(server: Server) {
+  afterInit(_server: Server) {
     this.logger.log('WebSocket Gateway initialized');
     
     // Clean up old typing indicators every 30 seconds
@@ -59,10 +59,10 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
       const payload = this.jwtService.verify(token);
       client.userId = payload.sub;
-      this.connectedClients.set(client.id, client.userId);
+      this.connectedClients.set(client.id, client.userId as string);
 
       // Set user online
-      const onlineUsers = await this.chatService.handleSocketConnect(client.id, client.userId);
+      const onlineUsers = await this.chatService.handleSocketConnect(client.id, client.userId as string);
       
       // Join user to their personal room for notifications
       client.join(`user:${client.userId}`);
@@ -85,11 +85,11 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   }
 
   async handleDisconnect(client: AuthenticatedSocket) {
-    if (client.userId) {
+    if (client.userId as string) {
       this.connectedClients.delete(client.id);
       
       // Set user offline
-      const onlineUsers = await this.chatService.handleSocketDisconnect(client.id, client.userId);
+      const onlineUsers = await this.chatService.handleSocketDisconnect(client.id, client.userId as string);
       
       // Notify others about user going offline
       client.broadcast.emit('user_offline', {
@@ -107,7 +107,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     @MessageBody() data: { conversationId: string },
     @ConnectedSocket() client: AuthenticatedSocket,
   ) {
-    if (!client.userId) return;
+    if (!client.userId as string) return;
 
     try {
       // Verify user is a participant in the conversation
@@ -133,7 +133,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     @MessageBody() data: { conversationId: string },
     @ConnectedSocket() client: AuthenticatedSocket,
   ) {
-    if (!client.userId) return;
+    if (!client.userId as string) return;
 
     try {
       await this.chatService.handleLeaveRoom(client.id, client.userId, data.conversationId);
@@ -158,10 +158,10 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     @MessageBody() data: { conversationId: string; content: string; type: string; replyToId?: string },
     @ConnectedSocket() client: AuthenticatedSocket,
   ) {
-    if (!client.userId) return;
+    if (!client.userId as string) return;
 
     try {
-      const messageData = await this.chatService.handleSendMessage(client.id, client.userId, data);
+      await this.chatService.handleSendMessage(client.id, client.userId, data);
       
       // Create the message in database
       const message = await this.messagesService.createMessage(client.userId, {
@@ -185,7 +185,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     @MessageBody() data: { conversationId: string },
     @ConnectedSocket() client: AuthenticatedSocket,
   ) {
-    if (!client.userId) return;
+    if (!client.userId as string) return;
 
     try {
       const typingIndicators = await this.chatService.handleTypingStart(client.id, client.userId, data.conversationId);
@@ -208,7 +208,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     @MessageBody() data: { conversationId: string },
     @ConnectedSocket() client: AuthenticatedSocket,
   ) {
-    if (!client.userId) return;
+    if (!client.userId as string) return;
 
     try {
       const typingIndicators = await this.chatService.handleTypingStop(client.id, client.userId, data.conversationId);
@@ -231,7 +231,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     @MessageBody() data: { status: OnlineStatus },
     @ConnectedSocket() client: AuthenticatedSocket,
   ) {
-    if (!client.userId) return;
+    if (!client.userId as string) return;
 
     try {
       const onlineUsers = await this.chatService.handleOnlineStatusUpdate(client.id, client.userId, data.status);
@@ -254,14 +254,14 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     @MessageBody() data: { messageId: string; conversationId: string },
     @ConnectedSocket() client: AuthenticatedSocket,
   ) {
-    if (!client.userId) return;
+    if (!client.userId as string) return;
 
     try {
       await this.chatService.handleMessageRead(client.id, client.userId, data.messageId);
       
       // Notify the message sender about read receipt
       const message = await this.messagesService.getMessageById(data.messageId);
-      if (message && message.senderId !== client.userId) {
+      if (message && message.senderId !== client.userId as string) {
         this.server.to(`user:${message.senderId}`).emit('message_read', {
           messageId: data.messageId,
           conversationId: data.conversationId,
@@ -280,7 +280,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     @MessageBody() data: { messageId: string; emoji: string; conversationId: string },
     @ConnectedSocket() client: AuthenticatedSocket,
   ) {
-    if (!client.userId) return;
+    if (!client.userId as string) return;
 
     try {
       const reaction = await this.messagesService.addReaction(data.messageId, client.userId, data.emoji);
@@ -304,7 +304,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     @MessageBody() data: { messageId: string; emoji: string; conversationId: string },
     @ConnectedSocket() client: AuthenticatedSocket,
   ) {
-    if (!client.userId) return;
+    if (!client.userId as string) return;
 
     try {
       await this.messagesService.removeReaction(data.messageId, client.userId, data.emoji);
@@ -322,22 +322,4 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     }
   }
 
-  // Helper methods
-  private async verifyUserInConversation(userId: string, conversationId: string): Promise<boolean> {
-    try {
-      // This would check if user is a participant in the conversation
-      // Implementation would depend on your Prisma schema
-      return true; // Placeholder
-    } catch (error) {
-      return false;
-    }
-  }
-
-  private broadcastToConversationParticipants(conversationId: string, event: string, data: any) {
-    this.server.to(`conversation:${conversationId}`).emit(event, data);
-  }
-
-  private sendToUser(userId: string, event: string, data: any) {
-    this.server.to(`user:${userId}`).emit(event, data);
-  }
 }

@@ -24,14 +24,14 @@ export class MentorsController {
   }
 
   @Get("profile")
-  async getMyMentorProfile(@Request() req) {
+  async getMyMentorProfile(@Request() req: any) {
     const userId = req.user.sub;
     const profile = await this.mentorsService.getMentorProfile(userId);
     return { data: profile };
   }
 
   @Post("profile")
-  async createMentorProfile(@Request() req, @Body() data: any) {
+  async createMentorProfile(@Request() req: any, @Body() data: any) {
     const userId = req.user.sub;
     const validatedData = CreateMentorProfileSchema.parse(data);
     const profile = await this.mentorsService.createMentorProfile(userId, validatedData);
@@ -39,7 +39,7 @@ export class MentorsController {
   }
 
   @Put("profile")
-  async updateMentorProfile(@Request() req, @Body() data: any) {
+  async updateMentorProfile(@Request() req: any, @Body() data: any) {
     const userId = req.user.sub;
     const profile = await this.mentorsService.updateMentorProfile(userId, data);
     return { data: profile };
@@ -52,7 +52,7 @@ export class MentorsController {
   }
 
   @Post(":id/verify")
-  async verifyMentor(@Param("id") id: string, @Request() req) {
+  async verifyMentor(@Param("id") id: string, @Request() req: any) {
     // Only admins can verify mentors
     const userId = req.user.sub;
     const mentor = await this.mentorsService.verifyMentor(id, userId);
@@ -60,7 +60,7 @@ export class MentorsController {
   }
 
   @Post(":id/reject")
-  async rejectMentor(@Param("id") id: string, @Body() body: { reason: string }, @Request() req) {
+  async rejectMentor(@Param("id") id: string, @Body() body: { reason: string }, @Request() req: any) {
     const userId = req.user.sub;
     const mentor = await this.mentorsService.rejectMentor(id, body.reason, userId);
     return { data: mentor };
@@ -68,21 +68,21 @@ export class MentorsController {
 
   // Mentorship endpoints
   @Get("requests/sent")
-  async getSentRequests(@Request() req, @Query() filters: any) {
+  async getSentRequests(@Request() req: any, @Query() filters: any) {
     const userId = req.user.sub;
     const requests = await this.mentorshipService.getSentRequests(userId, filters);
     return { data: requests };
   }
 
   @Get("requests/received")
-  async getReceivedRequests(@Request() req, @Query() filters: any) {
+  async getReceivedRequests(@Request() req: any, @Query() filters: any) {
     const userId = req.user.sub;
     const requests = await this.mentorshipService.getReceivedRequests(userId, filters);
     return { data: requests };
   }
 
   @Post("requests")
-  async createMentorshipRequest(@Request() req, @Body() data: any) {
+  async createMentorshipRequest(@Request() req: any, @Body() data: any) {
     const userId = req.user.sub;
     const validatedData = CreateMentorshipRequestSchema.parse(data);
     const request = await this.mentorshipService.createMentorshipRequest(userId, validatedData);
@@ -90,7 +90,7 @@ export class MentorsController {
   }
 
   @Put("requests/:id/accept")
-  async acceptMentorshipRequest(@Param("id") id: string, @Request() req) {
+  async acceptMentorshipRequest(@Param("id") id: string, @Request() req: any) {
     const userId = req.user.sub;
     const request = await this.mentorshipService.acceptMentorshipRequest(id, userId);
     return { data: request };
@@ -100,7 +100,7 @@ export class MentorsController {
   async rejectMentorshipRequest(
     @Param("id") id: string,
     @Body() body: { reason: string },
-    @Request() req,
+    @Request() req: any,
   ) {
     const userId = req.user.sub;
     const request = await this.mentorshipService.rejectMentorshipRequest(id, body.reason, userId);
@@ -108,7 +108,7 @@ export class MentorsController {
   }
 
   @Put("requests/:id/complete")
-  async completeMentorshipRequest(@Param("id") id: string, @Request() req) {
+  async completeMentorshipRequest(@Param("id") id: string, @Request() req: any) {
     const userId = req.user.sub;
     const request = await this.mentorshipService.completeMentorshipRequest(id, userId);
     return { data: request };

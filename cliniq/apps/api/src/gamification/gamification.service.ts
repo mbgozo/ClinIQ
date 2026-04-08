@@ -43,8 +43,8 @@ export class GamificationService {
       answerReputation,
       questionReputation,
       badgeCount,
-      level: level.title,
-      levelNumber: level.level,
+      rank: level.title,
+      level: level.level,
       nextLevelReputation,
     };
   }
@@ -108,8 +108,8 @@ export class GamificationService {
 
     const earnedBadgeTypes = new Set(alreadyHasBadges.map((b) => b.type));
 
-    for (const [badgeType, definition] of Object.entries(BADGE_DEFINITIONS)) {
-      if (!earnedBadgeTypes.has(badgeType as BadgeType)) {
+    for (const [badgeType] of Object.entries(BADGE_DEFINITIONS)) {
+      if (!earnedBadgeTypes.has(badgeType as any)) {
         const isEligible = await this.checkBadgeEligibility(userId, badgeType as BadgeType);
 
         if (isEligible) {
@@ -152,7 +152,7 @@ export class GamificationService {
     const userBadge = await this.prisma.userBadge.create({
       data: {
         userId,
-        type: badgeType,
+        type: badgeType as any,
         awardedAt: new Date(),
       },
     });

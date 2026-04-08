@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import { OnlineStatus, TypingIndicator, SocketEvent } from '@cliniq/shared-types';
+import { OnlineStatus, TypingIndicator } from '@cliniq/shared-types';
 
 @Injectable()
 export class ChatService {
@@ -10,7 +10,7 @@ export class ChatService {
   private typingIndicators = new Map<string, Map<string, { isTyping: boolean; timestamp: string }>>();
 
   async getOnlineUsers() {
-    const onlineUsers = Array.from(this.onlineUsers.entries()).map(([userId, data]) => ({
+    const onlineUsers = Array.from(this.onlineUsers.entries()).map(([userId, data]: [string, any]) => ({
       userId,
       status: data.status,
       lastSeenAt: data.lastSeen,
@@ -240,50 +240,50 @@ export class ChatService {
   }
 
   // WebSocket event handlers
-  async handleSocketConnect(socketId: string, userId: string) {
+  async handleSocketConnect(_socketId: string, userId: string) {
     await this.setUserOnline(userId, socketId);
     return this.getOnlineUsers();
   }
 
-  async handleSocketDisconnect(socketId: string, userId: string) {
+  async handleSocketDisconnect(_socketId: string, userId: string) {
     await this.setUserOffline(userId);
     return this.getOnlineUsers();
   }
 
-  async handleJoinRoom(socketId: string, userId: string, conversationId: string) {
+  async handleJoinRoom(_socketId: string, userId: string, conversationId: string) {
     // User joins a conversation room for real-time updates
     this.logger.log(`User ${userId} joined conversation room ${conversationId}`);
     return { success: true };
   }
 
-  async handleLeaveRoom(socketId: string, userId: string, conversationId: string) {
+  async handleLeaveRoom(_socketId: string, userId: string, conversationId: string) {
     // User leaves a conversation room
     this.logger.log(`User ${userId} left conversation room ${conversationId}`);
     return { success: true };
   }
 
-  async handleSendMessage(socketId: string, userId: string, messageData: any) {
+  async handleSendMessage(_socketId: string, userId: string, messageData: any) {
     // Handle real-time message sending
     this.logger.log(`Message sent by user ${userId} in conversation ${messageData.conversationId}`);
     return messageData;
   }
 
-  async handleTypingStart(socketId: string, userId: string, conversationId: string) {
+  async handleTypingStart(_socketId: string, userId: string, conversationId: string) {
     await this.setTypingIndicator(conversationId, userId, true);
     return this.getTypingIndicators(conversationId);
   }
 
-  async handleTypingStop(socketId: string, userId: string, conversationId: string) {
+  async handleTypingStop(_socketId: string, userId: string, conversationId: string) {
     await this.setTypingIndicator(conversationId, userId, false);
     return this.getTypingIndicators(conversationId);
   }
 
-  async handleOnlineStatusUpdate(socketId: string, userId: string, status: OnlineStatus) {
+  async handleOnlineStatusUpdate(_socketId: string, userId: string, status: OnlineStatus) {
     await this.updateUserStatus(userId, status);
     return this.getOnlineUsers();
   }
 
-  async handleMessageRead(socketId: string, userId: string, messageId: string) {
+  async handleMessageRead(_socketId: string, userId: string, messageId: string) {
     // Handle message read receipt
     await this.prisma.message.update({
       where: { id: messageId },

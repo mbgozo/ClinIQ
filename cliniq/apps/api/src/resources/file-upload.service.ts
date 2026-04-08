@@ -14,11 +14,15 @@ export class FileUploadService {
     this.ensureUploadDir();
   }
 
-  async uploadFile(file: Express.Multer.File): Promise<{ fileRef: string; fileType: string }> {
+  async uploadFile(file: any): Promise<{ fileRef: string; fileType: string }> {
     try {
       // Determine file type
       const fileType = getFileType(file.originalname);
-      const typeDefinition = RESOURCE_TYPE_DEFINITIONS[fileType];
+      const typeDefinition = (RESOURCE_TYPE_DEFINITIONS as any)[fileType];
+
+      if (!typeDefinition) {
+        throw new Error(`Invalid file type recognized for ${file.originalname}`);
+      }
 
       // Validate file type
       if (!validateFileType(file.originalname, typeDefinition.allowedFormats)) {
@@ -44,7 +48,7 @@ export class FileUploadService {
         fileRef: fileName,
         fileType,
       };
-    } catch (error) {
+    } catch (error: any) {
       this.logger.error(`Failed to upload file: ${error.message}`);
       throw error;
     }
@@ -58,7 +62,7 @@ export class FileUploadService {
         fs.unlinkSync(filePath);
         this.logger.log(`File deleted: ${fileRef}`);
       }
-    } catch (error) {
+    } catch (error: any) {
       this.logger.error(`Failed to delete file ${fileRef}: ${error.message}`);
       throw error;
     }
@@ -109,13 +113,13 @@ export class FileUploadService {
         size: stats.size,
         type: fileType,
       };
-    } catch (error) {
+    } catch (error: any) {
       this.logger.error(`Failed to get file stats for ${fileRef}: ${error.message}`);
       return null;
     }
   }
 
-  validateFile(file: Express.Multer.File, allowedTypes: ResourceType[]): { isValid: boolean; error?: string } {
+  validateFile(file: any, allowedTypes: ResourceType[]): { isValid: boolean; error?: string } {
     try {
       const fileType = getFileType(file.originalname);
       
@@ -126,7 +130,14 @@ export class FileUploadService {
         };
       }
 
-      const typeDefinition = RESOURCE_TYPE_DEFINITIONS[fileType];
+      const typeDefinition = (RESOURCE_TYPE_DEFINITIONS as any)[fileType];
+
+      if (!typeDefinition) {
+        return {
+          isValid: false,
+          error: `Invalid file type definition for ${fileType}`
+        };
+      }
 
       if (!validateFileType(file.originalname, typeDefinition.allowedFormats)) {
         return {
@@ -143,7 +154,7 @@ export class FileUploadService {
       }
 
       return { isValid: true };
-    } catch (error) {
+    } catch (error: any) {
       return {
         isValid: false,
         error: `File validation failed: ${error.message}`

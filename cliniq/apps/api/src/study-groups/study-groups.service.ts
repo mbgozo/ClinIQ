@@ -11,7 +11,7 @@ export class StudyGroupsService {
     const { page = 1, limit = 10, ...filterOptions } = filters;
     const skip = (page - 1) * limit;
 
-    const where: Prisma.GroupWhereInput = {
+    const where: Prisma.StudyGroupWhereInput = {
       ...(filterOptions.categoryId && { categoryId: filterOptions.categoryId }),
       ...(filterOptions.institution && { institution: { contains: filterOptions.institution, mode: Prisma.QueryMode.insensitive } }),
       ...(filterOptions.privacy && { privacy: filterOptions.privacy }),
@@ -25,7 +25,7 @@ export class StudyGroupsService {
     };
 
     const [groups, total] = await Promise.all([
-      this.prisma.group.findMany({
+      this.prisma.studyGroup.findMany({
         where,
         include: {
           owner: {
@@ -67,7 +67,7 @@ export class StudyGroupsService {
         skip,
         take: limit,
       }),
-      this.prisma.group.count({ where })
+      this.prisma.studyGroup.count({ where })
     ]);
 
     return {
@@ -87,7 +87,7 @@ export class StudyGroupsService {
   }
 
   async getGroupById(id: string) {
-    const group = await this.prisma.group.findFirst({
+    const group = await this.prisma.studyGroup.findFirst({
       where: { id },
       include: {
         owner: {
@@ -158,7 +158,7 @@ export class StudyGroupsService {
   async createGroup(userId: string, data: CreateGroupInput) {
     const inviteCode = generateInviteCode();
 
-    const group = await this.prisma.group.create({
+    const group = await this.prisma.studyGroup.create({
       data: {
         ...data,
         ownerId: userId,
@@ -231,7 +231,7 @@ export class StudyGroupsService {
       throw new Error('Insufficient permissions to edit group');
     }
 
-    const group = await this.prisma.group.update({
+    const group = await this.prisma.studyGroup.update({
       where: { id },
       data: {
         ...data,
@@ -279,7 +279,7 @@ export class StudyGroupsService {
 
   async deleteGroup(id: string, userId: string) {
     // Check if user is owner
-    const group = await this.prisma.group.findFirst({
+    const group = await this.prisma.studyGroup.findFirst({
       where: { id, ownerId: userId }
     });
 
@@ -287,7 +287,7 @@ export class StudyGroupsService {
       throw new Error('Only group owner can delete group');
     }
 
-    await this.prisma.group.delete({
+    await this.prisma.studyGroup.delete({
       where: { id }
     });
 
@@ -295,7 +295,7 @@ export class StudyGroupsService {
   }
 
   async joinGroup(groupId: string, userId: string, _inviteCode?: string) {
-    const group = await this.prisma.group.findFirst({
+    const group = await this.prisma.studyGroup.findFirst({
       where: { id: groupId },
       include: { members: true }
     });
@@ -365,7 +365,7 @@ export class StudyGroupsService {
   }
 
   async getUserGroups(userId: string) {
-    const groups = await this.prisma.group.findMany({
+    const groups = await this.prisma.studyGroup.findMany({
       where: {
         members: {
           some: { userId }

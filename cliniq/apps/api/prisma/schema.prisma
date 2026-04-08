@@ -67,6 +67,11 @@ model User {
   bio               String?
   avatarUrl         String?
   verified          Boolean   @default(false)
+  isBanned          Boolean   @default(false)
+  bannedAt          DateTime?
+  bannedReason      String?
+  onlineStatus      String    @default("OFFLINE")
+  lastSeenAt        DateTime?
   profilePublic     Boolean   @default(true)
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
@@ -86,10 +91,13 @@ model User {
   sentMessages      Message[]         @relation("SentMessages")
   receivedMessages  Message[]         @relation("ReceivedMessages")
   aiConversations   AIConversation[]
-  ownedGroups       Group[]           @relation("GroupOwner")
+  ownedGroups       StudyGroup[]      @relation("GroupOwner")
   groupPosts        GroupPost[]       @relation("GroupPostAuthor")
   sentInvites       GroupInvite[]     @relation("SentInvites")
   receivedInvites   GroupInvite[]     @relation("ReceivedInvites")
+  adminUser         AdminUser?
+  conversations     ConversationParticipant[]
+  messageReactions  MessageReaction[]
 
   @@index([email])
   @@index([phone])
@@ -165,11 +173,13 @@ model Category {
   id          String     @id @default(cuid())
   name        String     @unique
   description String?
+  icon        String?
+  color       String?
   parentId    String?
   parent      Category?  @relation("SubCategories", fields: [parentId], references: [id])
   children    Category[] @relation("SubCategories")
   questions   Question[]
-  groups      Group[]
+  studyGroups StudyGroup[]
   resources   Resource[]
 }
 
@@ -200,44 +210,124 @@ model Attachment {
 }
 
 model MentorProfile {
-  id               String   @id @default(cuid())
-  userId           String   @unique
-  expertise        String[]
-  availability     String
-  responseSLA      String   @default("48h")
-  verifiedAt       DateTime?
-  verifiedBy       String?
-  acceptanceRate   Float    @default(0)
-  totalAnswers     Int      @default(0)
-  user             User     @relation(fields: [userId], references: [id])
+  id                  String   @id @default(cuid())
+  userId              String   @unique
+  bio                 String?
+  experience          String?
+  expertiseAreas      String[]
+  institution         String?
+  graduationYear      Int?
+  currentRole         String?
+  linkedinUrl         String?
+  availability        String
+  languages           String[]
+  verificationStatus  String   @default("PENDING")
+  verifiedAt          DateTime?
+  rejectionReason     String?
+  totalAnswers        Int      @default(0)
+  acceptedAnswers     Int      @default(0)
+  acceptanceRate      Float    @default(0)
+  averageResponseTime Float    @default(0)
+  mentorshipCount     Int      @default(0)
+  mentorRating        Float    @default(0)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  user                User     @relation(fields: [userId], references: [id])
 }
 
 model MentorRequest {
-  id         String   @id @default(cuid())
-  studentId  String
-  mentorId   String
-  message    String
-  status     String   @default("PENDING")
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id               String         @id @default(cuid())
+  studentId        String
+  mentorId         String
+  topic            String
+  description      String
+  urgency          String         @default("MEDIUM")
+  preferredTime    String
+  status           String         @default("PENDING")
+  rejectionReason  String?
+  notes            String?
+  scheduledAt      DateTime?
+  completedAt      DateTime?
+  mentorRating     Int?
+  studentRating    Int?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
 
-  student    User           @relation("StudentRequests", fields: [studentId], references: [id])
-  mentor     User           @relation("MentorResponses", fields: [mentorId], references: [id])
-  thread     Message[]
+  student          User           @relation("StudentRequests", fields: [studentId], references: [id])
+  mentor           User           @relation("MentorResponses", fields: [mentorId], references: [id])
+  thread           Message[]
 }
 
 model Message {
-  id         String        @id @default(cuid())
-  requestId  String
-  senderId   String
-  receiverId String
-  body       String
-  read       Boolean       @default(false)
-  createdAt  DateTime      @default(now())
+  id             String        @id @default(cuid())
+  conversationId String?
+  requestId      String?
+  senderId       String
+  receiverId     String?
+  body           String
+  content        String?       // Some parts of current code use content instead of body
+  type           String        @default("TEXT")
+  status         String        @default("SENT")
+  read           Boolean        @default(false)
+  readAt         DateTime?
+  fileUrl        String?
+  fileName       String?
+  fileSize       Int?
+  mimeType       String?
+  replyToId      String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
 
-  request    MentorRequest @relation(fields: [requestId], references: [id])
-  sender     User          @relation("SentMessages", fields: [senderId], references: [id])
-  receiver   User          @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  conversation   Conversation? @relation(fields: [conversationId], references: [id])
+  request        MentorRequest? @relation(fields: [requestId], references: [id])
+  sender         User          @relation("SentMessages", fields: [senderId], references: [id])
+  receiver       User?         @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  replyTo        Message?      @relation("MessageReplies", fields: [replyToId], references: [id])
+  replies        Message[]     @relation("MessageReplies")
+  reactions      MessageReaction[]
+}
+
+model Conversation {
+  id            String    @id @default(cuid())
+  type          String    @default("DIRECT") // ChatType
+  name          String?
+  description   String?
+  avatarUrl     String?
+  lastMessage   String?
+  lastMessageAt DateTime?
+  metadata      Json?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  participants  ConversationParticipant[]
+  messages      Message[]
+}
+
+model ConversationParticipant {
+  id             String       @id @default(cuid())
+  conversationId String
+  userId         String
+  role           String       @default("MEMBER")
+  joinedAt       DateTime     @default(now())
+  lastReadAt     DateTime?
+
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  user           User         @relation(fields: [userId], references: [id])
+
+  @@unique([conversationId, userId])
+}
+
+model MessageReaction {
+  id        String   @id @default(cuid())
+  messageId String
+  userId    String
+  emoji     String
+  createdAt DateTime @default(now())
+
+  message   Message  @relation(fields: [messageId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@unique([messageId, userId, emoji])
 }
 
 model Resource {
@@ -253,6 +343,7 @@ model Resource {
   year           Int?
   copyrightAck   Boolean  @default(false)
   downloads      Int      @default(0)
+  tags           String[] @default([])
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
@@ -261,7 +352,7 @@ model Resource {
   flags          Flag[]
 }
 
-model Group {
+model StudyGroup {
   id          String        @id @default(cuid())
   ownerId     String
   name        String
@@ -287,7 +378,7 @@ model GroupMember {
   role      String   @default("MEMBER")
   joinedAt  DateTime @default(now())
 
-  group     Group    @relation(fields: [groupId], references: [id])
+  group     StudyGroup @relation(fields: [groupId], references: [id])
   user      User     @relation(fields: [userId], references: [id])
 
   @@id([groupId, userId])
@@ -302,7 +393,7 @@ model GroupPost {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  group     Group    @relation(fields: [groupId], references: [id])
+  group     StudyGroup @relation(fields: [groupId], references: [id])
   user      User     @relation("GroupPostAuthor", fields: [userId], references: [id])
   flags     Flag[]
 }
@@ -320,7 +411,7 @@ model GroupInvite {
   expiresAt    DateTime
   respondedAt  DateTime?
 
-  group        Group       @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  group        StudyGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
   inviter      User        @relation("SentInvites", fields: [inviterId], references: [id])
   invitee      User?       @relation("ReceivedInvites", fields: [inviteeId], references: [id])
 }
@@ -333,8 +424,12 @@ model Flag {
   reporterId   String
   moderatorId  String?
   status       FlagStatus     @default(PENDING)
+  description  String         @default("")
+  action       String?        // Map to ModerationAction
+  actionReason String?
   auditNote    String?
   createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
   resolvedAt   DateTime?
 
   reporter     User           @relation("FlagReporter", fields: [reporterId], references: [id])
@@ -345,6 +440,32 @@ model Flag {
   groupPost    GroupPost?     @relation(fields: [entityId], references: [id], map: "flag_grouppost")
 
   @@index([status])
+}
+
+model AdminUser {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  role        Role     @default(ADMIN)
+  permissions String[] // Simplified permissions
+  isActive    Boolean  @default(true)
+  lastLoginAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id])
+  logs        AdminLog[]
+}
+
+model AdminLog {
+  id          String   @id @default(cuid())
+  adminId     String
+  action      String
+  entityType  String
+  entityId    String
+  details     Json?
+  ipAddress   String?
+  userAgent   String?
+  createdAt   DateTime @default(now())
+  admin       AdminUser @relation(fields: [adminId], references: [id])
 }
 
 model UserBadge {

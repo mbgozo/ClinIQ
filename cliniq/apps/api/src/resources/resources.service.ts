@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
-import { Resource, CreateResourceInput, ResourceFilter, ResourceCategory } from '@cliniq/shared-types';
+import { PrismaClient, Prisma } from '@prisma/client';
+import { CreateResourceInput, ResourceFilter } from '@cliniq/shared-types';
 
 @Injectable()
 export class ResourcesService {
@@ -11,9 +11,9 @@ export class ResourcesService {
     const { page = 1, limit = 10, ...filterOptions } = filters;
     const skip = (page - 1) * limit;
 
-    const where = {
+    const where: Prisma.ResourceWhereInput = {
       ...(filterOptions.categoryId && { categoryId: filterOptions.categoryId }),
-      ...(filterOptions.course && { course: { contains: filterOptions.course, mode: 'insensitive' } }),
+      ...(filterOptions.course && { course: { contains: filterOptions.course, mode: Prisma.QueryMode.insensitive } }),
       ...(filterOptions.year && { year: filterOptions.year }),
       ...(filterOptions.userId && { userId: filterOptions.userId }),
       ...(filterOptions.tags && filterOptions.tags.length > 0 && {
@@ -23,8 +23,8 @@ export class ResourcesService {
       }),
       ...(filterOptions.search && {
         OR: [
-          { title: { contains: filterOptions.search, mode: 'insensitive' } },
-          { description: { contains: filterOptions.search, mode: 'insensitive' } },
+          { title: { contains: filterOptions.search, mode: Prisma.QueryMode.insensitive } },
+          { description: { contains: filterOptions.search, mode: Prisma.QueryMode.insensitive } },
           { tags: { hasSome: [filterOptions.search] } }
         ]
       })
@@ -65,11 +65,11 @@ export class ResourcesService {
     ]);
 
     return {
-      resources: resources.map(resource => ({
+      resources: resources.map((resource: any) => ({
         ...resource,
         createdAt: resource.createdAt.toISOString(),
         updatedAt: resource.updatedAt.toISOString(),
-        isFlagged: resource.flags.some(flag => flag.status === 'PENDING'),
+        isFlagged: resource.flags?.some((flag: any) => flag.status === 'PENDING') || false,
       })),
       total,
     };
@@ -108,18 +108,21 @@ export class ResourcesService {
       throw new Error('Resource not found');
     }
 
+    const resourceAny = resource as any;
     return {
-      ...resource,
-      createdAt: resource.createdAt.toISOString(),
-      updatedAt: resource.updatedAt.toISOString(),
-      isFlagged: resource.flags.some(flag => flag.status === 'PENDING'),
+      ...resourceAny,
+      createdAt: resourceAny.createdAt.toISOString(),
+      updatedAt: resourceAny.updatedAt.toISOString(),
+      isFlagged: resourceAny.flags?.some((flag: any) => flag.status === 'PENDING') || false,
     };
   }
 
   async createResource(userId: string, data: CreateResourceInput & { fileRef?: string; fileType?: string }) {
+    const { tags, ...rest } = data;
     const resource = await this.prisma.resource.create({
       data: {
-        ...data,
+        ...rest,
+        tags: tags || [],
         userId,
         downloads: 0,
         createdAt: new Date(),
@@ -354,11 +357,11 @@ export class ResourcesService {
       take: limit,
     });
 
-    return resources.map(resource => ({
+    return resources.map((resource: any) => ({
       ...resource,
       createdAt: resource.createdAt.toISOString(),
       updatedAt: resource.updatedAt.toISOString(),
-      isFlagged: resource.flags.some(flag => flag.status === 'PENDING'),
+      isFlagged: resource.flags?.some((flag: any) => flag.status === 'PENDING') || false,
     }));
   }
 }

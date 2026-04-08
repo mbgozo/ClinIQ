@@ -25,8 +25,8 @@ export class MentorshipService {
     // Check if mentor exists and is verified
     const mentor = await this.prisma.mentorProfile.findFirst({
       where: {
-        id: data.mentorId,
-        verifiedAt: { not: null }, // Verified mentors have verifiedAt set
+        userId: data.mentorId, // data.mentorId is the User ID
+        verifiedAt: { not: null },
       },
     });
 
@@ -49,11 +49,13 @@ export class MentorshipService {
 
     const request = await this.prisma.mentorRequest.create({
       data: {
-        ...data,
+        mentorId: data.mentorId,
         studentId,
+        topic: data.topic,
+        description: data.description,
+        urgency: data.urgency,
+        preferredTime: data.preferredTime,
         status: MentorshipStatus.PENDING,
-        createdAt: new Date(),
-        updatedAt: new Date(),
       },
     });
 
@@ -68,13 +70,7 @@ export class MentorshipService {
 
     this.logger.log(`Created mentorship request from ${studentId} to mentor ${data.mentorId}`);
 
-    return {
-      ...request,
-      createdAt: request.createdAt.toISOString(),
-      updatedAt: request.updatedAt.toISOString(),
-      scheduledAt: request.scheduledAt?.toISOString() || null,
-      completedAt: request.completedAt?.toISOString() || null,
-    };
+    return this.mapToMentorshipRequest(request);
   }
 
   async getSentRequests(studentId: string, filters: MentorshipRequestFilter) {
@@ -83,7 +79,7 @@ export class MentorshipService {
 
     const where = {
       studentId,
-      ...(status && { status }),
+      ...(status && { status: status as string }),
     };
 
     const [requests, total] = await Promise.all([
@@ -91,14 +87,17 @@ export class MentorshipService {
         where,
         include: {
           mentor: {
-            include: {
-              user: {
-                select: {
-                  id: true,
-                  name: true,
-                  avatarUrl: true,
-                },
-              },
+            select: {
+              id: true,
+              name: true,
+              avatarUrl: true,
+            },
+          },
+          student: {
+            select: {
+              id: true,
+              name: true,
+              avatarUrl: true,
             },
           },
         },
@@ -110,13 +109,7 @@ export class MentorshipService {
     ]);
 
     return {
-      requests: requests.map((request) => ({
-        ...request,
-        createdAt: request.createdAt.toISOString(),
-        updatedAt: request.updatedAt.toISOString(),
-        scheduledAt: request.scheduledAt?.toISOString() || null,
-        completedAt: request.completedAt?.toISOString() || null,
-      })),
+      requests: requests.map((request) => this.mapToMentorshipRequest(request)),
       total,
     };
   }
@@ -127,7 +120,7 @@ export class MentorshipService {
 
     const where = {
       mentorId,
-      ...(status && { status }),
+      ...(status && { status: status as string }),
     };
 
     const [requests, total] = await Promise.all([
@@ -152,13 +145,7 @@ export class MentorshipService {
     ]);
 
     return {
-      requests: requests.map((request) => ({
-        ...request,
-        createdAt: request.createdAt.toISOString(),
-        updatedAt: request.updatedAt.toISOString(),
-        scheduledAt: request.scheduledAt?.toISOString() || null,
-        completedAt: request.completedAt?.toISOString() || null,
-      })),
+      requests: requests.map((request) => this.mapToMentorshipRequest(request)),
       total,
     };
   }
@@ -172,14 +159,14 @@ export class MentorshipService {
       throw new Error("Request not found");
     }
 
-    if (request.status !== MentorshipStatus.PENDING) {
+    if (request.status !== "PENDING") {
       throw new Error("Request cannot be accepted");
     }
 
     const updatedRequest = await this.prisma.mentorRequest.update({
       where: { id: requestId },
       data: {
-        status: MentorshipStatus.ACCEPTED,
+        status: "ACCEPTED",
         updatedAt: new Date(),
       },
       include: {
@@ -191,14 +178,10 @@ export class MentorshipService {
           },
         },
         mentor: {
-          include: {
-            user: {
-              select: {
-                id: true,
-                name: true,
-                avatarUrl: true,
-              },
-            },
+          select: {
+            id: true,
+            name: true,
+            avatarUrl: true,
           },
         },
       },
@@ -209,28 +192,21 @@ export class MentorshipService {
       request.studentId,
       "MENTOR_REQUEST" as any,
       "Mentorship Request Accepted",
-      `${updatedRequest.mentor.user.name} accepted your mentorship request on: ${request.topic}`,
+      `${(updatedRequest as any).mentor.name} accepted your mentorship request on: ${request.topic}`,
       `/mentors/requests`,
     );
 
     // Update mentor's mentorship count
     await this.prisma.mentorProfile.update({
-      where: { id: mentorId },
+      where: { userId: mentorId },
       data: {
         mentorshipCount: { increment: 1 },
-        updatedAt: new Date(),
       },
     });
 
     this.logger.log(`Mentor ${mentorId} accepted request ${requestId}`);
 
-    return {
-      ...updatedRequest,
-      createdAt: updatedRequest.createdAt.toISOString(),
-      updatedAt: updatedRequest.updatedAt.toISOString(),
-      scheduledAt: updatedRequest.scheduledAt?.toISOString() || null,
-      completedAt: updatedRequest.completedAt?.toISOString() || null,
-    };
+    return this.mapToMentorshipRequest(updatedRequest);
   }
 
   async rejectMentorshipRequest(
@@ -246,27 +222,23 @@ export class MentorshipService {
       throw new Error("Request not found");
     }
 
-    if (request.status !== MentorshipStatus.PENDING) {
+    if (request.status !== "PENDING") {
       throw new Error("Request cannot be rejected");
     }
 
     const updatedRequest = await this.prisma.mentorRequest.update({
       where: { id: requestId },
       data: {
-        status: MentorshipStatus.REJECTED,
+        status: "REJECTED",
         rejectionReason: reason,
         updatedAt: new Date(),
       },
       include: {
         mentor: {
-          include: {
-            user: {
-              select: {
-                id: true,
-                name: true,
-                avatarUrl: true,
-              },
-            },
+          select: {
+            id: true,
+            name: true,
+            avatarUrl: true,
           },
         },
       },
@@ -277,19 +249,13 @@ export class MentorshipService {
       request.studentId,
       "MENTOR_REQUEST" as any,
       "Mentorship Request Updated",
-      `${updatedRequest.mentor.user.name} declined your mentorship request. Reason: ${reason}`,
+      `${(updatedRequest as any).mentor.name} declined your mentorship request. Reason: ${reason}`,
       `/mentors/requests`,
     );
 
     this.logger.log(`Mentor ${mentorId} rejected request ${requestId}: ${reason}`);
 
-    return {
-      ...updatedRequest,
-      createdAt: updatedRequest.createdAt.toISOString(),
-      updatedAt: updatedRequest.updatedAt.toISOString(),
-      scheduledAt: updatedRequest.scheduledAt?.toISOString() || null,
-      completedAt: updatedRequest.completedAt?.toISOString() || null,
-    };
+    return this.mapToMentorshipRequest(updatedRequest);
   }
 
   async completeMentorshipRequest(requestId: string, userId: string): Promise<MentorshipRequest> {
@@ -301,7 +267,7 @@ export class MentorshipService {
       throw new Error("Request not found");
     }
 
-    if (request.status !== MentorshipStatus.ACCEPTED) {
+    if (request.status !== "ACCEPTED") {
       throw new Error("Request cannot be completed");
     }
 
@@ -313,7 +279,7 @@ export class MentorshipService {
     const updatedRequest = await this.prisma.mentorRequest.update({
       where: { id: requestId },
       data: {
-        status: MentorshipStatus.COMPLETED,
+        status: "COMPLETED",
         completedAt: new Date(),
         updatedAt: new Date(),
       },
@@ -326,14 +292,10 @@ export class MentorshipService {
           },
         },
         mentor: {
-          include: {
-            user: {
-              select: {
-                id: true,
-                name: true,
-                avatarUrl: true,
-              },
-            },
+          select: {
+            id: true,
+            name: true,
+            avatarUrl: true,
           },
         },
       },
@@ -342,7 +304,7 @@ export class MentorshipService {
     // Send completion notifications
     const otherUserId = request.mentorId === userId ? request.studentId : request.mentorId;
     const completerName =
-      request.mentorId === userId ? updatedRequest.mentor.user.name : updatedRequest.student.name;
+      request.mentorId === userId ? (updatedRequest as any).mentor.name : (updatedRequest as any).student.name;
 
     await this.notificationsService.createNotification(
       otherUserId,
@@ -354,13 +316,7 @@ export class MentorshipService {
 
     this.logger.log(`Request ${requestId} completed by ${userId}`);
 
-    return {
-      ...updatedRequest,
-      createdAt: updatedRequest.createdAt.toISOString(),
-      updatedAt: updatedRequest.updatedAt.toISOString(),
-      scheduledAt: updatedRequest.scheduledAt?.toISOString() || null,
-      completedAt: updatedRequest.completedAt.toISOString(),
-    };
+    return this.mapToMentorshipRequest(updatedRequest);
   }
 
   async rateMentorshipSession(
@@ -377,7 +333,7 @@ export class MentorshipService {
       throw new Error("Request not found");
     }
 
-    if (request.status !== MentorshipStatus.COMPLETED) {
+    if (request.status !== "COMPLETED") {
       throw new Error("Cannot rate an incomplete session");
     }
 
@@ -389,25 +345,46 @@ export class MentorshipService {
     });
 
     // Update mentor's overall rating
-    if (isMentor) {
+    if (!isMentor) { // Student rates mentor
       const allRatings = await this.prisma.mentorRequest.findMany({
         where: {
           mentorId: request.mentorId,
-          status: MentorshipStatus.COMPLETED,
+          status: "COMPLETED",
           studentRating: { not: null },
         },
         select: { studentRating: true },
       });
 
-      const averageRating =
-        allRatings.reduce((sum, r) => sum + r.studentRating!, 0) / allRatings.length;
+      const sum = allRatings.reduce((acc: number, curr: any) => acc + (curr.studentRating || 0), 0);
+      const averageRating = allRatings.length > 0 ? sum / allRatings.length : 0;
 
       await this.prisma.mentorProfile.update({
-        where: { id: request.mentorId },
+        where: { userId: request.mentorId },
         data: { mentorRating: averageRating },
       });
     }
 
     this.logger.log(`Rated mentorship session ${requestId} by ${userId}: ${rating}`);
+  }
+
+  private mapToMentorshipRequest(request: any): MentorshipRequest {
+    return {
+      id: request.id,
+      mentorId: request.mentorId,
+      studentId: request.studentId,
+      topic: request.topic,
+      description: request.description,
+      urgency: (request.urgency as any) || "MEDIUM",
+      preferredTime: request.preferredTime || "",
+      status: request.status as MentorshipStatus,
+      createdAt: request.createdAt.toISOString(),
+      updatedAt: request.updatedAt.toISOString(),
+      scheduledAt: request.scheduledAt?.toISOString() || undefined,
+      completedAt: request.completedAt?.toISOString() || undefined,
+      rejectionReason: request.rejectionReason || undefined,
+      notes: request.notes || undefined,
+      studentRating: request.studentRating || undefined,
+      mentorRating: request.mentorRating || undefined,
+    };
   }
 }

@@ -1,6 +1,6 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { PrismaClient } from "@prisma/client";
-import { CreateMessageInput, Message, MessageStatus, MessageType } from "@cliniq/shared-types";
+import { CreateMessageInput, MessageStatus, MessageType } from "@cliniq/shared-types";
 
 @Injectable()
 export class MessagesService {
@@ -56,19 +56,19 @@ export class MessagesService {
         createdAt: message.createdAt.toISOString(),
         updatedAt: message.updatedAt.toISOString(),
         readAt: message.readAt?.toISOString() || null,
-        reactions: message.reactions.reduce((acc, reaction) => {
-          const existing = acc.find((r) => r.emoji === reaction.emoji);
+        reactions: (message as any).reactions.reduce((a: any[], r2: any) => {
+          const existing = a.find((r: any) => r.emoji === r2.emoji);
           if (existing) {
-            existing.userIds.push(reaction.userId);
+            existing.userIds.push(r2.userId);
             existing.count++;
           } else {
-            acc.push({
-              emoji: reaction.emoji,
-              userIds: [reaction.userId],
+            a.push({
+              emoji: r2.emoji,
+              userIds: [r2.userId],
               count: 1,
             });
           }
-          return acc;
+          return a;
         }, [] as any[]),
       }))
       .reverse(); // Return in chronological order
@@ -89,6 +89,7 @@ export class MessagesService {
         conversationId: data.conversationId,
         senderId: userId,
         type: data.type,
+        body: data.content,
         content: data.content,
         status: MessageStatus.SENT,
         replyToId: data.replyToId,
@@ -163,19 +164,19 @@ export class MessagesService {
       createdAt: message.createdAt.toISOString(),
       updatedAt: message.updatedAt.toISOString(),
       readAt: message.readAt?.toISOString() || null,
-      reactions: message.reactions.reduce((acc, reaction) => {
-        const existing = acc.find((r) => r.emoji === reaction.emoji);
+      reactions: (message as any).reactions.reduce((a: any[], r2: any) => {
+        const existing = a.find((r: any) => r.emoji === r2.emoji);
         if (existing) {
-          existing.userIds.push(reaction.userId);
+          existing.userIds.push(r2.userId);
           existing.count++;
         } else {
-          acc.push({
-            emoji: reaction.emoji,
-            userIds: [reaction.userId],
+          a.push({
+            emoji: r2.emoji,
+            userIds: [r2.userId],
             count: 1,
           });
         }
-        return acc;
+        return a;
       }, [] as any[]),
     };
   }
@@ -193,7 +194,7 @@ export class MessagesService {
     // Check if user can edit this message
     if (message.senderId !== userId) {
       const participant = await this.prisma.conversationParticipant.findFirst({
-        where: { conversationId: message.conversationId, userId },
+        where: { conversationId: message.conversationId as string, userId },
       });
 
       const canEdit = participant && (participant.role === "OWNER" || participant.role === "ADMIN");
@@ -249,19 +250,19 @@ export class MessagesService {
       createdAt: updatedMessage.createdAt.toISOString(),
       updatedAt: updatedMessage.updatedAt.toISOString(),
       readAt: updatedMessage.readAt?.toISOString() || null,
-      reactions: updatedMessage.reactions.reduce((acc, reaction) => {
-        const existing = acc.find((r) => r.emoji === reaction.emoji);
+      reactions: (updatedMessage as any).reactions.reduce((a: any[], r2: any) => {
+        const existing = a.find((r: any) => r.emoji === r2.emoji);
         if (existing) {
-          existing.userIds.push(reaction.userId);
+          existing.userIds.push(r2.userId);
           existing.count++;
         } else {
-          acc.push({
-            emoji: reaction.emoji,
-            userIds: [reaction.userId],
+          a.push({
+            emoji: r2.emoji,
+            userIds: [r2.userId],
             count: 1,
           });
         }
-        return acc;
+        return a;
       }, [] as any[]),
     };
   }
@@ -279,7 +280,7 @@ export class MessagesService {
     // Check if user can delete this message
     if (message.senderId !== userId) {
       const participant = await this.prisma.conversationParticipant.findFirst({
-        where: { conversationId: message.conversationId, userId },
+        where: { conversationId: message.conversationId as string, userId },
       });
 
       const canDelete =
@@ -306,9 +307,13 @@ export class MessagesService {
       throw new Error("Message not found");
     }
 
+    if (!message.conversationId) {
+      throw new Error("Message is not part of a conversation");
+    }
+
     // Check if user is a participant
     const participant = await this.prisma.conversationParticipant.findFirst({
-      where: { conversationId: message.conversationId, userId },
+      where: { conversationId: message.conversationId as string as string, userId },
     });
 
     if (!participant) {
@@ -324,7 +329,7 @@ export class MessagesService {
     await this.prisma.conversationParticipant.update({
       where: {
         conversationId_userId: {
-          conversationId: message.conversationId,
+          conversationId: message.conversationId as string as string,
           userId,
         },
       },
@@ -381,8 +386,12 @@ export class MessagesService {
       throw new Error("Message not found");
     }
 
+    if (!message.conversationId) {
+      throw new Error("Message is not part of a conversation");
+    }
+
     const participant = await this.prisma.conversationParticipant.findFirst({
-      where: { conversationId: message.conversationId, userId },
+      where: { conversationId: message.conversationId as string, userId },
     });
 
     if (!participant) {

@@ -12,9 +12,9 @@ export class FlagsService {
     const existingFlag = await this.prisma.flag.findFirst({
       where: {
         reporterId,
-        entityType: data.entityType,
+        entityType: data.entityType as any,
         entityId: data.entityId,
-        status: FlagStatus.PENDING
+        status: 'PENDING'
       }
     });
 
@@ -24,11 +24,11 @@ export class FlagsService {
 
     const flag = await this.prisma.flag.create({
       data: {
-        ...data,
+        entityType: data.entityType as any,
+        entityId: data.entityId,
+        reason: data.reason,
         reporterId,
-        status: FlagStatus.PENDING,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        status: 'PENDING',
       }
     });
 
@@ -36,15 +36,19 @@ export class FlagsService {
 
     return {
       ...flag,
+      entityType: flag.entityType as FlagEntityType,
+      status: flag.status as FlagStatus,
       createdAt: flag.createdAt.toISOString(),
       updatedAt: flag.updatedAt.toISOString(),
-      resolvedAt: flag.resolvedAt?.toISOString() || null,
+      resolvedAt: flag.resolvedAt?.toISOString() || undefined,
+      resolvedBy: flag.moderatorId || undefined,
+      notes: flag.auditNote || undefined,
     };
   }
 
   async getPendingFlags() {
     const flags = await this.prisma.flag.findMany({
-      where: { status: FlagStatus.PENDING },
+      where: { status: 'PENDING' },
       include: {
         reporter: {
           select: {
@@ -59,9 +63,13 @@ export class FlagsService {
 
     return flags.map(flag => ({
       ...flag,
+      entityType: flag.entityType as FlagEntityType,
+      status: flag.status as FlagStatus,
       createdAt: flag.createdAt.toISOString(),
       updatedAt: flag.updatedAt.toISOString(),
       resolvedAt: flag.resolvedAt?.toISOString() || null,
+      resolvedBy: flag.moderatorId || undefined,
+      notes: flag.auditNote || undefined,
     }));
   }
 
@@ -69,11 +77,10 @@ export class FlagsService {
     const flag = await this.prisma.flag.update({
       where: { id: flagId },
       data: {
-        status: FlagStatus.RESOLVED,
-        resolvedBy: adminId,
+        status: 'RESOLVED',
+        moderatorId: adminId,
         resolvedAt: new Date(),
-        notes,
-        updatedAt: new Date(),
+        auditNote: notes,
       },
       include: {
         reporter: {
@@ -93,9 +100,13 @@ export class FlagsService {
 
     return {
       ...flag,
+      entityType: flag.entityType as FlagEntityType,
+      status: flag.status as FlagStatus,
       createdAt: flag.createdAt.toISOString(),
       updatedAt: flag.updatedAt.toISOString(),
-      resolvedAt: flag.resolvedAt.toISOString(),
+      resolvedAt: flag.resolvedAt?.toISOString() || undefined,
+      resolvedBy: flag.moderatorId || undefined,
+      notes: flag.auditNote || undefined,
     };
   }
 
@@ -103,11 +114,10 @@ export class FlagsService {
     const flag = await this.prisma.flag.update({
       where: { id: flagId },
       data: {
-        status: FlagStatus.DISMISSED,
-        resolvedBy: adminId,
+        status: 'DISMISSED',
+        moderatorId: adminId,
         resolvedAt: new Date(),
-        notes,
-        updatedAt: new Date(),
+        auditNote: notes,
       },
       include: {
         reporter: {
@@ -124,16 +134,20 @@ export class FlagsService {
 
     return {
       ...flag,
+      entityType: flag.entityType as FlagEntityType,
+      status: flag.status as FlagStatus,
       createdAt: flag.createdAt.toISOString(),
       updatedAt: flag.updatedAt.toISOString(),
-      resolvedAt: flag.resolvedAt.toISOString(),
+      resolvedAt: flag.resolvedAt?.toISOString() || undefined,
+      resolvedBy: flag.moderatorId || undefined,
+      notes: flag.auditNote || undefined,
     };
   }
 
   async getFlagsByEntity(entityType: FlagEntityType, entityId: string) {
     const flags = await this.prisma.flag.findMany({
       where: {
-        entityType,
+        entityType: entityType as any,
         entityId,
       },
       include: {
@@ -150,18 +164,22 @@ export class FlagsService {
 
     return flags.map(flag => ({
       ...flag,
+      entityType: flag.entityType as FlagEntityType,
+      status: flag.status as FlagStatus,
       createdAt: flag.createdAt.toISOString(),
       updatedAt: flag.updatedAt.toISOString(),
       resolvedAt: flag.resolvedAt?.toISOString() || null,
+      resolvedBy: flag.moderatorId || undefined,
+      notes: flag.auditNote || undefined,
     }));
   }
 
   async getFlagStats() {
     const [total, pending, resolved, dismissed] = await Promise.all([
       this.prisma.flag.count(),
-      this.prisma.flag.count({ where: { status: FlagStatus.PENDING } }),
-      this.prisma.flag.count({ where: { status: FlagStatus.RESOLVED } }),
-      this.prisma.flag.count({ where: { status: FlagStatus.DISMISSED } })
+      this.prisma.flag.count({ where: { status: 'PENDING' } }),
+      this.prisma.flag.count({ where: { status: 'RESOLVED' } }),
+      this.prisma.flag.count({ where: { status: 'DISMISSED' } })
     ]);
 
     return {
@@ -209,9 +227,13 @@ export class FlagsService {
 
     return flags.map(flag => ({
       ...flag,
+      entityType: flag.entityType as FlagEntityType,
+      status: flag.status as FlagStatus,
       createdAt: flag.createdAt.toISOString(),
       updatedAt: flag.updatedAt.toISOString(),
       resolvedAt: flag.resolvedAt?.toISOString() || null,
+      resolvedBy: flag.moderatorId || undefined,
+      notes: flag.auditNote || undefined,
     }));
   }
 
@@ -221,7 +243,7 @@ export class FlagsService {
       case FlagEntityType.RESOURCE:
         // For resolved flags, you might want to hide or remove the resource
         // This is a placeholder for actual moderation logic
-        if (flag.status === FlagStatus.RESOLVED) {
+        if (flag.status === 'RESOLVED') {
           this.logger.log(`Resource ${flag.entityId} flagged for moderation`);
           // In production, you might:
           // - Hide the resource temporarily
@@ -233,14 +255,14 @@ export class FlagsService {
       case FlagEntityType.QUESTION:
       case FlagEntityType.ANSWER:
         // Handle Q&A content flags
-        if (flag.status === FlagStatus.RESOLVED) {
+        if (flag.status === 'RESOLVED') {
           this.logger.log(`${flag.entityType} ${flag.entityId} flagged for moderation`);
         }
         break;
       
       case FlagEntityType.GROUP_POST:
         // Handle group post flags
-        if (flag.status === FlagStatus.RESOLVED) {
+        if (flag.status === 'RESOLVED') {
           this.logger.log(`Group post ${flag.entityId} flagged for moderation`);
         }
         break;

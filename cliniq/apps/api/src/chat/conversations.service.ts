@@ -45,9 +45,9 @@ export class ConversationsService {
       orderBy: { updatedAt: 'desc' }
     });
 
-    return conversations.map(conversation => {
+    return conversations.map((conversation: any) => {
       const lastMessage = conversation.messages[0];
-      const userParticipant = conversation.participants.find(p => p.userId === userId);
+      const userParticipant = conversation.participants.find((p: any) => p.userId === userId);
       
       // Calculate unread count
       const unreadCount = lastMessage && userParticipant?.lastReadAt
@@ -59,7 +59,7 @@ export class ConversationsService {
         lastMessage: lastMessage?.content || null,
         lastMessageAt: lastMessage?.createdAt?.toISOString() || null,
         unreadCount,
-        participantIds: conversation.participants.map(p => p.userId),
+        participantIds: conversation.participants.map((p: any) => p.userId),
         createdAt: conversation.createdAt.toISOString(),
         updatedAt: conversation.updatedAt.toISOString(),
       };
@@ -110,12 +110,12 @@ export class ConversationsService {
       throw new Error('Conversation not found');
     }
 
-    const userParticipant = conversation.participants.find(p => p.userId === userId);
+    const userParticipant = conversation.participants.find((p: any) => p.userId === userId);
     const unreadCount = userParticipant?.lastReadAt
-      ? conversation.messages.filter(m => 
+      ? conversation.messages.filter((m: any) => 
           m.senderId !== userId && m.createdAt > userParticipant.lastReadAt
         ).length
-      : conversation.messages.filter(m => m.senderId !== userId).length;
+      : conversation.messages.filter((m: any) => m.senderId !== userId).length;
 
     return {
       ...conversation,
@@ -123,7 +123,7 @@ export class ConversationsService {
       unreadCount,
       createdAt: conversation.createdAt.toISOString(),
       updatedAt: conversation.updatedAt.toISOString(),
-      messages: conversation.messages.map(message => ({
+      messages: conversation.messages.map((message: any) => ({
         ...message,
         createdAt: message.createdAt.toISOString(),
         updatedAt: message.updatedAt.toISOString(),
@@ -459,7 +459,12 @@ export class ConversationsService {
     }
 
     const participant = await this.prisma.conversationParticipant.update({
-      where: { conversationId, userId },
+      where: { 
+        conversationId_userId: {
+          conversationId,
+          userId
+        }
+      },
       data: { role: newRole as any },
       include: {
         user: {

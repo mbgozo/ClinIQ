@@ -4,7 +4,6 @@ import {
   NotificationType,
   CreateNotificationInput,
   NotificationFilter,
-  NotificationPreferences,
 } from "@cliniq/shared-types";
 
 @Injectable()

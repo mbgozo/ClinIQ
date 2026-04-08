@@ -8,14 +8,14 @@ export class GamificationController {
   constructor(private readonly gamificationService: GamificationService) {}
 
   @Get('profile')
-  async getUserGamificationProfile(@Request() req) {
+  async getUserGamificationProfile(@Request() req: any) {
     const userId = req.user.sub;
     const profile = await this.gamificationService.getUserProfile(userId);
     return { data: profile };
   }
 
   @Get('badges')
-  async getUserBadges(@Request() req) {
+  async getUserBadges(@Request() req: any) {
     const userId = req.user.sub;
     const badges = await this.gamificationService.getUserBadges(userId);
     return { data: badges };

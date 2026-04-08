@@ -20,7 +20,7 @@ export class ModerationService {
       where: { userId: requestingAdminId }
     });
 
-    if (!requestingAdmin || !hasPermission(requestingAdmin.permissions, Permission.VIEW_FLAGS)) {
+    if (!requestingAdmin || !hasPermission(requestingAdmin.permissions as any, Permission.VIEW_FLAGS)) {
       throw new Error('Insufficient permissions to view moderation queue');
     }
 

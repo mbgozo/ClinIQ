@@ -37,9 +37,9 @@ export class ResourcesController {
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   async createResource(
-    @Request() req,
+    @Request() req: any,
     @Body() data: any,
-    @UploadedFile() file: Express.Multer.File
+    @UploadedFile() file?: any
   ) {
     const userId = req.user.sub;
     const validatedData = CreateResourceSchema.parse(data);
@@ -66,9 +66,9 @@ export class ResourcesController {
   @UseInterceptors(FileInterceptor('file'))
   async updateResource(
     @Param('id') id: string,
-    @Request() req,
+    @Request() req: any,
     @Body() data: any,
-    @UploadedFile() file: Express.Multer.File
+    @UploadedFile() file?: any
   ) {
     const userId = req.user.sub;
 
@@ -91,14 +91,14 @@ export class ResourcesController {
   }
 
   @Delete(':id')
-  async deleteResource(@Param('id') id: string, @Request() req) {
+  async deleteResource(@Param('id') id: string, @Request() req: any) {
     const userId = req.user.sub;
     await this.resourcesService.deleteResource(id, userId);
     return { message: 'Resource deleted successfully' };
   }
 
   @Post(':id/download')
-  async downloadResource(@Param('id') id: string, @Request() req) {
+  async downloadResource(@Param('id') id: string, @Request() req: any) {
     const userId = req.user.sub;
     const downloadUrl = await this.resourcesService.incrementDownload(id, userId);
     return { data: { downloadUrl } };
@@ -106,7 +106,7 @@ export class ResourcesController {
 
   // Flag endpoints
   @Post(':id/flag')
-  async flagResource(@Param('id') id: string, @Body() data: any, @Request() req) {
+  async flagResource(@Param('id') id: string, @Body() data: any, @Request() req: any) {
     const userId = req.user.sub;
     const validatedData = CreateFlagSchema.parse({
       entityType: 'RESOURCE',
@@ -119,20 +119,20 @@ export class ResourcesController {
   }
 
   @Get('flags/pending')
-  async getPendingFlags(@Request() req) {
+  async getPendingFlags() {
     const flags = await this.flagsService.getPendingFlags();
     return { data: flags };
   }
 
   @Put('flags/:id/resolve')
-  async resolveFlag(@Param('id') id: string, @Body() body: { notes?: string }, @Request() req) {
+  async resolveFlag(@Param('id') id: string, @Body() body: { notes?: string }, @Request() req: any) {
     const adminId = req.user.sub;
     const flag = await this.flagsService.resolveFlag(id, adminId, body.notes);
     return { data: flag };
   }
 
   @Put('flags/:id/dismiss')
-  async dismissFlag(@Param('id') id: string, @Body() body: { notes?: string }, @Request() req) {
+  async dismissFlag(@Param('id') id: string, @Body() body: { notes?: string }, @Request() req: any) {
     const adminId = req.user.sub;
     const flag = await this.flagsService.dismissFlag(id, adminId, body.notes);
     return { data: flag };

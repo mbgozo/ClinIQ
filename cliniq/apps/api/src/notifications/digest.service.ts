@@ -47,7 +47,7 @@ export class DigestService {
 
   private async sendUserDigest(user: any) {
     // Get unanswered questions from user's categories/program
-    const unansweredQuestions = await this.getUnansweredQuestions(user);
+    const unansweredQuestions = await this.getUnansweredQuestions();
 
     if (unansweredQuestions.length === 0) {
       this.logger.log(`No unanswered questions for user ${user.id} - skipping digest`);
@@ -62,7 +62,7 @@ export class DigestService {
     this.logger.log(`Digest sent to user ${user.id} with ${unansweredQuestions.length} questions`);
   }
 
-  private async getUnansweredQuestions(user: any) {
+  private async getUnansweredQuestions() {
     // Get questions from the last 24 hours that are unanswered
     const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
 
@@ -154,7 +154,7 @@ export class DigestService {
     ]);
 
     // TODO: Create weekly digest email template
-    this.logger.log(`Weekly digest data prepared for user ${user.id}`);
+    this.logger.log(`Weekly digest data prepared for user ${user.id}: ${newQuestions} new questions, ${topQuestions.length} top questions, user activity: ${userStats.questionsAsked} asked, ${userStats.answersGiven} answered`);
   }
 
   private async getUserWeeklyStats(userId: string, since: Date) {
