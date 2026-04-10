@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from "react";
 import { 
   useConversations, 
-  useConversation, 
   useMessages, 
   useSendMessage, 
   useMarkAllMessagesAsRead,
@@ -20,20 +19,17 @@ import {
 import { 
   Send, 
   Paperclip, 
-  Search, 
+  Search,
   MoreVertical, 
   MessageSquare, 
   User, 
-  Wifi, 
-  WifiOff,
-  Plus,
   X,
-  ShieldCheck,
-  Activity,
-  Network,
-  Fingerprint,
-  Zap,
+  Plus,
   Globe,
+  Activity,
+  WifiOff,
+  Network,
+  ShieldCheck,
   Lock
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -45,7 +41,7 @@ export default function ChatPage() {
   const [replyingTo, setReplyingTo] = useState<Message | null>(null);
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const { data: conversations } = useConversations();
   const { data: messages, isLoading: messagesLoading } = useMessages(selectedConversation?.id || '', { enabled: !!selectedConversation });
@@ -58,9 +54,7 @@ export default function ChatPage() {
     typingIndicators, 
     isConnected, 
     joinRoom, 
-    leaveRoom, 
     sendMessage, 
-    handleTypingStop: wsStopTyping, 
     updateStatus,
     addReaction,
   } = useWebSocket();
@@ -78,12 +72,8 @@ export default function ChatPage() {
     if (selectedConversation) {
       joinRoom(selectedConversation.id);
       markAllAsReadMutation.mutate(selectedConversation.id);
-      
-      return () => {
-        leaveRoom(selectedConversation.id);
-      };
     }
-  }, [selectedConversation, joinRoom, leaveRoom, markAllAsReadMutation]);
+  }, [selectedConversation, joinRoom, markAllAsReadMutation]);
 
   // Handle online status changes
   useEffect(() => {
@@ -104,12 +94,7 @@ export default function ChatPage() {
     handleTypingStop();
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSendMessage();
-    }
-  };
+
 
   const handleReply = (messageId: string) => {
     const message = messages?.find(m => m.id === messageId);

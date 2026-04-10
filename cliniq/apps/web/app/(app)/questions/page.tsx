@@ -218,7 +218,7 @@ export default function QuestionsFeedPage() {
                               </div>
                               <div>
                                  <p className="text-[10px] font-bold text-slate-900 leading-none">{question.user?.name || "Dr. Anonymous"}</p>
-                                 <p className="text-[9px] font-bold text-slate-400 uppercase mt-1 leading-none">{question.user?.institution || "Unspecified Facility"}</p>
+                                 <p className="text-[9px] font-bold text-slate-400 uppercase mt-1 leading-none">{"Verified Clinician"}</p>
                               </div>
                            </div>
                            <div className="h-10 w-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-inner">

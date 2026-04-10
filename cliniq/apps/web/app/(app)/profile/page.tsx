@@ -16,14 +16,9 @@ import {
   BrainCircuit, 
   School, 
   Target,
-  Trophy,
-  History,
   ChevronRight,
-  MoreHorizontal,
-  Star,
   ShieldCheck,
   Zap,
-  CheckCircle2,
   Hexagon,
   Sparkles,
   Crown
@@ -215,7 +210,7 @@ export default function ProfilePage() {
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-8">
             <AnimatePresence mode="popLayout">
               {badges && badges.length > 0 ? (
-                badges.map((badge, i) => (
+                badges.map((badge, _i) => (
                   <motion.div 
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}

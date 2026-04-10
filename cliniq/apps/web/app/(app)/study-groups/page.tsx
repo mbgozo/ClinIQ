@@ -13,21 +13,14 @@ import {
   Search, 
   Filter, 
   Plus, 
-  Globe, 
   Lock, 
-  Mail, 
-  Calendar, 
-  School, 
-  CheckCircle2, 
   X,
   RefreshCcw,
   Sparkles,
-  ChevronRight,
   ShieldCheck,
   UserPlus
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "../../../lib/utils";
 
 export default function StudyGroupsPage() {
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -48,7 +41,7 @@ export default function StudyGroupsPage() {
   const joinMutation = useJoinStudyGroup();
 
   const groups = groupsData?.groups || [];
-  const total = groupsData?.total || 0;
+
 
   const handleCreateGroup = async (formData: any) => {
     try {

@@ -1,38 +1,31 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+
+import { motion, useScroll, useTransform, Variants } from "framer-motion";
 import { 
   MessageSquare, 
   BookOpen, 
-  Users, 
   GraduationCap, 
-  Search, 
   ArrowRight, 
-  Star, 
   ShieldCheck, 
   Activity,
-  Globe,
-  Plus,
   Zap,
-  Sparkles,
-  Shield,
   Target,
   ChevronRight,
   Hexagon,
   Cpu,
   BrainCircuit,
-  Waves,
-  Fingerprint,
   Network,
   Orbit,
-  Bot
+  Bot,
+  Globe,
+  Fingerprint
 } from "lucide-react";
 import { cn } from "../lib/utils";
 
 export default function HomePage() {
-  const [searchQuery, setSearchQuery] = useState("");
+
   const { scrollY } = useScroll();
   
   const headerOpacity = useTransform(scrollY, [0, 100], [0, 0.9]);
@@ -76,7 +69,7 @@ export default function HomePage() {
     }
   ];
 
-  const containers = {
+  const containers: Variants = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
@@ -86,9 +79,9 @@ export default function HomePage() {
     }
   };
 
-  const item = {
+  const item: Variants = {
     hidden: { opacity: 0, y: 30 },
-    show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100 } }
+    show: { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 100 } }
   };
 
   return (

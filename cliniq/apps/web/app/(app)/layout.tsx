@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { Sidebar } from "@cliniq/ui";
-import { User, Bell, Search, Settings, ShieldCheck, Sparkles } from "lucide-react";
+import { User, Bell, Search, ShieldCheck, Sparkles } from "lucide-react";
 
 export default function AppLayout({ children }: { children: ReactNode }) {
   return (

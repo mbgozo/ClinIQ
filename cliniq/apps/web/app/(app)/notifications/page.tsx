@@ -10,7 +10,6 @@ import {
   Award, 
   ThumbsUp, 
   UserPlus, 
-  MoreHorizontal, 
   Check, 
   Eye, 
   Clock,
@@ -19,7 +18,8 @@ import {
   Sparkles,
   ChevronRight,
   ShieldCheck,
-  AlertCircle
+  AlertCircle,
+  RefreshCcw
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "../../../lib/utils";

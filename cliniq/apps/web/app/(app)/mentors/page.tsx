@@ -11,15 +11,9 @@ import {
   ChevronRight, 
   X, 
   ShieldCheck, 
-  MapPin, 
-  Clock, 
-  Star,
-  Globe,
-  GraduationCap,
   MessageCircle,
   AlertCircle,
   CheckCircle2,
-  MoreVertical,
   Target
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";

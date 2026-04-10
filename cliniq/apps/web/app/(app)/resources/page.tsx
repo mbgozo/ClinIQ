@@ -13,7 +13,6 @@ import {
 import { 
   Search, 
   Filter, 
-  Plus, 
   BookOpen, 
   Layers, 
   Calendar, 
@@ -21,11 +20,9 @@ import {
   X,
   RefreshCcw,
   CloudUpload,
-  Library,
-  GraduationCap
+  Library
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "../../../lib/utils";
 
 export default function ResourcesPage() {
   const [showUploadModal, setShowUploadModal] = useState(false);
