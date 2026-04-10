@@ -67,9 +67,9 @@ export function StudyGroupCard({
 }: StudyGroupCardProps) {
   const getPrivacyIcon = (privacy: string) => {
     switch (privacy) {
-      case 'PRIVATE': return <Lock className="h-3.5 w-3.5" />;
-      case 'INVITE_ONLY': return <Mail className="h-3.5 w-3.5" />;
-      default: return <Globe className="h-3.5 w-3.5" />;
+      case 'PRIVATE': return <Lock className="h-4 w-4" />;
+      case 'INVITE_ONLY': return <Mail className="h-4 w-4" />;
+      default: return <Globe className="h-4 w-4" />;
     }
   };
 
@@ -105,135 +105,137 @@ export function StudyGroupCard({
 
   return (
     <motion.div 
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, scale: 0.95 }}
+      whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
+      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       className={cn(
-        "glass group border-white hover:border-emerald-200 transition-all duration-700 shadow-2xl hover:shadow-[0_45px_100px_-20px_rgba(0,0,0,0.15)] rounded-[4rem] overflow-hidden flex flex-col relative",
+        "glass group border-white hover:border-emerald-300/30 transition-all duration-700 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] hover:shadow-[0_50px_100px_-20px_rgba(16,185,129,0.15)] rounded-[3.5rem] overflow-hidden flex flex-col relative bg-white/40 backdrop-blur-3xl",
         className
       )}
     >
       {/* Dynamic Activity Beacon */}
-      <div className="absolute top-0 right-0 h-40 w-40 bg-emerald-500/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none group-hover:bg-emerald-500/10 transition-colors duration-700" />
+      <div className="absolute top-0 right-0 h-48 w-48 bg-emerald-500/5 rounded-full blur-3xl -translate-y-1/3 translate-x-1/3 pointer-events-none group-hover:bg-emerald-500/10 transition-colors duration-1000" />
       
-      <div className="p-10 flex-1 flex flex-col relative z-10">
+      <div className="p-12 flex-1 flex flex-col relative z-10">
         {/* Superior Header */}
         <div className="flex items-start justify-between mb-8">
-          <div className="space-y-3">
-             <div className="flex flex-wrap items-center gap-3">
-               <h3 className="text-2xl font-black text-slate-900 heading group-hover:text-emerald-700 transition-colors leading-tight tracking-tight">{group.name}</h3>
+          <div className="space-y-4">
+             <div className="flex flex-wrap items-center gap-4">
+               <h3 className="text-3xl font-black text-slate-900 heading group-hover:text-emerald-800 transition-colors leading-[1.1] tracking-tight">{group.name}</h3>
                {group.category && (
-                 <span className="px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full text-[9px] font-black text-emerald-600 uppercase tracking-[0.2em] shadow-sm">
+                 <span className="px-4 py-1.5 bg-emerald-50 border border-emerald-100/50 rounded-full text-[10px] font-black text-emerald-600 uppercase tracking-widest shadow-sm">
                    {group.category.name}
                  </span>
                )}
              </div>
-             <div className="flex flex-wrap items-center gap-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
-                <span className="flex items-center gap-2 group-hover:text-slate-600 transition-colors">
+             <div className="flex flex-wrap items-center gap-8 text-[11px] font-black text-slate-400 uppercase tracking-widest">
+                <span className="flex items-center gap-2.5 px-3 py-1 rounded-xl hover:bg-slate-50 transition-all">
                   {getPrivacyIcon(group.privacy)} {group.privacy.replace(/_/g, ' ')}
                 </span>
-                <span className="flex items-center gap-2 group-hover:text-slate-600 transition-colors">
-                  <Activity className="h-4 w-4 text-emerald-500" /> {formatCadenceLabel(group.cadence)}
+                <span className="flex items-center gap-2.5 px-3 py-1 rounded-xl hover:bg-slate-50 transition-all">
+                  <Activity className="h-4 w-4 text-emerald-500 animate-pulse" /> {formatCadenceLabel(group.cadence)}
                 </span>
              </div>
           </div>
 
-          <div className="h-12 w-12 rounded-2xl glass border-white flex items-center justify-center text-slate-400 hover:bg-slate-900 hover:text-white cursor-pointer transition-all active:scale-90 shadow-sm">
+          <div className="h-14 w-14 rounded-2xl glass border-white flex items-center justify-center text-slate-400 hover:bg-slate-900 hover:text-white cursor-pointer transition-all active:scale-90 shadow-sm">
              <MoreVertical className="h-6 w-6" />
           </div>
         </div>
 
-        {/* Descriptive Core */}
-        <p className="text-base text-slate-500 mb-10 line-clamp-2 font-medium leading-relaxed">
+        {/* Narrative Core */}
+        <p className="text-[15px] text-slate-500 mb-10 line-clamp-2 font-medium leading-relaxed opacity-80">
           {group.description}
         </p>
 
         {/* Capacity Matrix & Intel Nodes */}
-        <div className="space-y-8 mb-10 pb-10 border-b border-slate-100/50">
-           <div className="flex items-end justify-between">
-              <div className="space-y-3">
-                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Operational Cohort</p>
+        <div className="space-y-10 mb-10 pb-10 border-b border-slate-100/50">
+           <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+              <div className="space-y-4">
+                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em]">Operational Cohort</p>
                  <div className="flex -space-x-4">
                     {[1, 2, 3, 4].map((i) => (
-                      <div key={i} className="h-10 w-10 rounded-[1.25rem] border-3 border-white bg-slate-100 flex items-center justify-center overflow-hidden shadow-xl ring-2 ring-slate-50 relative group/icon">
-                         <User className="h-5 w-5 text-slate-300 group-hover/icon:text-emerald-500 transition-colors" />
+                      <div key={i} className="h-12 w-12 rounded-[1.25rem] border-4 border-white bg-slate-100 flex items-center justify-center overflow-hidden shadow-2xl ring-2 ring-slate-50/50 relative group/icon transition-transform hover:scale-110 hover:z-20">
+                         <User className="h-6 w-6 text-slate-300 group-hover/icon:text-emerald-500 transition-colors" />
                       </div>
                     ))}
-                    <div className="h-10 w-10 rounded-[1.25rem] border-3 border-white bg-emerald-500 flex items-center justify-center text-[10px] font-black text-white shadow-xl ring-2 ring-emerald-50 relative z-10">
+                    <div className="h-12 w-12 rounded-[1.25rem] border-4 border-white bg-slate-950 flex items-center justify-center text-[10px] font-black text-white shadow-2xl ring-2 ring-slate-50 relative z-10 hover:scale-110 transition-transform">
                        +{group.memberCount}
                     </div>
                  </div>
               </div>
               
-              <div className="text-right space-y-3">
-                 <div className="flex items-center justify-end gap-3 text-xs font-black text-slate-900 uppercase">
+              <div className="text-left md:text-right space-y-4 flex-1 max-w-[220px]">
+                 <div className="flex items-center justify-between md:justify-end gap-3 text-[11px] font-black text-slate-900 uppercase tracking-widest">
                    {isFull ? <span className="text-rose-600">Saturation Limit</span> : <span>{group.maxMembers - group.memberCount} Nodes Remaining</span>}
                    <Fingerprint className={cn("h-4 w-4", isFull ? "text-rose-500" : "text-emerald-500")} />
                  </div>
-                 <div className="w-40 h-2 bg-slate-100 rounded-full overflow-hidden shadow-inner">
+                 <div className="h-2.5 bg-slate-100 rounded-full overflow-hidden shadow-inner border border-slate-50">
                     <motion.div 
                       initial={{ width: 0 }}
                       whileInView={{ width: `${capacityPercentage}%` }}
-                      transition={{ duration: 1.5, ease: "circOut" }}
+                      transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
                       className={cn(
-                        "h-full rounded-full transition-all duration-700 shadow-[0_0_15px_rgba(16,185,129,0.3)]",
-                        isFull ? "bg-rose-500" : "bg-gradient-to-r from-emerald-500 to-indigo-600"
+                        "h-full rounded-full transition-all duration-700 relative",
+                        isFull ? "bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.3)]" : "bg-gradient-to-r from-emerald-400 via-emerald-500 to-indigo-600 shadow-[0_0_10px_rgba(16,185,129,0.3)]"
                       )} 
-                    />
+                    >
+                       <div className="absolute inset-0 bg-white/20 animate-pulse" />
+                    </motion.div>
                  </div>
               </div>
            </div>
         </div>
 
         {/* Intel Metrics Grid */}
-        <div className="grid grid-cols-3 gap-6 mb-12">
-           <div className="space-y-2 group/metric">
-              <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] flex items-center gap-2 group-hover/metric:text-emerald-500 transition-colors">
-                 <MessageSquare className="h-3.5 w-3.5" /> Intel Hub
+        <div className="grid grid-cols-3 gap-8 mb-12">
+           <div className="space-y-3 group/metric">
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] flex items-center gap-2.5 group-hover/metric:text-emerald-600 transition-colors">
+                 <MessageSquare className="h-4 w-4" /> Intel Hub
               </p>
-              <p className="text-base font-black text-slate-900 heading tracking-tight">{group.postCount} Dispatches</p>
+              <p className="text-xl font-black text-slate-900 heading tracking-tight leading-none uppercase">{group.postCount} Reports</p>
            </div>
-           <div className="space-y-2 group/metric">
-              <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] flex items-center gap-2 group-hover/metric:text-indigo-500 transition-colors">
-                 <Clock className="h-3.5 w-3.5" /> Sync Pulse
+           <div className="space-y-3 group/metric">
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] flex items-center gap-2.5 group-hover/metric:text-indigo-600 transition-colors">
+                 <Clock className="h-4 w-4" /> Sync Pulse
               </p>
-              <p className="text-base font-black text-slate-900 heading tracking-tight">{formatDate(group.lastActivity)}</p>
+              <p className="text-xl font-black text-slate-900 heading tracking-tight leading-none uppercase">{formatDate(group.lastActivity)}</p>
            </div>
-           <div className="space-y-2 group/metric">
-              <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] flex items-center gap-2 group-hover/metric:text-amber-500 transition-colors">
-                 <Fingerprint className="h-3.5 w-3.5" /> Identity
+           <div className="space-y-3 group/metric">
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] flex items-center gap-2.5 group-hover/metric:text-amber-600 transition-colors">
+                 <Fingerprint className="h-4 w-4" /> Authority
               </p>
               {group.userRole ? (
-                <div className={cn("flex items-center gap-2 text-[11px] font-black uppercase tracking-tight", getRoleLabel().color)}>
+                <div className={cn("flex items-center gap-2 text-[12px] font-black uppercase tracking-tight", getRoleLabel().color)}>
                    {getRoleLabel().icon} {getRoleLabel().label}
                 </div>
               ) : (
-                <div className="flex items-center gap-2 text-[11px] font-black text-slate-300 uppercase tracking-tight">
-                   <Network className="h-3.5 w-3.5" /> Outsider
+                <div className="flex items-center gap-2 text-[12px] font-black text-slate-300 uppercase tracking-tight">
+                   <Network className="h-4 w-4" /> Unlinked
                 </div>
               )}
            </div>
         </div>
 
         {/* Command Nexus (Footer) */}
-        <div className="mt-auto space-y-8">
-           <div className="flex items-center gap-5 p-4 bg-slate-50/50 rounded-3xl border border-slate-100 group/owner transition-all hover:bg-white hover:shadow-xl hover:border-emerald-100">
-              <div className="h-12 w-12 rounded-[1.25rem] bg-white p-0.5 shadow-xl border border-slate-100 relative group-hover/owner:rotate-6 transition-transform duration-500 overflow-hidden">
+        <div className="mt-auto space-y-10">
+           <div className="flex items-center gap-6 p-5 bg-slate-50/50 rounded-[2rem] border border-slate-100 group/owner transition-all hover:bg-white hover:shadow-2xl hover:border-emerald-200">
+              <div className="h-14 w-14 rounded-[1.25rem] bg-white p-1 shadow-2xl border border-white relative group-hover/owner:rotate-6 transition-transform duration-700 overflow-hidden ring-4 ring-slate-100">
                  {group.owner.avatarUrl ? (
                    <img src={group.owner.avatarUrl} alt="" className="h-full w-full object-cover rounded-xl" />
                  ) : (
                    <div className="h-full w-full flex items-center justify-center bg-slate-50 rounded-xl">
-                      <User className="h-6 w-6 text-slate-300" />
+                      <User className="h-8 w-8 text-slate-200" />
                    </div>
                  )}
               </div>
               <div className="flex-1 min-w-0">
-                 <p className="text-xs font-black text-slate-900 uppercase tracking-tight mb-1 truncate">{group.owner.name}</p>
-                 <p className="text-[9px] font-bold text-slate-400 uppercase truncate tracking-[0.1em]">{group.owner.institution}</p>
+                 <p className="text-sm font-black text-slate-900 uppercase tracking-tight mb-1 truncate leading-none">{group.owner.name}</p>
+                 <p className="text-[10px] font-bold text-slate-400 uppercase truncate tracking-[0.1em] leading-none">{group.owner.institution}</p>
               </div>
               <div className="h-10 w-10 flex items-center justify-center text-emerald-500 opacity-0 group-hover/owner:opacity-100 transition-opacity">
-                <Crown className="h-5 w-5" />
+                <Crown className="h-6 w-6" />
               </div>
            </div>
 
@@ -242,10 +244,11 @@ export function StudyGroupCard({
                {canJoin && (
                  <button
                    onClick={() => onJoin?.(group.id)}
-                   className="flex-1 h-16 rounded-[1.5rem] bg-slate-900 text-white flex items-center justify-center gap-4 font-black text-[11px] uppercase tracking-[0.2em] shadow-3xl shadow-slate-200 hover:bg-emerald-600 transition-all active:scale-95 group/btn"
+                   className="flex-1 h-18 rounded-[2rem] bg-slate-900 text-white flex items-center justify-center gap-4 font-black text-[11px] uppercase tracking-[0.3em] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)] hover:bg-emerald-600 transition-all active:scale-95 group/btn overflow-hidden relative"
                  >
-                   <UserPlus className="h-5 w-5 text-emerald-400 group-hover/btn:scale-110 transition-transform" />
-                   Initiate Strategic Entry
+                   <div className="absolute inset-0 bg-gradient-to-r from-emerald-400/0 via-emerald-400/10 to-emerald-400/0 translate-x-[-100%] group-hover/btn:translate-x-[100%] transition-transform duration-1000 ease-in-out" />
+                   <UserPlus className="h-6 w-6 text-emerald-400 group-hover/btn:scale-110 transition-transform relative z-10" />
+                   <span className="relative z-10">Initiate Tactical Sync</span>
                  </button>
                )}
                
@@ -253,18 +256,19 @@ export function StudyGroupCard({
                  <div className="flex w-full gap-4">
                    <button
                      onClick={() => onManage?.(group.id)}
-                     className="flex-1 h-16 rounded-[1.5rem] bg-white border-2 border-slate-900/5 text-slate-900 flex items-center justify-center gap-4 font-black text-[11px] uppercase tracking-[0.2em] shadow-xl hover:bg-slate-900 hover:text-white transition-all group/hub active:scale-95"
+                     className="flex-1 h-18 rounded-[2rem] bg-white border border-slate-200 text-slate-900 flex items-center justify-center gap-4 font-black text-[11px] uppercase tracking-[0.3em] shadow-xl hover:bg-slate-900 hover:text-white hover:border-slate-900 transition-all group/hub active:scale-95 relative overflow-hidden"
                    >
-                     Intel Command <ArrowUpRight className="h-5 w-5 group-hover/hub:translate-x-1 group-hover/hub:-translate-y-1 transition-transform text-emerald-500" />
+                     <span className="relative z-10">Operational HQ</span>
+                     <ArrowUpRight className="h-6 w-6 group-hover/hub:translate-x-1 group-hover/hub:-translate-y-1 transition-transform text-emerald-500 relative z-10" />
                    </button>
                    
                    {group.userRole !== 'OWNER' && (
                      <button
                        onClick={() => onLeave?.(group.id)}
-                       className="h-16 w-16 rounded-[1.5rem] glass-dark border-rose-500/20 text-rose-400 hover:bg-rose-600 hover:text-white transition-all flex items-center justify-center shadow-xl active:scale-95"
-                       title="Terminate Connection"
+                       className="h-18 w-18 rounded-[2rem] glass border-rose-500/10 text-rose-400 hover:bg-rose-600 hover:text-white transition-all flex items-center justify-center shadow-xl active:scale-95"
+                       title="Terminate Command"
                      >
-                       <Lock className="h-5 w-5" />
+                       <Lock className="h-6 w-6" />
                      </button>
                    )}
                  </div>
@@ -273,10 +277,10 @@ export function StudyGroupCard({
                {!isMember && isFull && (
                  <button
                    disabled
-                   className="flex-1 h-16 rounded-[1.5rem] bg-slate-100 border-2 border-slate-200 text-slate-300 font-black text-[11px] uppercase tracking-[0.2em] cursor-not-allowed flex items-center justify-center gap-3"
+                   className="flex-1 h-18 rounded-[2rem] bg-slate-100 border border-slate-200 text-slate-400 font-black text-[11px] uppercase tracking-[0.3em] cursor-not-allowed flex items-center justify-center gap-4"
                  >
-                   <ShieldCheck className="h-5 w-5 opacity-30" />
-                   Max Capacity Reached
+                   <ShieldCheck className="h-6 w-6 opacity-30" />
+                   Capacity Saturated
                  </button>
                )}
              </div>

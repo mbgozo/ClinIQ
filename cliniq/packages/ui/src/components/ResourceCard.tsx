@@ -104,156 +104,157 @@ export function ResourceCard({
 
   return (
     <motion.div 
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, scale: 0.95 }}
+      whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
+      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       className={cn(
-        "glass group border-white hover:border-emerald-200 transition-all duration-700 shadow-2xl hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.12)] rounded-[3.5rem] overflow-hidden flex flex-col relative",
+        "glass group border-white hover:border-emerald-300/50 transition-all duration-700 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] hover:shadow-[0_50px_100px_-20px_rgba(16,185,129,0.12)] rounded-[3rem] overflow-hidden flex flex-col relative bg-white/40 backdrop-blur-3xl",
         className
       )}
     >
       {/* Dynamic Visual Header */}
-      <div className="relative h-28 bg-slate-50 group-hover:bg-slate-100 transition-colors duration-700">
-         <div className="absolute inset-0 bg-grid-slate-200/[0.2] [mask-image:linear-gradient(0deg,transparent,black)] pointer-events-none" />
+      <div className="relative h-32 bg-slate-50/50 group-hover:bg-slate-100/80 transition-colors duration-700">
+         <div className="absolute inset-0 bg-grid-slate-200/[0.1] [mask-image:linear-gradient(0deg,transparent,black)] pointer-events-none" />
          
          <div className={cn(
-           "absolute top-8 left-10 h-14 w-14 rounded-2xl flex items-center justify-center shadow-xl border-2 transition-all duration-700 group-hover:scale-110 group-hover:rotate-6",
+           "absolute top-8 left-10 h-16 w-16 rounded-[1.2rem] flex items-center justify-center shadow-2xl border-2 transition-all duration-700 group-hover:scale-110 group-hover:rotate-6 bg-white",
            getFileIconColors(resource.fileType)
          )}>
            {getFileIcon(resource.fileType)}
-           <div className="absolute inset-0 rounded-2xl bg-white/40 blur-sm opacity-0 group-hover:opacity-100 transition-opacity" />
+           <div className="absolute inset-0 rounded-[1.2rem] bg-indigo-500/5 blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
          </div>
          
          <div className="absolute top-8 right-10">
-            <div className="h-10 w-10 rounded-xl glass border-white flex items-center justify-center text-slate-400 hover:bg-slate-900 hover:text-white cursor-pointer transition-all active:scale-90">
+            <div className="h-11 w-11 rounded-2xl glass border-white flex items-center justify-center text-slate-400 hover:bg-slate-900 hover:text-white cursor-pointer transition-all active:scale-90 shadow-sm">
                <MoreVertical className="h-5 w-5" />
             </div>
          </div>
 
-         {/* Type Backdrop Text */}
-         <div className="absolute -bottom-6 right-8 text-5xl font-black text-slate-100/50 select-none uppercase tracking-tighter opacity-10 transition-opacity group-hover:opacity-20">
+         {/* Type Backdrop Text - Premium subtle watermark */}
+         <div className="absolute -bottom-4 right-10 text-6xl font-black text-slate-200/20 select-none uppercase tracking-tighter opacity-10 transition-all duration-1000 group-hover:opacity-30 group-hover:translate-y-[-10px]">
             {resource.fileType?.split('_')[0] || 'Doc'}
          </div>
       </div>
 
-      <div className="p-10 pt-8 flex-1 flex flex-col relative z-10">
+      <div className="p-12 pt-10 flex-1 flex flex-col relative z-10">
         {/* Indicators Row */}
-        <div className="flex items-center gap-3 mb-6">
+        <div className="flex items-center gap-4 mb-8">
           {resource.category && (
-            <span className="flex items-center gap-1.5 px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-[9px] font-black text-emerald-600 uppercase tracking-[0.2em]">
-              <Layers className="h-3 w-3" /> {resource.category.name}
+            <span className="flex items-center gap-2 px-4 py-1.5 bg-emerald-50 border border-emerald-100/50 rounded-full text-[10px] font-black text-emerald-600 uppercase tracking-widest shadow-sm">
+              <Layers className="h-3.5 w-3.5" /> {resource.category.name}
             </span>
           )}
           {resource.isFlagged && (
-            <span className="flex items-center gap-1.5 px-3 py-1 bg-rose-500/10 border border-rose-500/20 rounded-lg text-[9px] font-black text-rose-600 uppercase tracking-[0.2em] animate-pulse">
-              <AlertTriangle className="h-3 w-3" /> Integrity Review
+            <span className="flex items-center gap-2 px-4 py-1.5 bg-rose-50 border border-rose-100/50 rounded-full text-[10px] font-black text-rose-600 uppercase tracking-widest shadow-sm animate-pulse">
+              <AlertTriangle className="h-3.5 w-3.5" /> Integrity Check
             </span>
           )}
         </div>
 
         {/* Core Asset Title */}
-        <div className="space-y-4 mb-8">
-          <div className="space-y-2">
-            <h3 className="text-2xl font-black text-slate-900 heading leading-[1.15] group-hover:text-emerald-700 transition-colors duration-500 max-w-[90%]">
+        <div className="space-y-6 mb-10">
+          <div className="space-y-3">
+            <h3 className="text-3xl font-black text-slate-900 heading leading-[1.1] group-hover:text-emerald-800 transition-colors duration-500 max-w-[95%] tracking-tight">
               {resource.title}
             </h3>
-            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[10px] font-black text-slate-400 uppercase tracking-[0.1em]">
+            <div className="flex flex-wrap items-center gap-x-8 gap-y-3 text-[11px] font-black text-slate-400 uppercase tracking-widest">
               {resource.course && (
-                <span className="flex items-center gap-2 px-1.5 py-0.5 rounded-md hover:bg-slate-50 transition-colors">
-                  <Book className="h-3.5 w-3.5 text-indigo-500" /> {resource.course}
+                <span className="flex items-center gap-2.5 px-3 py-1 rounded-xl hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-100">
+                  <Book className="h-4 w-4 text-indigo-500" /> {resource.course}
                 </span>
               )}
               {resource.year && (
-                <span className="flex items-center gap-2 px-1.5 py-0.5 rounded-md hover:bg-slate-50 transition-colors">
-                  <History className="h-3.5 w-3.5 text-amber-500" /> Phase {resource.year}
+                <span className="flex items-center gap-2.5 px-3 py-1 rounded-xl hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-100">
+                  <History className="h-4 w-4 text-amber-500" /> Archival {resource.year}
                 </span>
               )}
             </div>
           </div>
           
           {resource.description && (
-            <p className="text-sm text-slate-500 font-medium leading-relaxed line-clamp-2">
+            <p className="text-[15px] text-slate-500 font-medium leading-relaxed line-clamp-2 opacity-80">
               {resource.description}
             </p>
           )}
         </div>
 
-        {/* Global Markers */}
+        {/* Global Markers/Tags */}
         {resource.tags.length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-10">
+          <div className="flex flex-wrap gap-3 mb-12">
             {resource.tags.slice(0, 3).map((tag) => (
               <span 
                 key={tag}
-                className="text-[9px] font-black px-3 py-1.5 bg-slate-100 rounded-xl text-slate-500 transition-all cursor-default border border-transparent hover:border-emerald-200 hover:bg-white hover:text-emerald-600 uppercase tracking-widest"
+                className="text-[10px] font-bold px-4 py-2 bg-white/80 rounded-2xl text-slate-400 transition-all cursor-default border border-slate-100 hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700 uppercase tracking-widest shadow-sm"
               >
                 #{tag}
               </span>
             ))}
             {resource.tags.length > 3 && (
-              <div className="h-6 w-10 flex items-center justify-center bg-slate-50 rounded-lg text-[9px] font-black text-slate-300">
+              <div className="h-10 w-12 flex items-center justify-center bg-slate-50 rounded-2xl text-[10px] font-black text-slate-300 border border-slate-50 shadow-inner">
                 +{resource.tags.length - 3}
               </div>
             )}
           </div>
         )}
 
-        <div className="mt-auto space-y-8">
+        <div className="mt-auto space-y-10">
           {/* Attribution Nexus */}
-          <div className="flex items-center justify-between py-6 border-t border-slate-50">
-             <div className="flex items-center gap-4 group/author">
-                <div className="h-12 w-12 rounded-2xl bg-white p-0.5 shadow-xl border border-slate-100 ring-4 ring-slate-50/50 group-hover/author:ring-emerald-500/10 transition-all duration-500 relative overflow-hidden">
+          <div className="flex items-center justify-between py-8 border-t border-slate-100/50">
+             <div className="flex items-center gap-5 group/author">
+                <div className="h-14 w-14 rounded-[1.2rem] bg-white p-1 shadow-2xl border border-white ring-8 ring-slate-50/30 group-hover/author:ring-emerald-500/5 transition-all duration-700 relative overflow-hidden">
                    {resource.user.avatarUrl ? (
                      <img src={resource.user.avatarUrl} alt="" className="h-full w-full object-cover rounded-[0.9rem]" />
                    ) : (
                      <div className="h-full w-full flex items-center justify-center bg-slate-50 rounded-[0.9rem]">
-                        <User className="h-6 w-6 text-slate-200" />
+                        <User className="h-7 w-7 text-slate-200" />
                      </div>
                    )}
                 </div>
-                <div className="space-y-0.5">
-                   <p className="text-[11px] font-black text-slate-900 uppercase tracking-tight">{resource.user.name}</p>
-                   <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest leading-none truncate max-w-[140px]">{resource.user.institution}</p>
+                <div className="space-y-1">
+                   <p className="text-[13px] font-black text-slate-900 uppercase tracking-tight leading-none group-hover/author:text-emerald-600 transition-colors">{resource.user.name}</p>
+                   <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none truncate max-w-[160px]">{resource.user.institution}</p>
                 </div>
              </div>
              
-             <div className="text-right space-y-0.5">
-                <div className="flex items-center justify-end gap-1.5">
-                   <span className="text-base font-black text-slate-900">{resource.downloads.toLocaleString()}</span>
-                   <Zap className="h-3.5 w-3.5 text-emerald-500" />
+             <div className="text-right space-y-1.5">
+                <div className="flex items-center justify-end gap-2">
+                   <span className="text-xl font-black text-slate-900 tabular-nums">{resource.downloads.toLocaleString()}</span>
+                   <Zap className="h-4 w-4 text-emerald-500 animate-pulse" />
                 </div>
-                <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Global Syncs</p>
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">High-Fidelity Syncs</p>
              </div>
           </div>
 
           {/* Precision Controls */}
           {showActions && (
-            <div className="flex gap-3">
+            <div className="flex gap-4">
               <button
                 onClick={() => onDownload?.(resource.id)}
-                className="flex-1 h-14 rounded-[1.25rem] bg-slate-900 text-white flex items-center justify-center gap-3 font-black text-[10px] uppercase tracking-[0.2em] shadow-3xl shadow-slate-200 hover:bg-emerald-600 transition-all active:scale-95 group/btn"
+                className="flex-1 h-16 rounded-[1.5rem] bg-slate-900 text-white flex items-center justify-center gap-4 font-black text-[11px] uppercase tracking-[0.3em] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)] hover:bg-emerald-600 transition-all active:scale-95 group/btn overflow-hidden relative"
               >
-                {isExternalLink ? <ArrowUpRight className="h-4 w-4 text-emerald-400" /> : <Download className="h-4 w-4 text-emerald-400 group-hover/btn:translate-y-0.5" />}
-                {isExternalLink ? 'Access Vector' : 'Sync Offline'}
+                <div className="absolute inset-0 bg-gradient-to-r from-emerald-400/0 via-emerald-400/10 to-emerald-400/0 translate-x-[-100%] group-hover/btn:translate-x-[100%] transition-transform duration-1000 ease-in-out" />
+                {isExternalLink ? <ArrowUpRight className="h-5 w-5 text-emerald-400 relative z-10" /> : <Download className="h-5 w-5 text-emerald-400 relative z-10 group-hover/btn:translate-y-0.5 transition-transform" />}
+                <span className="relative z-10">{isExternalLink ? 'Initiate Access' : 'Secure Sync'}</span>
               </button>
               
-              <div className="flex gap-1.5 p-1.5 bg-slate-50 rounded-[1.25rem] border border-slate-100">
+              <div className="flex gap-2 p-2 bg-slate-100/50 rounded-[1.5rem] border border-slate-100">
                 {onEdit && (
-                  <button onClick={() => onEdit(resource.id)} className="h-11 w-11 rounded-xl glass border-white text-slate-400 hover:text-emerald-600 hover:bg-white transition-all flex items-center justify-center shadow-sm">
+                  <button onClick={() => onEdit(resource.id)} className="h-12 w-12 rounded-2xl glass border-white text-slate-400 hover:text-emerald-600 hover:bg-white transition-all flex items-center justify-center shadow-lg hover:scale-105 active:scale-95">
                     <Edit2 className="h-4 w-4" />
                   </button>
                 )}
                 <button 
                   onClick={() => onFlag?.(resource.id)} 
                   className={cn(
-                    "h-11 w-11 rounded-xl glass border-white transition-all flex items-center justify-center shadow-sm",
+                    "h-12 w-12 rounded-2xl glass border-white transition-all flex items-center justify-center shadow-lg hover:scale-105 active:scale-95",
                     resource.isFlagged ? "text-rose-500 bg-rose-50" : "text-slate-400 hover:text-rose-600 hover:bg-white"
                   )}
                 >
                   <Flag className="h-4 w-4" />
                 </button>
                 {onDelete && (
-                  <button onClick={() => onDelete(resource.id)} className="h-11 w-11 rounded-xl glass border-white text-slate-300 hover:text-rose-700 hover:bg-white transition-all flex items-center justify-center shadow-sm">
+                  <button onClick={() => onDelete(resource.id)} className="h-12 w-12 rounded-2xl glass border-white text-slate-300 hover:text-rose-700 hover:bg-white transition-all flex items-center justify-center shadow-lg hover:scale-105 active:scale-95">
                     <Trash2 className="h-4 w-4" />
                   </button>
                 )}
