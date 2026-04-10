@@ -118,7 +118,6 @@ export function AdminDashboard({
 
   return (
     <div className={cn("space-y-16 pb-24", className)}>
-      {/* Dynamic Alerts Matrix */}
       <AnimatePresence>
         {alerts.length > 0 && (
           <div className="space-y-6">
@@ -183,41 +182,38 @@ export function AdminDashboard({
           </div>
         )}
       </AnimatePresence>
-      {/* Quick Intelligence Directives */}
-      {hasPermission(Permission.MANAGE_USERS) && (
-        <section className="space-y-8">
-           <div className="flex items-center gap-4 px-4">
-              <Icons.Zap className="h-6 w-6 text-emerald-500" />
-              <h3 className="text-[11px] font-black text-white uppercase tracking-[0.4em]">Operational Directives</h3>
-           </div>
-           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-             {[
-               { label: "Personnel Nexus", icon: <Icons.Users className="h-6 w-6" />, color: "text-blue-400", desc: "User registry & permissions" },
-               { label: "Oversight Queue", icon: <Icons.ShieldAlert className="h-6 w-6" />, color: "text-amber-400", desc: "Moderation & integrity" },
-               { label: "Deep Intel", icon: <Icons.BarChart3 className="h-6 w-6" />, color: "text-emerald-400", desc: "Engagement telemetry" },
-               { label: "Kernel Health", icon: <Icons.Cpu className="h-6 w-6" />, color: "text-indigo-400", desc: "Global system settings" }
-             ].map((action, i) => (
-               <motion.button 
-                 key={i}
-                 whileHover={{ y: -8, scale: 1.02 }}
-                 className="glass-dark border-white/5 p-10 rounded-[3rem] text-left transition-all hover:bg-white/10 group shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] relative overflow-hidden"
-               >
-                 <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent pointer-events-none" />
-                 <div className={cn("h-16 w-16 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-center mb-8 group-hover:scale-110 group-hover:rotate-6 transition-all duration-700 shadow-inner", action.color)}>
-                   {action.icon}
-                 </div>
-                 <h4 className="text-lg font-black text-white tracking-tight mb-2 uppercase heading">{action.label}</h4>
-                 <p className="text-[11px] font-bold text-slate-500 uppercase tracking-widest leading-none mb-8">{action.desc}</p>
-                 <div className="flex items-center gap-3 text-[10px] font-black text-white/40 uppercase tracking-[0.2em] group-hover:text-emerald-400 transition-colors">
-                    Execute Directive <Icons.ChevronRight className="h-4 w-4 group-hover:translate-x-2 transition-transform" />
-                 </div>
-               </motion.button>
-             ))}
-           </div>
-        </section>
-      )}
 
-      {/* Detailed Operations Grid */}
+      <section className="space-y-8">
+         <div className="flex items-center gap-4 px-4">
+            <Icons.Zap className="h-6 w-6 text-emerald-500" />
+            <h3 className="text-[11px] font-black text-white uppercase tracking-[0.4em]">Operational Directives</h3>
+         </div>
+         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+           {[
+             { label: "Personnel Nexus", icon: <Icons.Users className="h-6 w-6" />, color: "text-blue-400", desc: "User registry & permissions" },
+             { label: "Oversight Queue", icon: <Icons.ShieldAlert className="h-6 w-6" />, color: "text-amber-400", desc: "Moderation & integrity" },
+             { label: "Deep Intel", icon: <Icons.BarChart3 className="h-6 w-6" />, color: "text-emerald-400", desc: "Engagement telemetry" },
+             { label: "Kernel Health", icon: <Icons.Cpu className="h-6 w-6" />, color: "text-indigo-400", desc: "Global system settings" }
+           ].map((action, i) => (
+             <motion.button 
+               key={i}
+               whileHover={{ y: -8, scale: 1.02 }}
+               className="glass-dark border-white/5 p-10 rounded-[3rem] text-left transition-all hover:bg-white/10 group shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] relative overflow-hidden"
+             >
+               <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent pointer-events-none" />
+               <div className={cn("h-16 w-16 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-center mb-8 group-hover:scale-110 group-hover:rotate-6 transition-all duration-700 shadow-inner", action.color)}>
+                 {action.icon}
+               </div>
+               <h4 className="text-lg font-black text-white tracking-tight mb-2 uppercase heading">{action.label}</h4>
+               <p className="text-[11px] font-bold text-slate-500 uppercase tracking-widest leading-none mb-8">{action.desc}</p>
+               <div className="flex items-center gap-3 text-[10px] font-black text-white/40 uppercase tracking-[0.2em] group-hover:text-emerald-400 transition-colors">
+                  Execute Directive <Icons.ChevronRight className="h-4 w-4 group-hover:translate-x-2 transition-transform" />
+               </div>
+             </motion.button>
+           ))}
+         </div>
+      </section>
+
       {stats && (
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-12">
           <motion.div 
