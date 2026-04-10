@@ -6,7 +6,8 @@ import {
   SystemStats, 
   SystemAlert, 
   AdminRole, 
-  Permission 
+  Permission,
+  SystemAlertType
 } from "@cliniq/shared-types";
 import { cn } from "../lib/utils";
 
@@ -24,14 +25,13 @@ interface NeuralStatCardProps {
   icon: React.ElementType;
   color: string;
   trend?: number;
-  index: number;
 }
 
 const formatPercentage = (num: number) => {
   return num.toFixed(1) + '%';
 };
 
-const NeuralStatCard = ({ title, value, subtitle, icon: Icon, color, trend, index }: NeuralStatCardProps) => {
+const NeuralStatCard = ({ title, value, subtitle, icon: Icon, color, trend }: NeuralStatCardProps) => {
   return (
     <div className="relative group p-8 glass rounded-[2.5rem] border-white/40 shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden">
       <div className={cn("absolute -top-10 -right-10 h-32 w-32 rounded-full blur-[60px] opacity-20 group-hover:opacity-40 transition-opacity", color)} />
@@ -64,12 +64,12 @@ const NeuralStatCard = ({ title, value, subtitle, icon: Icon, color, trend, inde
 };
 
 export function AdminDashboard({ stats, alerts, userRole, userPermissions }: AdminDashboardProps) {
-  const getSeverityIcon = (severity: string) => {
-    switch (severity) {
-      case 'CRITICAL': return <Icons.ShieldAlert className="h-5 w-5" />;
-      case 'ERROR': return <Icons.AlertCircle className="h-5 w-5" />;
-      case 'WARNING': return <Icons.AlertTriangle className="h-5 w-5" />;
-      case 'INFO': return <Icons.Info className="h-5 w-5" />;
+  const getSeverityIcon = (type: SystemAlertType) => {
+    switch (type) {
+      case SystemAlertType.ERROR: return <Icons.AlertCircle className="h-5 w-5" />;
+      case SystemAlertType.WARNING: return <Icons.AlertTriangle className="h-5 w-5" />;
+      case SystemAlertType.INFO: return <Icons.Info className="h-5 w-5" />;
+      case SystemAlertType.MAINTENANCE: return <Icons.Settings className="h-5 w-5" />;
       default: return <Icons.Activity className="h-5 w-5" />;
     }
   };
@@ -114,7 +114,7 @@ export function AdminDashboard({ stats, alerts, userRole, userPermissions }: Adm
       {/* 1. Neural Intel Grid */}
       <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         {dashboardStats.map((stat, i) => (
-          <NeuralStatCard key={i} {...stat} index={i} />
+          <NeuralStatCard key={i} {...stat} />
         ))}
       </section>
 
@@ -146,24 +146,24 @@ export function AdminDashboard({ stats, alerts, userRole, userPermissions }: Adm
                      <p className="text-xs font-black text-slate-400 uppercase tracking-widest">System baseline nominal</p>
                   </div>
                 ) : (
-                  alerts.map((alert, i) => (
+                  alerts.map((alert) => (
                     <div 
                       key={alert.id} 
                       className="group flex items-start gap-6 p-6 rounded-[2rem] hover:bg-slate-50 transition-all border border-transparent hover:border-slate-100"
                     >
                       <div className={cn(
                         "h-12 w-12 rounded-2xl flex items-center justify-center shrink-0 shadow-sm",
-                        alert.severity === 'CRITICAL' ? "bg-red-50 text-red-500" : 
-                        alert.severity === 'WARNING' ? "bg-amber-50 text-amber-500" : "bg-blue-50 text-blue-500"
+                        alert.type === SystemAlertType.ERROR ? "bg-red-50 text-red-500" : 
+                        alert.type === SystemAlertType.WARNING ? "bg-amber-50 text-amber-500" : "bg-blue-50 text-blue-500"
                       )}>
-                        {getSeverityIcon(alert.severity)}
+                        {getSeverityIcon(alert.type)}
                       </div>
                       <div className="flex-1 space-y-1">
                         <div className="flex items-center justify-between">
-                           <h4 className="text-sm font-black text-slate-900 uppercase tracking-tight">{alert.message}</h4>
-                           <span className="text-[10px] font-bold text-slate-400">{new Date(alert.timestamp).toLocaleTimeString()}</span>
+                           <h4 className="text-sm font-black text-slate-900 uppercase tracking-tight">{alert.title}</h4>
+                           <span className="text-[10px] font-bold text-slate-400">{new Date(alert.createdAt).toLocaleTimeString()}</span>
                         </div>
-                        <p className="text-xs text-slate-500 font-medium leading-relaxed">{alert.details || "No secondary diagnostic data available for this event."}</p>
+                        <p className="text-xs text-slate-500 font-medium leading-relaxed">{alert.message}</p>
                       </div>
                       <button className="opacity-0 group-hover:opacity-100 p-2 hover:bg-white rounded-lg transition-all">
                         <Icons.ChevronRight className="h-4 w-4 text-slate-400" />
