@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { 
   SystemStats, 
   SystemAlert, 
@@ -9,6 +10,65 @@ import {
 import * as Icons from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "../lib/utils";
+
+interface NeuralStatCardProps {
+  title: string;
+  value: string | number;
+  subtitle?: string;
+  icon: React.ReactNode;
+  color: string;
+  trend?: { value: number; isPositive: boolean };
+  index: number;
+}
+
+const NeuralStatCard = ({ title, value, subtitle, icon, color, trend, index }: NeuralStatCardProps) => {
+  const formatPercentage = (num: number) => {
+    return num.toFixed(1) + '%';
+  };
+
+  return (
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.1, duration: 0.5 }}
+      className="glass-dark border-white/10 rounded-[2rem] p-8 hover:border-emerald-500/30 transition-all group relative overflow-hidden shadow-[0_40px_80px_-15px_rgba(0,0,0,0.5)] bg-slate-900/40 backdrop-blur-3xl"
+    >
+      <div className="absolute top-0 right-0 p-8 opacity-[0.02] pointer-events-none group-hover:opacity-[0.05] transition-opacity scale-150 rotate-12">
+         {icon}
+      </div>
+      
+      <div className="flex flex-col h-full space-y-6 relative z-10">
+        <div className="flex items-center justify-between">
+           <div className={cn("p-4 rounded-2xl bg-white/5 border border-white/5 group-hover:scale-110 group-hover:rotate-3 transition-all duration-700 shadow-inner", color)}>
+              {icon}
+           </div>
+           {trend && (
+             <div className={cn(
+               "flex items-center gap-2 px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-[0.2em] border backdrop-blur-md",
+               trend.isPositive ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400" : "bg-rose-500/10 border-rose-500/20 text-rose-400"
+             )}>
+               <div className={cn("h-1.5 w-1.5 rounded-full animate-pulse", trend.isPositive ? "bg-emerald-500" : "bg-rose-500")} />
+               {formatPercentage(trend.value)}
+             </div>
+           )}
+        </div>
+
+        <div className="space-y-2">
+          <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.4em] mb-1">{title}</p>
+          <p className="text-4xl font-black heading tracking-tighter text-white leading-none">
+            {typeof value === 'number' ? value.toLocaleString() : value}
+          </p>
+          {subtitle && (
+            <div className="flex items-center gap-2 pt-2">
+               <div className="h-1 w-1 rounded-full bg-slate-700" />
+               <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest leading-none">{subtitle}</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </motion.div>
+  );
+};
 
 interface AdminDashboardProps {
   stats?: SystemStats;
@@ -64,57 +124,6 @@ export function AdminDashboard({
   const dismissAlert = async (alertId: string) => {
     console.log('Dismissing alert:', alertId);
   };
-
-  const NeuralStatCard = ({ title, value, subtitle, icon, color, trend, index }: {
-    title: string;
-    value: string | number;
-    subtitle?: string;
-    icon: React.ReactNode;
-    color: string;
-    trend?: { value: number; isPositive: boolean };
-    index: number;
-  }) => (
-    <motion.div 
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.1, duration: 0.5 }}
-      className="glass-dark border-white/10 rounded-[2rem] p-8 hover:border-emerald-500/30 transition-all group relative overflow-hidden shadow-[0_40px_80px_-15px_rgba(0,0,0,0.5)] bg-slate-900/40 backdrop-blur-3xl"
-    >
-      <div className="absolute top-0 right-0 p-8 opacity-[0.02] pointer-events-none group-hover:opacity-[0.05] transition-opacity scale-150 rotate-12">
-         {icon}
-      </div>
-      
-      <div className="flex flex-col h-full space-y-6 relative z-10">
-        <div className="flex items-center justify-between">
-           <div className={cn("p-4 rounded-2xl bg-white/5 border border-white/5 group-hover:scale-110 group-hover:rotate-3 transition-all duration-700 shadow-inner", color)}>
-              {icon}
-           </div>
-           {trend && (
-             <div className={cn(
-               "flex items-center gap-2 px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-[0.2em] border backdrop-blur-md",
-               trend.isPositive ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400" : "bg-rose-500/10 border-rose-500/20 text-rose-400"
-             )}>
-               <div className={cn("h-1.5 w-1.5 rounded-full animate-pulse", trend.isPositive ? "bg-emerald-500" : "bg-rose-500")} />
-               {formatPercentage(trend.value)}
-             </div>
-           )}
-        </div>
-
-        <div className="space-y-2">
-          <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.4em] mb-1">{title}</p>
-          <p className="text-4xl font-black heading tracking-tighter text-white leading-none">
-            {typeof value === 'number' ? value.toLocaleString() : value}
-          </p>
-          {subtitle && (
-            <div className="flex items-center gap-2 pt-2">
-               <div className="h-1 w-1 rounded-full bg-slate-700" />
-               <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest leading-none">{subtitle}</p>
-            </div>
-          )}
-        </div>
-      </div>
-    </motion.div>
-  );
 
   return (
     <div className={cn("space-y-16 pb-24", className)}>
