@@ -3,6 +3,26 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { 
+  Bell, 
+  MessageSquare, 
+  CheckCircle2, 
+  Award, 
+  ThumbsUp, 
+  UserPlus, 
+  MoreHorizontal, 
+  Check, 
+  Eye, 
+  Clock,
+  Trash2,
+  Inbox,
+  Sparkles,
+  ChevronRight,
+  ShieldCheck,
+  AlertCircle
+} from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { cn } from "../../lib/utils";
 
 interface Notification {
   id: string;
@@ -23,14 +43,14 @@ export default function NotificationCenterPage() {
     queryKey: ["notifications", filter],
     queryFn: async ({ pageParam = 1 }) => {
       // Mock data - replace with actual API call
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise(resolve => setTimeout(resolve, 800));
       
       const mockNotifications: Notification[] = [
         {
           id: '1',
           type: 'ANSWER_POSTED',
-          title: 'New answer on your question',
-          body: 'John Doe answered: "How to properly take blood pressure? Check this step-by-step guide..."',
+          title: 'Intelligence Update',
+          body: 'John Doe provided a clinical breakdown for your inquiry on arterial tension protocols...',
           read: false,
           link: '/questions/123#answer-456',
           createdAt: new Date(Date.now() - 1000 * 60 * 5).toISOString(),
@@ -38,8 +58,8 @@ export default function NotificationCenterPage() {
         {
           id: '2',
           type: 'ANSWER_ACCEPTED',
-          title: 'Your answer was accepted!',
-          body: 'Your answer to "Medication administration guidelines" was marked as accepted.',
+          title: 'Honorary Recognition',
+          body: 'Your clinical synthesis on "Vascular Access Management" was marked as the definitive solution.',
           read: false,
           link: '/questions/789',
           createdAt: new Date(Date.now() - 1000 * 60 * 60).toISOString(),
@@ -47,8 +67,8 @@ export default function NotificationCenterPage() {
         {
           id: '3',
           type: 'BADGE_EARNED',
-          title: 'You earned the HELPFUL badge!',
-          body: 'Your answers have received 5+ upvotes from the community.',
+          title: 'Distinction Acquired',
+          body: 'You have been awarded the "Elite Responder" badge for exceptional community contributions.',
           read: true,
           link: '/profile',
           createdAt: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(),
@@ -56,8 +76,8 @@ export default function NotificationCenterPage() {
         {
           id: '4',
           type: 'QUESTION_UPVOTED',
-          title: 'Your question received an upvote',
-          body: 'Your question "Best practices for wound care" was upvoted by the community.',
+          title: 'Intel Verification',
+          body: 'Your protocol query "Optimal Wound Debridement" received 10+ community endorsements.',
           read: true,
           link: '/questions/456',
           createdAt: new Date(Date.now() - 1000 * 60 * 60 * 4).toISOString(),
@@ -65,8 +85,8 @@ export default function NotificationCenterPage() {
         {
           id: '5',
           type: 'MENTOR_REQUEST',
-          title: 'New mentorship request',
-          body: 'Jane Smith requested your guidance on pediatric nursing topics.',
+          title: 'Mentorship Proposal',
+          body: 'Jane Smith requested your strategic guidance on Pediatric Intensive Care certifications.',
           read: true,
           link: '/mentors/requests/789',
           createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(),
@@ -121,174 +141,192 @@ export default function NotificationCenterPage() {
     const diffHours = Math.floor(diffMins / 60);
     const diffDays = Math.floor(diffHours / 24);
 
-    if (diffMins < 1) return 'just now';
-    if (diffMins < 60) return `${diffMins}m ago`;
-    if (diffHours < 24) return `${diffHours}h ago`;
-    return `${diffDays}d ago`;
+    if (diffMins < 1) return 'moment ago';
+    if (diffMins < 60) return `${diffMins}m`;
+    if (diffHours < 24) return `${diffHours}h`;
+    return `${diffDays}d`;
   };
 
   const getNotificationIcon = (type: string) => {
     switch (type) {
       case 'ANSWER_POSTED':
-        return (
-          <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
-            <svg className="h-4 w-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
-            </svg>
-          </div>
-        );
+        return <div className="h-10 w-10 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600"><MessageSquare className="h-5 w-5" /></div>;
       case 'ANSWER_ACCEPTED':
-        return (
-          <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center">
-            <svg className="h-4 w-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-            </svg>
-          </div>
-        );
+        return <div className="h-10 w-10 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-600"><CheckCircle2 className="h-5 w-5" /></div>;
       case 'BADGE_EARNED':
-        return (
-          <div className="h-8 w-8 rounded-full bg-yellow-100 flex items-center justify-center">
-            <svg className="h-4 w-4 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-            </svg>
-          </div>
-        );
+        return <div className="h-10 w-10 rounded-xl bg-amber-100 flex items-center justify-center text-amber-600"><Award className="h-5 w-5" /></div>;
       case 'QUESTION_UPVOTED':
-        return (
-          <div className="h-8 w-8 rounded-full bg-teal-100 flex items-center justify-center">
-            <svg className="h-4 w-4 text-teal-600" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
-            </svg>
-          </div>
-        );
+        return <div className="h-10 w-10 rounded-xl bg-teal-100 flex items-center justify-center text-teal-600"><ThumbsUp className="h-5 w-5" /></div>;
+      case 'MENTOR_REQUEST':
+        return <div className="h-10 w-10 rounded-xl bg-indigo-100 flex items-center justify-center text-indigo-600"><UserPlus className="h-5 w-5" /></div>;
       default:
-        return (
-          <div className="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center">
-            <svg className="h-4 w-4 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
-            </svg>
-          </div>
-        );
+        return <div className="h-10 w-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-600"><Bell className="h-5 w-5" /></div>;
     }
   };
 
   return (
-    <main className="mx-auto max-w-4xl px-4 py-8">
-      <div className="mb-6">
-        <h1 className="text-2xl font-semibold">Notifications</h1>
-        <p className="text-gray-600">Stay updated with your latest activity</p>
-      </div>
+    <div className="max-w-4xl mx-auto space-y-10 pb-20">
+      {/* Header Section */}
+      <section className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div className="space-y-2">
+          <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100 w-fit">
+            <Sparkles className="h-3 w-3 text-indigo-600" />
+            <span className="text-[10px] font-bold text-indigo-700 uppercase tracking-widest">Real-time Updates</span>
+          </div>
+          <h1 className="text-4xl lg:text-5xl font-bold tracking-tight text-slate-900 heading">Alert Directive</h1>
+          <p className="text-slate-500 max-w-lg text-lg leading-relaxed">
+            Monitor community endorsements, clinical insights, and strategic distinctions as they manifest.
+          </p>
+        </div>
 
-      {/* Filters */}
-      <div className="mb-6 flex items-center justify-between">
-        <div className="flex gap-2">
-          <button
-            onClick={() => setFilter("all")}
-            className={`px-4 py-2 text-sm font-medium rounded-lg ${
-              filter === "all"
-                ? "bg-teal-600 text-white"
-                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-            }`}
-          >
-            All
-          </button>
-          <button
-            onClick={() => setFilter("unread")}
-            className={`px-4 py-2 text-sm font-medium rounded-lg relative ${
-              filter === "unread"
-                ? "bg-teal-600 text-white"
-                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-            }`}
-          >
-            Unread
-            {unreadCount > 0 && (
-              <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-red-600 text-white text-xs flex items-center justify-center">
-                {unreadCount}
-              </span>
-            )}
-          </button>
+        <div className="bg-slate-900 rounded-2xl px-6 py-4 text-white shadow-xl shadow-slate-200 flex items-center gap-4">
+           <div className="h-10 w-10 rounded-xl bg-white/10 flex items-center justify-center">
+              <Bell className="h-5 w-5 text-emerald-400" />
+           </div>
+           <div>
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Unread Briefings</p>
+              <p className="text-2xl font-bold heading leading-none">{unreadCount}</p>
+           </div>
+        </div>
+      </section>
+
+      {/* Controller Bar */}
+      <section className="glass rounded-[2rem] p-4 border-white/40 shadow-xl flex items-center justify-between">
+        <div className="flex bg-slate-100 p-1.5 rounded-2xl">
+           <button
+             onClick={() => setFilter("all")}
+             className={cn(
+               "px-6 py-2 rounded-xl text-xs font-bold uppercase tracking-widest transition-all",
+               filter === "all" ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700"
+             )}
+           >
+             Archive
+           </button>
+           <button
+             onClick={() => setFilter("unread")}
+             className={cn(
+               "px-6 py-2 rounded-xl text-xs font-bold uppercase tracking-widest transition-all gap-2 flex items-center",
+               filter === "unread" ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700"
+             )}
+           >
+             Unread
+             {unreadCount > 0 && <span className="h-2 w-2 rounded-full bg-red-500 animate-pulse" />}
+           </button>
         </div>
 
         {unreadCount > 0 && (
           <button
             onClick={() => markAllAsReadMutation.mutate()}
             disabled={markAllAsReadMutation.isPending}
-            className="text-sm text-teal-600 hover:text-teal-700 disabled:opacity-50"
+            className="flex items-center gap-2 px-5 py-2 hover:bg-emerald-50 text-emerald-600 rounded-xl text-xs font-bold uppercase tracking-widest transition-all disabled:opacity-50"
           >
-            {markAllAsReadMutation.isPending ? 'Marking...' : 'Mark all as read'}
+            {markAllAsReadMutation.isPending ? <RefreshCcw className="h-4 w-4 animate-spin" /> : <ShieldCheck className="h-4 w-4" />}
+            Clear Intelligence
           </button>
         )}
-      </div>
+      </section>
 
-      {/* Notifications List */}
-      <div className="space-y-2">
-        {query.isLoading && (
-          <div className="text-center py-8 text-gray-500">Loading notifications...</div>
-        )}
-
-        {query.isError && (
-          <div className="text-center py-8 text-red-600">Failed to load notifications.</div>
-        )}
-
-        {!query.isLoading && !query.isError && notifications.length === 0 && (
-          <div className="text-center py-8 text-gray-500">
-            {filter === "unread" ? "No unread notifications" : "No notifications yet"}
-          </div>
-        )}
-
-        {notifications.map((notification) => (
-          <div
-            key={notification.id}
-            className={`flex items-start gap-4 p-4 rounded-lg border transition-colors ${
-              !notification.read ? "bg-teal-50 border-teal-200" : "bg-white border-gray-200 hover:bg-gray-50"
-            }`}
-          >
-            {getNotificationIcon(notification.type)}
-            
-            <div className="flex-1 min-w-0">
-              <div className="flex items-start justify-between gap-2">
-                <div className="flex-1">
-                  <h3 className="text-sm font-medium text-gray-900">{notification.title}</h3>
-                  <p className="text-sm text-gray-600 mt-1">{notification.body}</p>
-                  <p className="text-xs text-gray-500 mt-2">{formatTimeAgo(notification.createdAt)}</p>
-                </div>
-                
-                {!notification.read && (
-                  <button
-                    onClick={() => markAsReadMutation.mutate(notification.id)}
-                    disabled={markAsReadMutation.isPending}
-                    className="text-xs text-teal-600 hover:text-teal-700 disabled:opacity-50 flex-shrink-0"
-                  >
-                    Mark as read
-                  </button>
+      {/* Notifications Registry */}
+      <section className="space-y-4">
+        <AnimatePresence mode="popLayout">
+          {query.isLoading ? (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center justify-center py-20 gap-4">
+               <div className="h-12 w-12 border-4 border-emerald-100 border-t-emerald-600 rounded-full animate-spin" />
+               <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest animate-pulse">Syncing Communication Hub...</p>
+            </motion.div>
+          ) : query.isError ? (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center justify-center py-20 bg-red-50 rounded-[2.5rem] border border-red-100 text-center px-6">
+               <AlertCircle className="h-12 w-12 text-red-500 mb-4" />
+               <h3 className="text-xl font-bold text-slate-900 mb-2 heading">System Link Lost</h3>
+               <p className="text-slate-500 text-sm">Failed to establish a secure link with the notification node.</p>
+            </motion.div>
+          ) : notifications.length === 0 ? (
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col items-center justify-center py-20 glass rounded-[2.5rem] border-white/40 text-center px-6">
+               <div className="h-20 w-20 rounded-[2rem] bg-slate-50 flex items-center justify-center mb-6">
+                  <Inbox className="h-10 w-10 text-slate-200" />
+               </div>
+               <h3 className="text-2xl font-bold text-slate-900 mb-2 heading">Intelligence Clear</h3>
+               <p className="text-slate-500 max-w-sm">No new operational updates. Your current status is up to date.</p>
+            </motion.div>
+          ) : (
+            notifications.map((notification, i) => (
+              <motion.div
+                key={notification.id}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: i * 0.05 }}
+                className={cn(
+                  "glass group rounded-[2rem] p-6 border-white/40 transition-all duration-300 relative overflow-hidden flex items-center gap-6",
+                  !notification.read ? "bg-white/90 shadow-xl border-emerald-100 ring-1 ring-emerald-500/5" : "bg-white/40 hover:bg-white/60"
                 )}
-              </div>
-              
-              {notification.link && (
-                <Link
-                  href={notification.link}
-                  className="inline-block mt-2 text-sm text-teal-600 hover:text-teal-700 font-medium"
-                >
-                  View →
-                </Link>
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
+              >
+                {!notification.read && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-12 bg-emerald-500 rounded-r-lg" />}
+                
+                {getNotificationIcon(notification.type)}
+                
+                <div className="flex-1 min-w-0 space-y-1">
+                  <div className="flex items-center gap-2">
+                     <h3 className={cn("text-base font-bold tracking-tight", !notification.read ? "text-slate-900" : "text-slate-500")}>
+                       {notification.title}
+                     </h3>
+                     {!notification.read && <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-sm shadow-emerald-200" />}
+                  </div>
+                  <p className={cn("text-sm font-medium leading-relaxed line-clamp-2", !notification.read ? "text-slate-600" : "text-slate-400")}>
+                    {notification.body}
+                  </p>
+                  <div className="flex items-center gap-4 pt-1">
+                     <span className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                        <Clock className="h-3 w-3" /> {formatTimeAgo(notification.createdAt)}
+                     </span>
+                     {notification.link && (
+                       <Link
+                         href={notification.link}
+                         className="flex items-center gap-1 text-[10px] font-bold text-emerald-600 uppercase tracking-widest hover:text-emerald-700 transition-colors"
+                       >
+                         Executive View <ChevronRight className="h-3 w-3" />
+                       </Link>
+                     )}
+                  </div>
+                </div>
 
-      {/* Load More */}
+                <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                  {!notification.read ? (
+                    <button
+                      onClick={() => markAsReadMutation.mutate(notification.id)}
+                      disabled={markAsReadMutation.isPending}
+                      className="h-10 w-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center hover:bg-emerald-100 transition-all shadow-sm"
+                      title="Mark as Processed"
+                    >
+                      <Check className="h-5 w-5" />
+                    </button>
+                  ) : (
+                    <button
+                      className="h-10 w-10 rounded-xl bg-slate-50 text-slate-400 flex items-center justify-center hover:bg-red-50 hover:text-red-500 transition-all"
+                      title="Remove Record"
+                    >
+                      <Trash2 className="h-5 w-5" />
+                    </button>
+                  )}
+                </div>
+              </motion.div>
+            ))
+          )}
+        </AnimatePresence>
+      </section>
+
+      {/* Footer System Status */}
       {query.hasNextPage && (
-        <div className="mt-6 text-center">
+        <div className="mt-12 text-center">
           <button
             onClick={() => query.fetchNextPage()}
             disabled={query.isFetchingNextPage}
-            className="px-4 py-2 text-sm font-medium text-teal-600 hover:text-teal-700 disabled:opacity-50"
+            className="px-8 py-4 glass border-white/50 rounded-2xl text-[10px] font-bold text-slate-900 uppercase tracking-widest hover:bg-white transition-all shadow-sm flex items-center gap-3 mx-auto active:scale-95"
           >
-            {query.isFetchingNextPage ? 'Loading...' : 'Load more'}
+            {query.isFetchingNextPage ? <RefreshCcw className="h-4 w-4 animate-spin" /> : <Eye className="h-4 w-4" />}
+            Retrieve Legacy Intel
           </button>
         </div>
       )}
-    </main>
+    </div>
   );
 }

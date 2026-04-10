@@ -10,8 +10,6 @@ import {
   Settings, 
   Bell, 
   User,
-  Search,
-  PlusCircle,
   GraduationCap
 } from 'lucide-react';
 import { cn } from '../lib/utils'; // I'll need to create this in UI package too

@@ -1,9 +1,41 @@
+"use client";
+
 import { 
   SystemStats, 
   SystemAlert, 
   AdminRole, 
   Permission
 } from '@cliniq/shared-types';
+import { 
+  Activity, 
+  AlertTriangle, 
+  BarChart3, 
+  BookOpen, 
+  Clock, 
+  Cpu, 
+  Database, 
+  Flag, 
+  Layers, 
+  MessageSquare, 
+  RefreshCcw, 
+  ShieldAlert, 
+  ShieldCheck, 
+  Settings, 
+  TrendingUp, 
+  UserPlus, 
+  Users, 
+  Zap,
+  Info,
+  CheckCircle2,
+  AlertCircle,
+  FileBadge,
+  Sparkles,
+  Search,
+  ChevronRight,
+  Monitor
+} from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { cn } from "../lib/utils";
 
 interface AdminDashboardProps {
   stats?: SystemStats;
@@ -13,77 +45,6 @@ interface AdminDashboardProps {
   className?: string;
 }
 
-// Inline SVG icon helpers
-const InfoIcon = () => (
-  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-  </svg>
-);
-const WarningIcon = () => (
-  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
-  </svg>
-);
-const ErrorIcon = () => (
-  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-  </svg>
-);
-const SuccessIcon = () => (
-  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-  </svg>
-);
-const MaintenanceIcon = () => (
-  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-  </svg>
-);
-const UsersIcon = () => (
-  <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
-  </svg>
-);
-const FlagIcon = () => (
-  <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 2H21l-3 6 3 6H10.5l-1-2H5a2 2 0 00-2 2zm9-13.5V9" />
-  </svg>
-);
-const ChartIcon = () => (
-  <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-  </svg>
-);
-const SettingsIcon = () => (
-  <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-  </svg>
-);
-const BookIcon = () => (
-  <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-  </svg>
-);
-const ZapIcon = () => (
-  <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-  </svg>
-);
-const ClockIcon = () => (
-  <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-  </svg>
-);
-const DatabaseIcon = () => (
-  <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
-  </svg>
-);
-const ActiveDotIcon = () => (
-  <div className="w-3 h-3 rounded-full bg-green-500" />
-);
-
 export function AdminDashboard({ 
   stats, 
   alerts = [], 
@@ -91,39 +52,36 @@ export function AdminDashboard({
   userPermissions = [],
   className = ''
 }: AdminDashboardProps) {
-  // const [_selectedAlert, _setSelectedAlert] = useState<SystemAlert | null>(null);
-  // const [_showAlertModal, _setShowAlertModal] = useState(false);
-
   const hasPermission = (permission: Permission) => {
     return userPermissions.includes(permission);
   };
 
   const getAlertIcon = (type: string) => {
     switch (type) {
-      case 'INFO': return <InfoIcon />;
-      case 'WARNING': return <WarningIcon />;
-      case 'ERROR': return <ErrorIcon />;
-      case 'SUCCESS': return <SuccessIcon />;
-      case 'MAINTENANCE': return <MaintenanceIcon />;
-      default: return <InfoIcon />;
+      case 'INFO': return <Info className="h-5 w-5" />;
+      case 'WARNING': return <AlertTriangle className="h-5 w-5" />;
+      case 'ERROR': return <AlertCircle className="h-5 w-5" />;
+      case 'SUCCESS': return <CheckCircle2 className="h-5 w-5" />;
+      case 'MAINTENANCE': return <Settings className="h-5 w-5" />;
+      default: return <Info className="h-5 w-5" />;
     }
   };
 
-  const getAlertColor = (type: string) => {
-    const colors: Record<string, string> = {
-      INFO: 'bg-blue-50 border-blue-200 text-blue-800',
-      WARNING: 'bg-yellow-50 border-yellow-200 text-yellow-800',
-      ERROR: 'bg-red-50 border-red-200 text-red-800',
-      SUCCESS: 'bg-green-50 border-green-200 text-green-800',
-      MAINTENANCE: 'bg-gray-50 border-gray-200 text-gray-800',
+  const getAlertStyles = (type: string) => {
+    const styles: Record<string, string> = {
+      INFO: 'bg-indigo-500/5 border-indigo-500/20 text-indigo-400',
+      WARNING: 'bg-amber-500/5 border-amber-500/20 text-amber-400',
+      ERROR: 'bg-rose-500/5 border-rose-500/20 text-rose-400',
+      SUCCESS: 'bg-emerald-500/5 border-emerald-500/20 text-emerald-400',
+      MAINTENANCE: 'bg-slate-500/5 border-slate-500/20 text-slate-400',
     };
-    return colors[type] || colors.INFO;
+    return styles[type] || styles.INFO;
   };
 
   const formatNumber = (num: number) => {
     if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
     if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
-    return num.toString();
+    return num.toLocaleString();
   };
 
   const formatPercentage = (num: number) => {
@@ -134,237 +92,313 @@ export function AdminDashboard({
     console.log('Dismissing alert:', alertId);
   };
 
-  const StatCard = ({ title, value, subtitle, icon, color, trend }: {
+  const NeuralStatCard = ({ title, value, subtitle, icon, color, trend, index }: {
     title: string;
     value: string | number;
     subtitle?: string;
     icon: React.ReactNode;
     color: string;
     trend?: { value: number; isPositive: boolean };
+    index: number;
   }) => (
-    <div className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition-shadow">
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-sm font-medium text-gray-600">{title}</p>
-          <p className={`text-2xl font-bold ${color}`}>{value}</p>
-          {subtitle && (
-            <p className="text-sm text-gray-500 mt-1">{subtitle}</p>
-          )}
-          {trend && (
-            <div className={`flex items-center mt-2 text-sm ${trend.isPositive ? 'text-green-600' : 'text-red-600'}`}>
-              <span>{trend.isPositive ? '↑' : '↓'}</span>
-              <span className="ml-1">{formatPercentage(trend.value)}</span>
-            </div>
-          )}
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.1, duration: 0.5 }}
+      className="glass-dark border-white/5 rounded-[2.5rem] p-8 hover:border-emerald-500/20 transition-all group relative overflow-hidden shadow-3xl"
+    >
+      <div className="absolute top-0 right-0 p-8 opacity-5 pointer-events-none group-hover:opacity-10 transition-opacity">
+         {icon}
+      </div>
+      
+      <div className="flex flex-col h-full space-y-4">
+        <div className="flex items-center justify-between">
+           <div className={cn("p-3 rounded-2xl bg-white/5 border border-white/5 group-hover:scale-110 transition-transform duration-500 shadow-inner", color)}>
+              {icon}
+           </div>
+           {trend && (
+             <div className={cn(
+               "flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border",
+               trend.isPositive ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400" : "bg-rose-500/10 border-rose-500/20 text-rose-400"
+             )}>
+               {trend.isPositive ? <TrendingUp className="h-3 w-3" /> : <Activity className="h-3 w-3" />}
+               {formatPercentage(trend.value)}
+             </div>
+           )}
         </div>
-        <div className={`p-3 rounded-lg ${color.replace('text-', 'bg-').replace('-600', '-100')}`}>
-          {icon}
+
+        <div className="space-y-1">
+          <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">{title}</p>
+          <p className={cn("text-3xl font-black heading tracking-tight text-white")}>{value}</p>
+          {subtitle && (
+            <p className="text-[10px] font-medium text-slate-500 italic mt-2">{subtitle}</p>
+          )}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 
   return (
-    <div className={`space-y-6 ${className}`}>
-      {/* System Alerts */}
-      {alerts.length > 0 && (
-        <div className="space-y-3">
-          {alerts.map((alert) => (
-            <div
-              key={alert.id}
-              className={`border rounded-lg p-4 ${getAlertColor(alert.type)}`}
-            >
-              <div className="flex items-start justify-between">
-                <div className="flex items-start gap-3">
-                  <span className="mt-0.5 flex-shrink-0">{getAlertIcon(alert.type)}</span>
-                  <div>
-                    <h3 className="font-semibold">{alert.title}</h3>
-                    <p className="text-sm mt-1">{alert.message}</p>
-                    <p className="text-xs mt-2 opacity-75">
-                      {new Date(alert.startsAt).toLocaleString()}
-                    </p>
-                  </div>
-                </div>
-                <button
-                  onClick={() => dismissAlert(alert.id)}
-                  className="ml-4 text-lg leading-none hover:opacity-75 flex-shrink-0"
-                  aria-label="Dismiss alert"
+    <div className={cn("space-y-12 pb-20", className)}>
+      {/* Dynamic Alerts Matrix */}
+      <AnimatePresence>
+        {alerts.length > 0 && (
+          <div className="space-y-4">
+            <div className="flex items-center gap-3 px-2">
+               <ShieldAlert className="h-4 w-4 text-rose-500" />
+               <h3 className="text-[10px] font-black text-white uppercase tracking-[0.3em]">Critical System Broadcasts</h3>
+            </div>
+            <div className="grid grid-cols-1 gap-4">
+              {alerts.map((alert, i) => (
+                <motion.div
+                  key={alert.id}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ delay: i * 0.1 }}
+                  className={cn(
+                    "relative border rounded-[2rem] p-6 lg:p-8 overflow-hidden group shadow-2xl",
+                    getAlertStyles(alert.type)
+                  )}
                 >
-                  ×
-                </button>
-              </div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                  <div className="flex items-start justify-between relative z-10">
+                    <div className="flex items-start gap-6">
+                      <div className="mt-1 h-12 w-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center flex-shrink-0">
+                         {getAlertIcon(alert.type)}
+                      </div>
+                      <div className="space-y-2">
+                        <h3 className="text-lg font-black heading tracking-tight text-white">{alert.title}</h3>
+                        <p className="text-sm font-medium opacity-80 leading-relaxed max-w-3xl">{alert.message}</p>
+                        <div className="flex items-center gap-4 pt-2">
+                           <span className="text-[10px] font-black uppercase tracking-[0.2em] opacity-60 flex items-center gap-2">
+                              <Clock className="h-3 w-3" /> Initiated {new Date(alert.startsAt).toLocaleTimeString()}
+                           </span>
+                           <div className="h-1 w-1 rounded-full bg-white/20" />
+                           <span className="text-[10px] font-black uppercase tracking-[0.2em] opacity-60">Status: Active Broadcast</span>
+                        </div>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => dismissAlert(alert.id)}
+                      className="h-10 w-10 rounded-xl bg-white/5 hover:bg-white/10 flex items-center justify-center transition-all active:scale-90"
+                      aria-label="Dismiss alert"
+                    >
+                      ×
+                    </button>
+                  </div>
+                </motion.div>
+              ))}
             </div>
-          ))}
-        </div>
-      )}
+          </div>
+        )}
+      </AnimatePresence>
 
-      {/* Quick Actions */}
+      {/* Quick Intelligence Directives */}
       {hasPermission(Permission.MANAGE_USERS) && (
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <h2 className="text-lg font-semibold mb-4">Quick Actions</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <button className="p-3 border border-gray-300 rounded-lg hover:bg-gray-50 text-left transition-colors">
-              <div className="mb-2 text-blue-600"><UsersIcon /></div>
-              <div className="text-sm font-medium">Manage Users</div>
-            </button>
-            <button className="p-3 border border-gray-300 rounded-lg hover:bg-gray-50 text-left transition-colors">
-              <div className="mb-2 text-orange-600"><FlagIcon /></div>
-              <div className="text-sm font-medium">Moderation Queue</div>
-            </button>
-            <button className="p-3 border border-gray-300 rounded-lg hover:bg-gray-50 text-left transition-colors">
-              <div className="mb-2 text-purple-600"><ChartIcon /></div>
-              <div className="text-sm font-medium">Analytics</div>
-            </button>
-            <button className="p-3 border border-gray-300 rounded-lg hover:bg-gray-50 text-left transition-colors">
-              <div className="mb-2 text-gray-600"><SettingsIcon /></div>
-              <div className="text-sm font-medium">System Settings</div>
-            </button>
-          </div>
-        </div>
+        <section className="space-y-6">
+           <div className="flex items-center gap-3 px-2">
+              <Zap className="h-4 w-4 text-emerald-500" />
+              <h3 className="text-[10px] font-black text-white uppercase tracking-[0.3em]">Operational Directives</h3>
+           </div>
+           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+             {[
+               { label: "Personnel Nexus", icon: <Users className="h-5 w-5" />, color: "text-blue-400", desc: "User registry & permissions" },
+               { label: "Oversight Queue", icon: <ShieldAlert className="h-5 w-5" />, color: "text-amber-400", desc: "Moderation & integrity" },
+               { label: "Deep Intel", icon: <BarChart3 className="h-5 w-5" />, color: "text-emerald-400", desc: "Engagement telemetry" },
+               { label: "Kernel Health", icon: <Cpu className="h-5 w-5" />, color: "text-indigo-400", desc: "Global system settings" }
+             ].map((action, i) => (
+               <motion.button 
+                 key={i}
+                 whileHover={{ y: -5 }}
+                 className="glass-dark border-white/5 p-6 rounded-[2.5rem] text-left transition-all hover:bg-white/5 group shadow-xl"
+               >
+                 <div className={cn("h-12 w-12 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform", action.color)}>
+                   {action.icon}
+                 </div>
+                 <h4 className="text-sm font-black text-white tracking-[0.1em] mb-1">{action.label}</h4>
+                 <p className="text-[10px] font-medium text-slate-500 uppercase tracking-tighter leading-none">{action.desc}</p>
+                 <div className="mt-6 flex items-center gap-2 text-[9px] font-black text-white/40 uppercase tracking-widest group-hover:text-white transition-colors">
+                    Access Directives <ChevronRight className="h-3 w-3 group-hover:translate-x-1 transition-transform" />
+                 </div>
+               </motion.button>
+             ))}
+           </div>
+        </section>
       )}
 
-      {/* System Stats */}
+      {/* Global Intelligence Stats */}
       {stats && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <StatCard
-            title="Total Users"
-            value={formatNumber(stats.users.total)}
-            subtitle={`${formatNumber(stats.users.new)} new this week`}
-            icon={<UsersIcon />}
-            color="text-blue-600"
-            trend={{ value: 12.5, isPositive: true }}
-          />
-          <StatCard
-            title="Active Users"
-            value={formatNumber(stats.users.active)}
-            subtitle={`${formatPercentage((stats.users.active / stats.users.total) * 100)} of total`}
-            icon={<ActiveDotIcon />}
-            color="text-green-600"
-            trend={{ value: 8.2, isPositive: true }}
-          />
-          <StatCard
-            title="Total Content"
-            value={formatNumber(stats.content.questions + stats.content.answers + stats.content.resources)}
-            subtitle={`${stats.content.questions} questions, ${stats.content.answers} answers`}
-            icon={<BookIcon />}
-            color="text-purple-600"
-            trend={{ value: 15.3, isPositive: true }}
-          />
-          <StatCard
-            title="Pending Flags"
-            value={stats.moderation.pendingFlags}
-            subtitle="Need attention"
-            icon={<FlagIcon />}
-            color="text-orange-600"
-            trend={{ value: 5.1, isPositive: false }}
-          />
-        </div>
+        <section className="space-y-6">
+           <div className="flex items-center gap-3 px-2">
+              <Activity className="h-4 w-4 text-indigo-500" />
+              <h3 className="text-[10px] font-black text-white uppercase tracking-[0.3em]">Core System Engagement</h3>
+           </div>
+           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+             <NeuralStatCard
+               index={0}
+               title="Aggregate Personnel"
+               value={formatNumber(stats.users.total)}
+               subtitle={`${formatNumber(stats.users.new)} newly established this cycle`}
+               icon={<Users className="h-8 w-8" />}
+               color="text-blue-400"
+               trend={{ value: 12.5, isPositive: true }}
+             />
+             <NeuralStatCard
+               index={1}
+               title="Active Sync Nodes"
+               value={formatNumber(stats.users.active)}
+               subtitle={`${formatPercentage((stats.users.active / stats.users.total) * 100)} system establishment rate`}
+               icon={<Activity className="h-8 w-8" />}
+               color="text-emerald-400"
+               trend={{ value: 8.2, isPositive: true }}
+             />
+             <NeuralStatCard
+               index={2}
+               title="Documented Assets"
+               value={formatNumber(stats.content.questions + stats.content.answers + stats.content.resources)}
+               subtitle={`${stats.content.questions} queries / ${stats.content.answers} solutions`}
+               icon={<BookOpen className="h-8 w-8" />}
+               color="text-indigo-400"
+               trend={{ value: 15.3, isPositive: true }}
+             />
+             <NeuralStatCard
+               index={3}
+               title="Critical Flags"
+               value={stats.moderation.pendingFlags}
+               subtitle="Immediate directive required"
+               icon={<Flag className="h-8 w-8" />}
+               color="text-rose-400"
+               trend={{ value: 5.1, isPositive: false }}
+             />
+           </div>
+        </section>
       )}
 
-      {/* Content Overview */}
+      {/* Detailed Operations Grid */}
       {stats && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-white rounded-lg border border-gray-200 p-6">
-            <h2 className="text-lg font-semibold mb-4">Content Overview</h2>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">Questions</span>
-                <span className="font-semibold">{formatNumber(stats.content.questions)}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">Answers</span>
-                <span className="font-semibold">{formatNumber(stats.content.answers)}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">Resources</span>
-                <span className="font-semibold">{formatNumber(stats.content.resources)}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">Study Groups</span>
-                <span className="font-semibold">{formatNumber(stats.content.studyGroups)}</span>
-              </div>
-            </div>
-          </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            className="glass-dark border-white/5 rounded-[3rem] p-10 shadow-3xl space-y-8"
+          >
+             <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-xl font-black heading tracking-tight text-white mb-1">Asset Distribution</h3>
+                  <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest leading-none">Global inventory categorization</p>
+                </div>
+                <div className="h-12 w-12 rounded-2xl bg-indigo-500/10 flex items-center justify-center text-indigo-400 shadow-inner">
+                   <Layers className="h-6 w-6" />
+                </div>
+             </div>
+             <div className="space-y-6">
+               {[
+                 { label: "Clinical Inquiries", value: stats.content.questions, color: "bg-blue-500" },
+                 { label: "Protocol Solutions", value: stats.content.answers, color: "bg-emerald-500" },
+                 { label: "Scholarly Resources", value: stats.content.resources, color: "bg-amber-500" },
+                 { label: "Strategic Groups", value: stats.content.studyGroups, color: "bg-indigo-500" }
+               ].map((item, i) => (
+                 <div key={i} className="space-y-2">
+                   <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-[0.1em]">
+                     <span className="text-slate-400">{item.label}</span>
+                     <span className="text-white">{formatNumber(item.value)}</span>
+                   </div>
+                   <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
+                      <motion.div 
+                        initial={{ width: 0 }} 
+                        whileInView={{ width: "65%" }} 
+                        className={cn("h-full rounded-full shadow-[0_0_10px_rgba(0,0,0,0.5)]", item.color)} 
+                      />
+                   </div>
+                 </div>
+               ))}
+             </div>
+          </motion.div>
 
-          <div className="bg-white rounded-lg border border-gray-200 p-6">
-            <h2 className="text-lg font-semibold mb-4">Engagement</h2>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">Total Interactions</span>
-                <span className="font-semibold">{formatNumber(stats.engagement.totalInteractions)}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">Daily Active</span>
-                <span className="font-semibold">{formatNumber(stats.engagement.dailyActive)}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">Weekly Active</span>
-                <span className="font-semibold">{formatNumber(stats.engagement.weeklyActive)}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">Monthly Active</span>
-                <span className="font-semibold">{formatNumber(stats.engagement.monthlyActive)}</span>
-              </div>
-            </div>
-          </div>
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            className="glass-dark border-white/5 rounded-[3rem] p-10 shadow-3xl space-y-10"
+          >
+             <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-xl font-black heading tracking-tight text-white mb-1">Synchronization Pulse</h3>
+                  <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest leading-none">Time-series engagement telemetry</p>
+                </div>
+                <div className="h-12 w-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 shadow-inner">
+                   <Monitor className="h-6 w-6" />
+                </div>
+             </div>
+             <div className="space-y-6">
+               {[
+                 { label: "Total Direct Syncs", value: stats.engagement.totalInteractions, icon: <Sparkles className="h-4 w-4" /> },
+                 { label: "Daily Sync Factor", value: stats.engagement.dailyActive, icon: <Activity className="h-4 w-4" /> },
+                 { label: "Weekly Unit Load", value: stats.engagement.weeklyActive, icon: <Clock className="h-4 w-4" /> },
+                 { label: "System Saturation", value: stats.engagement.monthlyActive, icon: <Database className="h-4 w-4" /> }
+               ].map((item, i) => (
+                 <div key={i} className="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/5 hover:bg-white/10 transition-all group">
+                    <div className="flex items-center gap-3">
+                       <div className="text-slate-500 group-hover:text-emerald-400 transition-colors uppercase tracking-widest text-[10px] font-black flex items-center gap-2">
+                          {item.icon} {item.label}
+                       </div>
+                    </div>
+                    <span className="text-lg font-black heading tracking-tight text-white">{formatNumber(item.value)}</span>
+                 </div>
+               ))}
+             </div>
+          </motion.div>
         </div>
       )}
 
-      {/* System Health */}
+      {/* Architecture Integrity Hub */}
       {stats && (
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <h2 className="text-lg font-semibold mb-4">System Health</h2>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="text-center">
-              <div className="flex justify-center mb-2 text-green-600"><ZapIcon /></div>
-              <div className="text-sm text-gray-600">Uptime</div>
-              <div className="font-semibold text-green-600">{formatPercentage(stats.system.uptime)}</div>
-            </div>
-            <div className="text-center">
-              <div className="flex justify-center mb-2 text-orange-600"><WarningIcon /></div>
-              <div className="text-sm text-gray-600">Error Rate</div>
-              <div className="font-semibold text-orange-600">{formatPercentage(stats.system.errorRate)}</div>
-            </div>
-            <div className="text-center">
-              <div className="flex justify-center mb-2 text-blue-600"><ClockIcon /></div>
-              <div className="text-sm text-gray-600">Response Time</div>
-              <div className="font-semibold text-blue-600">{stats.system.responseTime}ms</div>
-            </div>
-            <div className="text-center">
-              <div className="flex justify-center mb-2 text-purple-600"><DatabaseIcon /></div>
-              <div className="text-sm text-gray-600">Storage Used</div>
-              <div className="font-semibold text-purple-600">{formatNumber(stats.system.storageUsed / 1024 / 1024)}MB</div>
-            </div>
+        <section className="space-y-6">
+          <div className="flex items-center gap-3 px-2">
+             <ShieldCheck className="h-4 w-4 text-emerald-500" />
+             <h3 className="text-[10px] font-black text-white uppercase tracking-[0.3em]">Architectural Precision Matrix</h3>
           </div>
-        </div>
+          <div className="glass-dark border-white/5 rounded-[3.5rem] p-12 lg:p-16 shadow-[0_40px_100px_-20px_rgba(0,0,0,0.5)] relative overflow-hidden group">
+             <div className="absolute top-0 right-0 p-10 opacity-10 pointer-events-none group-hover:opacity-20 transition-opacity">
+                <Cpu className="h-64 w-64 rotate-12" />
+             </div>
+             <div className="grid grid-cols-1 md:grid-cols-4 gap-12 relative z-10">
+               {[
+                 { label: "Operational Uptime", value: formatPercentage(stats.system.uptime), icon: <Zap className="h-6 w-6 text-emerald-400" />, sub: "Fault-tolerant" },
+                 { label: "Signal Latency", value: `${stats.system.responseTime}ms`, icon: <Clock className="h-6 w-6 text-indigo-400" />, sub: "Sub-optimal <200" },
+                 { label: "System Fault Rate", value: formatPercentage(stats.system.errorRate), icon: <AlertTriangle className="h-6 w-6 text-rose-400" />, sub: "Nominal range" },
+                 { label: "Matrix Saturation", value: `${formatNumber(stats.system.storageUsed / 1024 / 1024)}mb`, icon: <Database className="h-6 w-6 text-amber-400" />, sub: "Archive utilization" }
+               ].map((stat, i) => (
+                 <div key={i} className="text-center space-y-4 group/stat">
+                   <div className="h-14 w-14 mx-auto rounded-2xl bg-white/5 flex items-center justify-center border border-white/10 group-hover/stat:scale-110 transition-transform shadow-inner">
+                      {stat.icon}
+                   </div>
+                   <div className="space-y-1">
+                      <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{stat.label}</p>
+                      <p className="text-3xl font-black heading text-white tracking-tight">{stat.value}</p>
+                      <p className="text-[9px] font-bold text-slate-600 uppercase tracking-tighter italic">{stat.sub}</p>
+                   </div>
+                 </div>
+               ))}
+             </div>
+             <div className="mt-16 flex flex-col md:flex-row items-center justify-between gap-8 pt-10 border-t border-white/5">
+                <div className="flex items-center gap-6">
+                   <div className="flex items-center gap-2">
+                      <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                      <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Master Kernel: SYNCHRONIZED</span>
+                   </div>
+                   <div className="h-4 w-px bg-white/10" />
+                   <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Dispatch Protocol: v4.1 Elite</span>
+                   </div>
+                </div>
+                <button className="h-14 px-10 bg-white text-slate-900 rounded-2xl font-black text-[10px] uppercase tracking-[0.3em] shadow-3xl hover:bg-emerald-500 hover:text-white transition-all active:scale-95">
+                   Initiate System Integrity Audit
+                </button>
+             </div>
+          </div>
+        </section>
       )}
-
-      {/* Recent Activity */}
-      <div className="bg-white rounded-lg border border-gray-200 p-6">
-        <h2 className="text-lg font-semibold mb-4">Recent Activity</h2>
-        <div className="space-y-3">
-          <div className="flex items-center gap-3 text-sm">
-            <div className="w-2 h-2 bg-green-500 rounded-full flex-shrink-0"></div>
-            <span className="text-gray-600">New user registration</span>
-            <span className="text-gray-400">2 minutes ago</span>
-          </div>
-          <div className="flex items-center gap-3 text-sm">
-            <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0"></div>
-            <span className="text-gray-600">Question posted in Pharmacology</span>
-            <span className="text-gray-400">5 minutes ago</span>
-          </div>
-          <div className="flex items-center gap-3 text-sm">
-            <div className="w-2 h-2 bg-orange-500 rounded-full flex-shrink-0"></div>
-            <span className="text-gray-600">Content flagged for review</span>
-            <span className="text-gray-400">12 minutes ago</span>
-          </div>
-          <div className="flex items-center gap-3 text-sm">
-            <div className="w-2 h-2 bg-purple-500 rounded-full flex-shrink-0"></div>
-            <span className="text-gray-600">Resource uploaded</span>
-            <span className="text-gray-400">1 hour ago</span>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }

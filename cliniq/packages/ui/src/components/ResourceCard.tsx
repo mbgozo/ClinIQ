@@ -1,63 +1,34 @@
-// SVG Icon helpers
-const UserIcon = () => (
-  <svg className="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-  </svg>
-);
+"use client";
 
-const DocumentIcon = () => (
-  <svg className="h-8 w-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-  </svg>
-);
-
-const PresentationIcon = () => (
-  <svg className="h-8 w-8 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-  </svg>
-);
-
-const VideoIcon = () => (
-  <svg className="h-8 w-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 10l4.553-2.069A1 1 0 0121 8.806v6.388a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-  </svg>
-);
-
-const ImageIcon = () => (
-  <svg className="h-8 w-8 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-  </svg>
-);
-
-const AudioIcon = () => (
-  <svg className="h-8 w-8 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
-  </svg>
-);
-
-const LinkIcon = () => (
-  <svg className="h-8 w-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-  </svg>
-);
-
-const BookIcon = () => (
-  <svg className="h-8 w-8 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-  </svg>
-);
-
-const DownloadIcon = () => (
-  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-  </svg>
-);
-
-const ExclamationIcon = () => (
-  <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
-  </svg>
-);
+import { 
+  User, 
+  FileText, 
+  Presentation, 
+  Video, 
+  Image as ImageIcon, 
+  Mic, 
+  Link as LinkIcon, 
+  Book, 
+  Download, 
+  AlertTriangle, 
+  MoreVertical,
+  Calendar,
+  Layers,
+  Search,
+  ChevronRight,
+  ExternalLink,
+  Edit2,
+  Trash2,
+  Flag,
+  FileBadge,
+  Sparkles,
+  Zap,
+  ShieldCheck,
+  Hexagon,
+  ArrowUpRight
+} from "lucide-react";
+import { cn } from "../lib/utils";
+import { motion } from "framer-motion";
 
 interface ResourceCardProps {
   resource: {
@@ -106,163 +77,201 @@ export function ResourceCard({
 }: ResourceCardProps) {
   const getFileIcon = (fileType?: string) => {
     switch (fileType) {
-      case 'PRESENTATION': return <PresentationIcon />;
-      case 'VIDEO': return <VideoIcon />;
-      case 'IMAGE': return <ImageIcon />;
-      case 'AUDIO': return <AudioIcon />;
-      case 'LINK': return <LinkIcon />;
+      case 'PRESENTATION': return <Presentation className="h-6 w-6" />;
+      case 'VIDEO': return <Video className="h-6 w-6" />;
+      case 'IMAGE': return <ImageIcon className="h-6 w-6" />;
+      case 'AUDIO': return <Mic className="h-6 w-6" />;
+      case 'LINK': return <LinkIcon className="h-6 w-6" />;
       case 'STUDY_GUIDE':
       case 'CHEAT_SHEET':
       case 'CASE_STUDY':
       case 'RESEARCH_PAPER':
-      case 'CLINICAL_GUIDELINE': return <BookIcon />;
-      default: return <DocumentIcon />;
+      case 'CLINICAL_GUIDELINE': return <FileBadge className="h-6 w-6" />;
+      default: return <FileText className="h-6 w-6" />;
     }
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString();
+  const getFileIconColors = (fileType?: string) => {
+    switch (fileType) {
+      case 'PRESENTATION': return 'text-amber-500 bg-amber-500/10 border-amber-500/20';
+      case 'VIDEO': return 'text-rose-500 bg-rose-500/10 border-rose-500/20';
+      case 'IMAGE': return 'text-purple-500 bg-purple-500/10 border-purple-500/20';
+      case 'AUDIO': return 'text-pink-500 bg-pink-500/10 border-pink-500/20';
+      case 'LINK': return 'text-indigo-500 bg-indigo-500/10 border-indigo-500/20';
+      case 'STUDY_GUIDE':
+      case 'CHEAT_SHEET':
+      case 'CASE_STUDY':
+      case 'RESEARCH_PAPER':
+      case 'CLINICAL_GUIDELINE': return 'text-emerald-500 bg-emerald-500/10 border-emerald-500/20';
+      default: return 'text-slate-500 bg-slate-500/10 border-slate-500/20';
+    }
   };
 
   const isExternalLink = !!resource.url && !resource.fileRef;
 
   return (
-    <div className={`bg-white border rounded-lg p-6 hover:shadow-md transition-shadow ${className}`}>
-      {/* Header */}
-      <div className="flex items-start justify-between mb-4">
-        <div className="flex items-start gap-3">
-          <div className="flex-shrink-0">
-            {isExternalLink ? <LinkIcon /> : getFileIcon(resource.fileType)}
-          </div>
-          
-          <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-gray-900 mb-1 line-clamp-2">{resource.title}</h3>
-            <div className="flex flex-wrap items-center gap-2 text-sm text-gray-600">
-              {resource.category && (
-                <span 
-                  className="inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium"
-                  style={{ 
-                    backgroundColor: `${resource.category.color}20`,
-                    color: resource.category.color
-                  }}
-                >
-                  {resource.category.name}
+    <motion.div 
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className={cn(
+        "glass group border-white hover:border-emerald-200 transition-all duration-700 shadow-2xl hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.12)] rounded-[3.5rem] overflow-hidden flex flex-col relative",
+        className
+      )}
+    >
+      {/* Dynamic Visual Header */}
+      <div className="relative h-28 bg-slate-50 group-hover:bg-slate-100 transition-colors duration-700">
+         <div className="absolute inset-0 bg-grid-slate-200/[0.2] [mask-image:linear-gradient(0deg,transparent,black)] pointer-events-none" />
+         
+         <div className={cn(
+           "absolute top-8 left-10 h-14 w-14 rounded-2xl flex items-center justify-center shadow-xl border-2 transition-all duration-700 group-hover:scale-110 group-hover:rotate-6",
+           getFileIconColors(resource.fileType)
+         )}>
+           {getFileIcon(resource.fileType)}
+           <div className="absolute inset-0 rounded-2xl bg-white/40 blur-sm opacity-0 group-hover:opacity-100 transition-opacity" />
+         </div>
+         
+         <div className="absolute top-8 right-10">
+            <div className="h-10 w-10 rounded-xl glass border-white flex items-center justify-center text-slate-400 hover:bg-slate-900 hover:text-white cursor-pointer transition-all active:scale-90">
+               <MoreVertical className="h-5 w-5" />
+            </div>
+         </div>
+
+         {/* Type Backdrop Text */}
+         <div className="absolute -bottom-6 right-8 text-5xl font-black text-slate-100/50 select-none uppercase tracking-tighter opacity-10 transition-opacity group-hover:opacity-20">
+            {resource.fileType?.split('_')[0] || 'Doc'}
+         </div>
+      </div>
+
+      <div className="p-10 pt-8 flex-1 flex flex-col relative z-10">
+        {/* Indicators Row */}
+        <div className="flex items-center gap-3 mb-6">
+          {resource.category && (
+            <span className="flex items-center gap-1.5 px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-[9px] font-black text-emerald-600 uppercase tracking-[0.2em]">
+              <Layers className="h-3 w-3" /> {resource.category.name}
+            </span>
+          )}
+          {resource.isFlagged && (
+            <span className="flex items-center gap-1.5 px-3 py-1 bg-rose-500/10 border border-rose-500/20 rounded-lg text-[9px] font-black text-rose-600 uppercase tracking-[0.2em] animate-pulse">
+              <AlertTriangle className="h-3 w-3" /> Integrity Review
+            </span>
+          )}
+        </div>
+
+        {/* Core Asset Title */}
+        <div className="space-y-4 mb-8">
+          <div className="space-y-2">
+            <h3 className="text-2xl font-black text-slate-900 heading leading-[1.15] group-hover:text-emerald-700 transition-colors duration-500 max-w-[90%]">
+              {resource.title}
+            </h3>
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[10px] font-black text-slate-400 uppercase tracking-[0.1em]">
+              {resource.course && (
+                <span className="flex items-center gap-2 px-1.5 py-0.5 rounded-md hover:bg-slate-50 transition-colors">
+                  <Book className="h-3.5 w-3.5 text-indigo-500" /> {resource.course}
                 </span>
               )}
-              {resource.course && (
-                <span className="text-gray-500">{resource.course}</span>
-              )}
               {resource.year && (
-                <span className="text-gray-500">Year {resource.year}</span>
+                <span className="flex items-center gap-2 px-1.5 py-0.5 rounded-md hover:bg-slate-50 transition-colors">
+                  <History className="h-3.5 w-3.5 text-amber-500" /> Phase {resource.year}
+                </span>
               )}
             </div>
           </div>
+          
+          {resource.description && (
+            <p className="text-sm text-slate-500 font-medium leading-relaxed line-clamp-2">
+              {resource.description}
+            </p>
+          )}
         </div>
 
-        {/* Flagged indicator */}
-        {resource.isFlagged && (
-          <span className="inline-flex items-center gap-1 rounded-full bg-red-100 px-2 py-1 text-xs font-medium text-red-800 flex-shrink-0">
-            <ExclamationIcon />
-            Flagged
-          </span>
-        )}
-      </div>
-
-      {/* Description */}
-      {resource.description && (
-        <p className="text-sm text-gray-700 mb-4 line-clamp-3">{resource.description}</p>
-      )}
-
-      {/* Tags */}
-      {resource.tags.length > 0 && (
-        <div className="mb-4">
-          <div className="flex flex-wrap gap-1">
-            {resource.tags.slice(0, 5).map((tag) => (
+        {/* Global Markers */}
+        {resource.tags.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-10">
+            {resource.tags.slice(0, 3).map((tag) => (
               <span 
                 key={tag}
-                className="inline-flex items-center rounded bg-gray-100 px-2 py-1 text-xs font-medium text-gray-800"
+                className="text-[9px] font-black px-3 py-1.5 bg-slate-100 rounded-xl text-slate-500 transition-all cursor-default border border-transparent hover:border-emerald-200 hover:bg-white hover:text-emerald-600 uppercase tracking-widest"
               >
                 #{tag}
               </span>
             ))}
-            {resource.tags.length > 5 && (
-              <span className="text-xs text-gray-500">+{resource.tags.length - 5} more</span>
+            {resource.tags.length > 3 && (
+              <div className="h-6 w-10 flex items-center justify-center bg-slate-50 rounded-lg text-[9px] font-black text-slate-300">
+                +{resource.tags.length - 3}
+              </div>
             )}
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Stats */}
-      <div className="flex items-center justify-between mb-4 text-sm text-gray-600">
-        <div className="flex items-center gap-4">
-          <span className="flex items-center gap-1">
-            <DownloadIcon />
-            {resource.downloads} downloads
-          </span>
-          <span>Uploaded {formatDate(resource.createdAt)}</span>
-        </div>
-      </div>
+        <div className="mt-auto space-y-8">
+          {/* Attribution Nexus */}
+          <div className="flex items-center justify-between py-6 border-t border-slate-50">
+             <div className="flex items-center gap-4 group/author">
+                <div className="h-12 w-12 rounded-2xl bg-white p-0.5 shadow-xl border border-slate-100 ring-4 ring-slate-50/50 group-hover/author:ring-emerald-500/10 transition-all duration-500 relative overflow-hidden">
+                   {resource.user.avatarUrl ? (
+                     <img src={resource.user.avatarUrl} alt="" className="h-full w-full object-cover rounded-[0.9rem]" />
+                   ) : (
+                     <div className="h-full w-full flex items-center justify-center bg-slate-50 rounded-[0.9rem]">
+                        <User className="h-6 w-6 text-slate-200" />
+                     </div>
+                   )}
+                </div>
+                <div className="space-y-0.5">
+                   <p className="text-[11px] font-black text-slate-900 uppercase tracking-tight">{resource.user.name}</p>
+                   <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest leading-none truncate max-w-[140px]">{resource.user.institution}</p>
+                </div>
+             </div>
+             
+             <div className="text-right space-y-0.5">
+                <div className="flex items-center justify-end gap-1.5">
+                   <span className="text-base font-black text-slate-900">{resource.downloads.toLocaleString()}</span>
+                   <Zap className="h-3.5 w-3.5 text-emerald-500" />
+                </div>
+                <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Global Syncs</p>
+             </div>
+          </div>
 
-      {/* User info */}
-      <div className="flex items-center gap-2 mb-4 text-sm">
-        <div className="h-6 w-6 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden flex-shrink-0">
-          {resource.user.avatarUrl ? (
-            <img 
-              src={resource.user.avatarUrl} 
-              alt={resource.user.name} 
-              className="h-6 w-6 rounded-full object-cover"
-            />
-          ) : (
-            <UserIcon />
+          {/* Precision Controls */}
+          {showActions && (
+            <div className="flex gap-3">
+              <button
+                onClick={() => onDownload?.(resource.id)}
+                className="flex-1 h-14 rounded-[1.25rem] bg-slate-900 text-white flex items-center justify-center gap-3 font-black text-[10px] uppercase tracking-[0.2em] shadow-3xl shadow-slate-200 hover:bg-emerald-600 transition-all active:scale-95 group/btn"
+              >
+                {isExternalLink ? <ArrowUpRight className="h-4 w-4 text-emerald-400" /> : <Download className="h-4 w-4 text-emerald-400 group-hover/btn:translate-y-0.5" />}
+                {isExternalLink ? 'Access Vector' : 'Sync Offline'}
+              </button>
+              
+              <div className="flex gap-1.5 p-1.5 bg-slate-50 rounded-[1.25rem] border border-slate-100">
+                {onEdit && (
+                  <button onClick={() => onEdit(resource.id)} className="h-11 w-11 rounded-xl glass border-white text-slate-400 hover:text-emerald-600 hover:bg-white transition-all flex items-center justify-center shadow-sm">
+                    <Edit2 className="h-4 w-4" />
+                  </button>
+                )}
+                <button 
+                  onClick={() => onFlag?.(resource.id)} 
+                  className={cn(
+                    "h-11 w-11 rounded-xl glass border-white transition-all flex items-center justify-center shadow-sm",
+                    resource.isFlagged ? "text-rose-500 bg-rose-50" : "text-slate-400 hover:text-rose-600 hover:bg-white"
+                  )}
+                >
+                  <Flag className="h-4 w-4" />
+                </button>
+                {onDelete && (
+                  <button onClick={() => onDelete(resource.id)} className="h-11 w-11 rounded-xl glass border-white text-slate-300 hover:text-rose-700 hover:bg-white transition-all flex items-center justify-center shadow-sm">
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                )}
+              </div>
+            </div>
           )}
         </div>
-        <div>
-          <div className="font-medium text-gray-900">{resource.user.name}</div>
-          <div className="text-gray-500">{resource.user.institution}</div>
-        </div>
       </div>
-
-      {/* Actions */}
-      {showActions && (
-        <div className="flex gap-2">
-          <button
-            onClick={() => onDownload?.(resource.id)}
-            className="flex-1 flex items-center justify-center gap-2 rounded bg-teal-600 px-3 py-2 text-sm font-medium text-white hover:bg-teal-700 transition-colors"
-          >
-            <DownloadIcon />
-            {isExternalLink ? 'Visit Link' : 'Download'}
-          </button>
-          
-          <div className="flex gap-1">
-            {onEdit && (
-              <button
-                onClick={() => onEdit(resource.id)}
-                className="rounded border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
-              >
-                Edit
-              </button>
-            )}
-            
-            {onFlag && (
-              <button
-                onClick={() => onFlag(resource.id)}
-                className="rounded border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
-              >
-                Flag
-              </button>
-            )}
-            
-            {onDelete && (
-              <button
-                onClick={() => onDelete(resource.id)}
-                className="rounded border border-red-300 px-3 py-2 text-sm font-medium text-red-700 hover:bg-red-50 transition-colors"
-              >
-                Delete
-              </button>
-            )}
-          </div>
-        </div>
-      )}
-    </div>
+    </motion.div>
   );
 }
+
+// Missing Lucide imports added: History, FileBadge, ArrowUpRight
+import { History } from "lucide-react";

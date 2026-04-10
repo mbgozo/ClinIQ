@@ -1,4 +1,21 @@
+"use client";
+
 import { useState } from 'react';
+import { 
+  ChevronDown, 
+  ChevronUp, 
+  X, 
+  Search, 
+  ArrowRight,
+  Zap,
+  ShieldCheck,
+  Cpu,
+  Network,
+  Orbit,
+  Bot
+} from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { cn } from '../lib/utils';
 
 interface Suggestion {
   id: string;
@@ -28,104 +45,153 @@ export function AIAssistPanel({
   if (!hasContent && !query) return null;
 
   return (
-    <div className="rounded-lg border border-teal-200 bg-teal-50/50 p-4">
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2">
-          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-teal-600 text-white">
-            {/* Sparkle / AI icon */}
-            <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-            </svg>
-          </div>
-          <span className="text-sm font-medium text-teal-900">GhanaHealth AI</span>
-        </div>
-        <div className="flex items-center gap-2">
-          {hasContent && (
-            <button
-              onClick={() => setIsExpanded(!isExpanded)}
-              className="text-xs text-teal-700 hover:text-teal-900"
-            >
-              {isExpanded ? 'Collapse' : 'Expand'}
-            </button>
-          )}
-          {onDismiss && (
-            <button
-              onClick={onDismiss}
-              className="text-xs text-teal-700 hover:text-teal-900"
-            >
-              Dismiss
-            </button>
-          )}
-        </div>
+    <motion.div 
+      initial={{ opacity: 0, scale: 0.98, y: 10 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      className="glass-dark rounded-[3rem] border-white/5 bg-slate-900/40 shadow-[0_40px_100px_-20px_rgba(0,0,0,0.5)] relative overflow-hidden group/panel"
+    >
+      {/* Advanced Neural Pulse Visual */}
+      <div className="absolute top-0 right-0 p-12 opacity-5 pointer-events-none group-hover/panel:opacity-10 transition-opacity duration-1000">
+         <Orbit className="h-64 w-64 animate-spin-slow text-emerald-500" />
       </div>
 
-      {isExpanded && (
-        <div className="space-y-3">
-          {loading && (
-            <div className="flex items-center gap-2 text-sm text-teal-700">
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-teal-600 border-t-transparent"></div>
-              Searching for relevant answers...
+      <div className="p-8">
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-5">
+            <div className="relative">
+               <div className="h-14 w-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-emerald-400 shadow-2xl relative z-10">
+                  <Cpu className="h-7 w-7" />
+               </div>
+               <div className="absolute -inset-1 opacity-20 bg-emerald-500 rounded-2xl blur-lg animate-pulse" />
+               <div className="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-emerald-500 border-3 border-slate-900 flex items-center justify-center z-20">
+                  <div className="h-2 w-2 rounded-full bg-white animate-ping" />
+               </div>
             </div>
-          )}
-
-          {!loading && suggestions.length === 0 && query && (
-            <div className="text-sm text-teal-700">
-              No relevant answers found for "{query}". Try rephrasing your question.
+            <div>
+               <h3 className="text-xl font-black text-white heading tracking-tight">Neural Intelligence Hub</h3>
+               <p className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.3em] leading-none mt-1">Core Synthesis Layer Active</p>
             </div>
-          )}
-
-          {!loading && suggestions.length > 0 && (
-            <div className="space-y-2">
-              <p className="text-sm font-medium text-teal-900">
-                Found {suggestions.length} relevant answer{suggestions.length !== 1 ? 's' : ''}:
-              </p>
-              {suggestions.map((suggestion) => (
-                <div
-                  key={suggestion.id}
-                  className="rounded border border-teal-200 bg-white p-3 text-sm"
-                >
-                  <h4 className="font-medium text-gray-900 mb-1">{suggestion.title}</h4>
-                  <p className="text-gray-600 text-xs line-clamp-2">{suggestion.snippet}</p>
-                  <div className="mt-2 flex items-center justify-between">
-                    <span className="text-xs text-teal-600">
-                      {Math.round(suggestion.relevance * 100)}% relevant
-                    </span>
-                    <a
-                      href="#"
-                      className="text-xs text-teal-700 hover:text-teal-900 underline"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        // Handle navigation to suggestion
-                      }}
-                    >
-                      View answer
-                    </a>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {onOpenFullChat && (
-            <div className="pt-2 border-t border-teal-200">
+          </div>
+          
+          <div className="flex items-center gap-3">
+            {hasContent && (
               <button
-                onClick={onOpenFullChat}
-                className="w-full rounded bg-teal-600 px-3 py-2 text-sm font-medium text-white hover:bg-teal-700 transition-colors"
+                onClick={() => setIsExpanded(!isExpanded)}
+                className="h-10 w-10 rounded-xl glass border-white/5 flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 transition-all active:scale-90"
               >
-                Ask GhanaHealth AI about this topic
+                {isExpanded ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
               </button>
-            </div>
-          )}
-
-          <div className="flex items-center gap-2 text-xs text-gray-500 mt-3">
-            <svg className="h-3.5 w-3.5 text-teal-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            AI-powered suggestions to help you find relevant answers. Always verify critical information.
+            )}
+            {onDismiss && (
+              <button
+                onClick={onDismiss}
+                className="h-10 w-10 rounded-xl glass border-white/5 flex items-center justify-center text-slate-400 hover:text-rose-500 hover:bg-white/10 transition-all active:scale-90"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            )}
           </div>
         </div>
-      )}
-    </div>
+
+        <AnimatePresence>
+          {isExpanded && (
+            <motion.div 
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.5, ease: "circOut" }}
+              className="space-y-8 overflow-hidden pr-2"
+            >
+              {loading && (
+                <div className="flex flex-col items-center justify-center py-16 gap-5">
+                  <div className="relative h-20 w-20 flex items-center justify-center">
+                    <motion.div 
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                      className="absolute inset-0 border-3 border-dashed border-emerald-500/30 rounded-full" 
+                    />
+                    <Network className="h-8 w-8 text-emerald-500 animate-pulse" />
+                  </div>
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Synthesizing Multidimensional Protocols...</p>
+                </div>
+              )}
+
+              {!loading && suggestions.length === 0 && query && (
+                <div className="p-8 glass border-white/5 rounded-3xl text-sm font-medium text-slate-300 flex items-center gap-6 shadow-xl">
+                  <div className="h-14 w-14 rounded-2xl bg-white/5 flex items-center justify-center text-slate-500 shrink-0 border border-white/5">
+                     <Search className="h-6 w-6" />
+                  </div>
+                  <p className="leading-relaxed">
+                    Inquiry matrix for <span className="text-emerald-400 font-black italic tracking-tight">"{query}"</span> does not yield exact matches in current vault. Relaying to <span className="text-white">Heuristic Processing Layer</span>...
+                  </p>
+                </div>
+              )}
+
+              {!loading && suggestions.length > 0 && (
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between px-2">
+                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] flex items-center gap-3">
+                        <Zap className="h-4 w-4 text-amber-500" /> Correlated Intelligence Matrix: {suggestions.length} Strategic Nodes
+                     </p>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 gap-4">
+                    {suggestions.map((suggestion, i) => (
+                      <motion.div
+                        key={suggestion.id}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: i * 0.1 }}
+                        className="group glass border-white/5 rounded-3xl p-6 hover:bg-white transition-all duration-500 cursor-pointer relative overflow-hidden shadow-xl"
+                      >
+                        <div className="absolute right-0 top-0 h-full w-2 bg-emerald-500/10 group-hover:bg-emerald-500 transition-all" />
+                        
+                        <div className="flex items-start justify-between gap-6 mb-3">
+                           <h4 className="text-lg font-black text-white group-hover:text-slate-900 heading tracking-tight transition-colors line-clamp-1">{suggestion.title}</h4>
+                           <div className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 group-hover:bg-emerald-500 group-hover:text-white text-[10px] font-black uppercase tracking-tight transition-all">
+                              {Math.round(suggestion.relevance * 100)}% Match
+                           </div>
+                        </div>
+                        
+                        <p className="text-sm font-medium text-slate-400 group-hover:text-slate-600 line-clamp-2 leading-relaxed mb-6 transition-colors">
+                          {suggestion.snippet}
+                        </p>
+                        
+                        <div className="flex justify-end">
+                           <button className="flex items-center gap-2 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] group-hover:text-emerald-600 transition-colors">
+                              Establish Link <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                           </button>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {onOpenFullChat && (
+                <div className="pt-4 px-2">
+                  <button
+                    onClick={onOpenFullChat}
+                    className="w-full h-16 bg-white text-slate-900 rounded-[1.5rem] text-[11px] font-black uppercase tracking-[0.3em] shadow-3xl hover:bg-emerald-600 hover:text-white transition-all flex items-center justify-center gap-4 active:scale-95 group/btn"
+                  >
+                    <Bot className="h-6 w-6 text-emerald-500 group-hover:text-white transition-colors" />
+                    Open Strategic Synthesis Matrix
+                  </button>
+                </div>
+              )}
+
+              <div className="p-6 glass border-white/5 rounded-[2rem] flex items-start gap-4">
+                <div className="h-6 w-6 rounded flex items-center justify-center shrink-0">
+                   <ShieldCheck className="h-5 w-5 text-emerald-500" />
+                </div>
+                <p className="text-[10px] font-black text-slate-500 leading-relaxed uppercase tracking-tighter italic">
+                   Neural logic correlations are based on documented clinical archives. Verify all directives with the <span className="text-white not-italic font-black">Lead Consultant or Primary Attending Physician</span> prior to execution.
+                </p>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </motion.div>
   );
 }

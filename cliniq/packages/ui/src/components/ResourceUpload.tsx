@@ -1,23 +1,30 @@
 import { useState } from 'react';
-// Unused imports from shared-types removed
+import { 
+  FileText, 
+  Check, 
+  X, 
+  CloudUpload, 
+  Link as LinkIcon, 
+  Type, 
+  AlignLeft, 
+  Layers, 
+  Calendar, 
+  Tag as TagIcon, 
+  ShieldCheck, 
+  Sparkles,
+  Zap,
+  ChevronRight
+} from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { cn } from '../lib/utils';
 
-// SVG icon helpers
+// SVG icon helpers (keeping these if needed, but transitioning to Lucide)
 const DocumentIcon = () => (
-  <svg className="h-8 w-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-  </svg>
+   <FileText className="h-10 w-10 text-slate-300" />
 );
 
 const UploadIcon = () => (
-  <svg className="h-10 w-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-  </svg>
-);
-
-const CheckIcon = () => (
-  <svg className="h-4 w-4 text-teal-600" fill="currentColor" viewBox="0 0 20 20">
-    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-  </svg>
+   <CloudUpload className="h-12 w-12 text-emerald-500" />
 );
 
 interface ResourceUploadProps {
@@ -97,18 +104,41 @@ export function ResourceUpload({ onSubmit, onCancel, isLoading = false }: Resour
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">Upload Resource</h2>
+    <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md flex items-center justify-center z-[110] p-6 overflow-y-auto">
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.9, y: 30 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.9, y: 30 }}
+        className="glass-dark rounded-[3.5rem] p-10 lg:p-14 max-w-2xl w-full border-white/10 shadow-3xl text-white relative overflow-hidden"
+      >
+        {/* Decorative elements */}
+        <div className="absolute top-0 right-0 p-12 opacity-5 pointer-events-none transform translate-x-1/4 -translate-y-1/4">
+           <CloudUpload className="h-64 w-64 text-emerald-400" />
+        </div>
+
+        <div className="flex items-center justify-between mb-10 relative">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <Sparkles className="h-4 w-4 text-emerald-400" />
+              <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-[0.3em]">Operational Contribution</span>
+            </div>
+            <h2 className="text-3xl font-bold heading tracking-tight">Sync New Asset</h2>
+          </div>
+          <button 
+            onClick={onCancel}
+            className="h-12 w-12 rounded-2xl bg-white/5 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-all active:scale-95"
+          >
+            <X className="h-6 w-6" />
+          </button>
+        </div>
         
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {/* File Upload */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              File or URL
+        <form onSubmit={handleSubmit} className="space-y-8 relative">
+          {/* File Upload / URL Segment */}
+          <div className="space-y-4">
+            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1 flex items-center gap-2">
+               <Zap className="h-3 w-3 text-amber-500" /> Source Vector Selection
             </label>
-            <div className="space-y-3">
-              {/* Drop zone */}
+            <div className="space-y-6">
               <input
                 type="file"
                 onChange={handleFileChange}
@@ -119,171 +149,201 @@ export function ResourceUpload({ onSubmit, onCancel, isLoading = false }: Resour
                 htmlFor="file-upload"
                 onDrop={handleDrop}
                 onDragOver={(e) => e.preventDefault()}
-                className="cursor-pointer flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-6 hover:border-teal-400 transition-colors"
+                className="cursor-pointer flex flex-col items-center justify-center border-2 border-dashed border-white/10 rounded-[2.5rem] p-10 hover:border-emerald-500/50 hover:bg-white/5 transition-all group"
               >
                 {file ? (
-                  <>
-                    <DocumentIcon />
-                    <span className="mt-2 text-sm font-medium text-gray-700">{file.name}</span>
-                    <span className="text-xs text-gray-500 mt-1">{formatFileSize(file.size)}</span>
-                  </>
+                  <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col items-center">
+                    <div className="h-16 w-16 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 mb-4">
+                       <FileText className="h-8 w-8" />
+                    </div>
+                    <span className="text-sm font-bold text-white mb-1">{file.name}</span>
+                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{formatFileSize(file.size)}</span>
+                  </motion.div>
                 ) : (
                   <>
-                    <UploadIcon />
-                    <span className="mt-2 text-sm font-medium text-gray-700">Click to upload or drag and drop</span>
-                    <span className="text-xs text-gray-500 mt-1">PDF, DOC, DOCX, PPT, MP4, images, audio up to 20MB</span>
+                    <div className="h-20 w-20 rounded-[1.8rem] bg-white/5 flex items-center justify-center text-slate-400 group-hover:bg-emerald-500/10 group-hover:text-emerald-400 transition-all mb-4">
+                       <UploadIcon />
+                    </div>
+                    <span className="text-sm font-bold text-white mb-2">Engage asset upload or drop vector</span>
+                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] max-w-[280px] text-center">
+                       PDF, DOC, DOCX, PPT, MP4, IMAGE - PEER VALIDATED ONLY
+                    </span>
                   </>
                 )}
               </label>
               
-              <div className="flex items-center gap-2 text-sm text-gray-400">
-                <div className="flex-1 h-px bg-gray-200" />
-                <span>or paste a URL</span>
-                <div className="flex-1 h-px bg-gray-200" />
+              <div className="flex items-center gap-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest px-6">
+                <div className="flex-1 h-[1px] bg-white/5" />
+                <span>or provide digital link</span>
+                <div className="flex-1 h-[1px] bg-white/5" />
               </div>
               
-              <input
-                type="url"
-                placeholder="https://example.com/resource"
-                value={formData.url}
-                onChange={(e) => setFormData(prev => ({ ...prev, url: e.target.value }))}
-                className="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 disabled:bg-gray-50 disabled:text-gray-400"
-                disabled={!!file}
-              />
+              <div className="relative group">
+                 <LinkIcon className="absolute left-6 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 group-focus-within:text-emerald-400 transition-colors" />
+                 <input
+                   type="url"
+                   placeholder="https://nexus.archives.edu/asset"
+                   value={formData.url}
+                   onChange={(e) => setFormData(prev => ({ ...prev, url: e.target.value }))}
+                   className="w-full h-14 bg-white/5 border border-white/10 rounded-2xl pl-14 pr-6 text-sm font-medium focus:ring-2 focus:ring-emerald-500/40 focus:bg-white/10 transition-all outline-none placeholder:text-slate-700 disabled:opacity-30"
+                   disabled={!!file}
+                 />
+              </div>
             </div>
           </div>
 
-          {/* Title */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Title <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              required
-              minLength={5}
-              maxLength={200}
-              value={formData.title}
-              onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-              className="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
-              placeholder="Enter resource title"
-            />
-          </div>
-
-          {/* Description */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Description <span className="text-red-500">*</span>
-            </label>
-            <textarea
-              required
-              minLength={10}
-              maxLength={1000}
-              rows={3}
-              value={formData.description}
-              onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-              className="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
-              placeholder="Describe the resource content"
-            />
-          </div>
-
-          {/* Category and Course */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
-              <select
-                value={formData.categoryId}
-                onChange={(e) => setFormData(prev => ({ ...prev, categoryId: e.target.value }))}
-                className="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
-              >
-                <option value="">Select category</option>
-                <option value="1">Anatomy &amp; Physiology</option>
-                <option value="2">Pharmacology</option>
-                <option value="3">Medical-Surgical</option>
-                <option value="4">Pediatrics</option>
-                <option value="5">Obstetrics &amp; Gynecology</option>
-              </select>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Title */}
+            <div className="space-y-2">
+              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">Asset Designation</label>
+              <div className="relative group">
+                 <Type className="absolute left-6 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 group-focus-within:text-emerald-400 transition-colors" />
+                 <input
+                   type="text"
+                   required
+                   minLength={5}
+                   maxLength={200}
+                   value={formData.title}
+                   onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                   className="w-full h-14 bg-white/5 border border-white/10 rounded-2xl pl-14 pr-6 text-sm font-medium focus:ring-2 focus:ring-emerald-500/40 focus:bg-white/10 transition-all outline-none placeholder:text-slate-700"
+                   placeholder="e.g., PICU Ventilation Protocols"
+                 />
+              </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Course</label>
-              <input
-                type="text"
-                value={formData.course}
-                onChange={(e) => setFormData(prev => ({ ...prev, course: e.target.value }))}
-                className="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
-                placeholder="e.g., NURS 101"
-              />
+            {/* Category selection */}
+            <div className="space-y-2">
+               <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">Clinical Context</label>
+               <div className="relative group">
+                  <Layers className="absolute left-6 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 group-focus-within:text-emerald-400 transition-colors pointer-events-none" />
+                  <select
+                    value={formData.categoryId}
+                    onChange={(e) => setFormData(prev => ({ ...prev, categoryId: e.target.value }))}
+                    className="w-full h-14 bg-white/5 border border-white/10 rounded-2xl pl-14 pr-10 text-sm font-bold text-white focus:ring-2 focus:ring-emerald-500/40 focus:bg-white/10 transition-all outline-none appearance-none cursor-pointer"
+                  >
+                    <option value="" className="bg-slate-900">Select Domain</option>
+                    <option value="1" className="bg-slate-900">Anatomy & Physiology</option>
+                    <option value="2" className="bg-slate-900">Pharmacology</option>
+                    <option value="3" className="bg-slate-900">Medical-Surgical</option>
+                    <option value="4" className="bg-slate-900">Pediatrics</option>
+                    <option value="5" className="bg-slate-900">Obstetrics & Gynecology</option>
+                  </select>
+               </div>
             </div>
           </div>
 
-          {/* Year */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Academic Year</label>
-            <input
-              type="number"
-              min="1950"
-              max={new Date().getFullYear()}
-              value={formData.year}
-              onChange={(e) => setFormData(prev => ({ ...prev, year: e.target.value }))}
-              className="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
-              placeholder="Academic year"
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+             {/* Course */}
+             <div className="space-y-2">
+                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">Academic Unit</label>
+                <div className="relative group">
+                   <ShieldCheck className="absolute left-6 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 group-focus-within:text-emerald-400 transition-colors" />
+                   <input
+                     type="text"
+                     value={formData.course}
+                     onChange={(e) => setFormData(prev => ({ ...prev, course: e.target.value }))}
+                     className="w-full h-14 bg-white/5 border border-white/10 rounded-2xl pl-14 pr-6 text-sm font-medium focus:ring-2 focus:ring-emerald-500/40 focus:bg-white/10 transition-all outline-none placeholder:text-slate-700"
+                     placeholder="e.g., NURS 204"
+                   />
+                </div>
+             </div>
+
+             {/* Year */}
+             <div className="space-y-2">
+                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">Archive Year</label>
+                <div className="relative group">
+                   <Calendar className="absolute left-6 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 group-focus-within:text-emerald-400 transition-colors" />
+                   <input
+                     type="number"
+                     min="1950"
+                     max={new Date().getFullYear()}
+                     value={formData.year}
+                     onChange={(e) => setFormData(prev => ({ ...prev, year: e.target.value }))}
+                     className="w-full h-14 bg-white/5 border border-white/10 rounded-2xl pl-14 pr-6 text-sm font-medium focus:ring-2 focus:ring-emerald-500/40 focus:bg-white/10 transition-all outline-none placeholder:text-slate-700"
+                     placeholder={new Date().getFullYear().toString()}
+                   />
+                </div>
+             </div>
           </div>
 
           {/* Tags */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Tags <span className="text-red-500">*</span>
-              <span className="text-gray-400 font-normal ml-1">(1–10 tags)</span>
+          <div className="space-y-4">
+            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1 flex items-center justify-between">
+               Indexing Keywords
+               <span className="text-[9px] lowercase opacity-50">(limit 10)</span>
             </label>
-            <div className="space-y-2">
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={tagInput}
-                  onChange={(e) => setTagInput(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddTag())}
-                  className="flex-1 rounded border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 disabled:bg-gray-50"
-                  placeholder="Add tag and press Enter"
-                  disabled={formData.tags.length >= 10}
-                />
+            <div className="space-y-4">
+              <div className="flex gap-3">
+                <div className="relative flex-1 group">
+                   <TagIcon className="absolute left-6 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 group-focus-within:text-emerald-400 transition-colors" />
+                   <input
+                     type="text"
+                     value={tagInput}
+                     onChange={(e) => setTagInput(e.target.value)}
+                     onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddTag())}
+                     className="w-full h-14 bg-white/5 border border-white/10 rounded-2xl pl-14 pr-6 text-sm font-medium focus:ring-2 focus:ring-emerald-500/40 focus:bg-white/10 transition-all outline-none placeholder:text-slate-700 disabled:opacity-30"
+                     placeholder="Define search index..."
+                     disabled={formData.tags.length >= 10}
+                   />
+                </div>
                 <button
                   type="button"
                   onClick={handleAddTag}
                   disabled={!tagInput.trim() || formData.tags.length >= 10}
-                  className="rounded bg-gray-200 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-300 disabled:opacity-50 transition-colors"
+                  className="h-14 px-8 rounded-2xl bg-white/5 text-[10px] font-bold uppercase tracking-widest hover:bg-white/10 transition-all active:scale-95 disabled:opacity-30"
                 >
-                  Add
+                  Inject
                 </button>
               </div>
               
-              {formData.tags.length > 0 && (
-                <div className="flex flex-wrap gap-1">
-                  {formData.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="inline-flex items-center gap-1 rounded bg-teal-100 px-2 py-1 text-xs font-medium text-teal-800"
-                    >
-                      #{tag}
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveTag(tag)}
-                        className="text-teal-600 hover:text-teal-900 leading-none"
-                        aria-label={`Remove tag ${tag}`}
+              <AnimatePresence>
+                {formData.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-2 px-1">
+                    {formData.tags.map((tag) => (
+                      <motion.span
+                        key={tag}
+                        initial={{ scale: 0.8, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        exit={{ scale: 0.8, opacity: 0 }}
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-bold text-emerald-400 uppercase tracking-widest"
                       >
-                        ×
-                      </button>
-                    </span>
-                  ))}
-                </div>
-              )}
+                        #{tag}
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveTag(tag)}
+                          className="hover:text-white transition-colors"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                      </motion.span>
+                    ))}
+                  </div>
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
+
+          {/* Description */}
+          <div className="space-y-2">
+            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">Executive Summary</label>
+            <div className="relative group">
+               <AlignLeft className="absolute left-6 top-6 h-4 w-4 text-slate-500 group-focus-within:text-emerald-400 transition-colors" />
+               <textarea
+                 required
+                 minLength={10}
+                 maxLength={1000}
+                 rows={4}
+                 value={formData.description}
+                 onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                 className="w-full bg-white/5 border border-white/10 rounded-[2rem] pl-14 pr-6 py-6 text-sm font-medium focus:ring-2 focus:ring-emerald-500/40 focus:bg-white/10 transition-all outline-none placeholder:text-slate-700 resize-none"
+                 placeholder="Provide the clinical rationale for this resource..."
+               />
             </div>
           </div>
 
           {/* Copyright Acknowledgment */}
-          <div>
-            <label className="flex items-start gap-3 cursor-pointer">
+          <div className="px-1">
+            <label className="flex items-start gap-4 cursor-pointer group">
               <div className="mt-0.5 relative">
                 <input
                   type="checkbox"
@@ -293,39 +353,50 @@ export function ResourceUpload({ onSubmit, onCancel, isLoading = false }: Resour
                   className="sr-only"
                 />
                 <div
-                  className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${
-                    formData.copyrightAck ? 'bg-teal-600 border-teal-600' : 'border-gray-300'
-                  }`}
+                  className={cn(
+                    "w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all group-hover:scale-110",
+                    formData.copyrightAck ? 'bg-emerald-500 border-emerald-500' : 'border-white/10 bg-white/5'
+                  )}
                 >
-                  {formData.copyrightAck && <CheckIcon />}
+                  {formData.copyrightAck && <Check className="h-4 w-4 text-white" />}
                 </div>
               </div>
-              <span className="text-sm text-gray-700">
-                I have the right to share this resource and it complies with copyright laws
-              </span>
+              <div className="space-y-1">
+                 <span className="block text-xs font-bold text-white uppercase tracking-wider">Clinical Integrity Mandate</span>
+                 <span className="block text-[10px] font-medium text-slate-400 leading-normal max-w-sm lowercase">
+                    By syncronizing this asset, I confirm full intellectual ownership or legitimate authorization for global distribution within the platform registry.
+                 </span>
+              </div>
             </label>
           </div>
 
           {/* Actions */}
-          <div className="flex gap-3 pt-4 border-t border-gray-100">
+          <div className="flex gap-4 pt-10 border-t border-white/5">
             <button
               type="button"
               onClick={onCancel}
               disabled={isLoading}
-              className="flex-1 rounded border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 transition-colors"
+              className="flex-1 h-14 rounded-2xl border border-white/10 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-white/5 transition-all active:scale-95 disabled:opacity-30"
             >
-              Cancel
+              Abort Contribution
             </button>
             <button
               type="submit"
               disabled={isLoading || (!file && !formData.url)}
-              className="flex-1 rounded bg-teal-600 px-4 py-2 text-sm font-medium text-white hover:bg-teal-700 disabled:opacity-50 transition-colors"
+              className="flex-1 h-14 rounded-2xl bg-emerald-500 text-white text-[10px] font-bold uppercase tracking-[0.2em] shadow-2xl shadow-emerald-500/20 hover:bg-emerald-400 transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-3"
             >
-              {isLoading ? 'Uploading...' : 'Upload Resource'}
+              {isLoading ? (
+                <div className="h-5 w-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              ) : (
+                <>
+                  Transmit Asset
+                  <ChevronRight className="h-4 w-4" />
+                </>
+              )}
             </button>
           </div>
         </form>
-      </div>
+      </motion.div>
     </div>
   );
 }
