@@ -1,22 +1,6 @@
 "use client";
 
-import { 
-  User, 
-  MessageSquare, 
-  Clock, 
-  Globe, 
-  Lock, 
-  Mail, 
-  Crown, 
-  ShieldCheck, 
-  Zap,
-  MoreVertical,
-  UserPlus,
-  Network,
-  Activity,
-  ArrowUpRight,
-  Fingerprint
-} from "lucide-react";
+import * as Icons from "lucide-react";
 import { cn } from "../lib/utils";
 import { motion } from "framer-motion";
 
@@ -67,9 +51,9 @@ export function StudyGroupCard({
 }: StudyGroupCardProps) {
   const getPrivacyIcon = (privacy: string) => {
     switch (privacy) {
-      case 'PRIVATE': return <Lock className="h-4 w-4" />;
-      case 'INVITE_ONLY': return <Mail className="h-4 w-4" />;
-      default: return <Globe className="h-4 w-4" />;
+      case 'PRIVATE': return <Icons.Lock className="h-4 w-4" />;
+      case 'INVITE_ONLY': return <Icons.Mail className="h-4 w-4" />;
+      default: return <Icons.Globe className="h-4 w-4" />;
     }
   };
 
@@ -94,10 +78,10 @@ export function StudyGroupCard({
 
   const getRoleLabel = () => {
     switch (group.userRole) {
-      case 'OWNER': return { icon: <Crown className="h-4 w-4 text-emerald-500" />, label: 'Lead Architect', color: 'text-emerald-600' };
-      case 'ADMIN': return { icon: <Zap className="h-4 w-4 text-indigo-500" />, label: 'Core Admin', color: 'text-indigo-600' };
-      case 'MODERATOR': return { icon: <ShieldCheck className="h-4 w-4 text-amber-500" />, label: 'Validator', color: 'text-amber-600' };
-      default: return { icon: <User className="h-4 w-4 text-slate-500" />, label: 'Fellow', color: 'text-slate-600' };
+      case 'OWNER': return { icon: <Icons.Crown className="h-4 w-4 text-emerald-500" />, label: 'Lead Architect', color: 'text-emerald-600' };
+      case 'ADMIN': return { icon: <Icons.Zap className="h-4 w-4 text-indigo-500" />, label: 'Core Admin', color: 'text-indigo-600' };
+      case 'MODERATOR': return { icon: <Icons.ShieldCheck className="h-4 w-4 text-amber-500" />, label: 'Validator', color: 'text-amber-600' };
+      default: return { icon: <Icons.User className="h-4 w-4 text-slate-500" />, label: 'Fellow', color: 'text-slate-600' };
     }
   };
 
@@ -134,13 +118,13 @@ export function StudyGroupCard({
                   {getPrivacyIcon(group.privacy)} {group.privacy.replace(/_/g, ' ')}
                 </span>
                 <span className="flex items-center gap-2.5 px-3 py-1 rounded-xl hover:bg-slate-50 transition-all">
-                  <Activity className="h-4 w-4 text-emerald-500 animate-pulse" /> {formatCadenceLabel(group.cadence)}
+                  <Icons.Activity className="h-4 w-4 text-emerald-500 animate-pulse" /> {formatCadenceLabel(group.cadence)}
                 </span>
              </div>
           </div>
 
           <div className="h-14 w-14 rounded-2xl glass border-white flex items-center justify-center text-slate-400 hover:bg-slate-900 hover:text-white cursor-pointer transition-all active:scale-90 shadow-sm">
-             <MoreVertical className="h-6 w-6" />
+             <Icons.MoreVertical className="h-6 w-6" />
           </div>
         </div>
 
@@ -157,7 +141,7 @@ export function StudyGroupCard({
                  <div className="flex -space-x-4">
                     {[1, 2, 3, 4].map((i) => (
                       <div key={i} className="h-12 w-12 rounded-[1.25rem] border-4 border-white bg-slate-100 flex items-center justify-center overflow-hidden shadow-2xl ring-2 ring-slate-50/50 relative group/icon transition-transform hover:scale-110 hover:z-20">
-                         <User className="h-6 w-6 text-slate-300 group-hover/icon:text-emerald-500 transition-colors" />
+                         <Icons.User className="h-6 w-6 text-slate-300 group-hover/icon:text-emerald-500 transition-colors" />
                       </div>
                     ))}
                     <div className="h-12 w-12 rounded-[1.25rem] border-4 border-white bg-slate-950 flex items-center justify-center text-[10px] font-black text-white shadow-2xl ring-2 ring-slate-50 relative z-10 hover:scale-110 transition-transform">
@@ -169,7 +153,7 @@ export function StudyGroupCard({
               <div className="text-left md:text-right space-y-4 flex-1 max-w-[220px]">
                  <div className="flex items-center justify-between md:justify-end gap-3 text-[11px] font-black text-slate-900 uppercase tracking-widest">
                    {isFull ? <span className="text-rose-600">Saturation Limit</span> : <span>{group.maxMembers - group.memberCount} Nodes Remaining</span>}
-                   <Fingerprint className={cn("h-4 w-4", isFull ? "text-rose-500" : "text-emerald-500")} />
+                   <Icons.Fingerprint className={cn("h-4 w-4", isFull ? "text-rose-500" : "text-emerald-500")} />
                  </div>
                  <div className="h-2.5 bg-slate-100 rounded-full overflow-hidden shadow-inner border border-slate-50">
                     <motion.div 
@@ -192,19 +176,19 @@ export function StudyGroupCard({
         <div className="grid grid-cols-3 gap-8 mb-12">
            <div className="space-y-3 group/metric">
               <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] flex items-center gap-2.5 group-hover/metric:text-emerald-600 transition-colors">
-                 <MessageSquare className="h-4 w-4" /> Intel Hub
+                 <Icons.MessageSquare className="h-4 w-4" /> Intel Hub
               </p>
               <p className="text-xl font-black text-slate-900 heading tracking-tight leading-none uppercase">{group.postCount} Reports</p>
            </div>
            <div className="space-y-3 group/metric">
               <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] flex items-center gap-2.5 group-hover/metric:text-indigo-600 transition-colors">
-                 <Clock className="h-4 w-4" /> Sync Pulse
+                 <Icons.Clock className="h-4 w-4" /> Sync Pulse
               </p>
               <p className="text-xl font-black text-slate-900 heading tracking-tight leading-none uppercase">{formatDate(group.lastActivity)}</p>
            </div>
            <div className="space-y-3 group/metric">
               <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] flex items-center gap-2.5 group-hover/metric:text-amber-600 transition-colors">
-                 <Fingerprint className="h-4 w-4" /> Authority
+                 <Icons.Fingerprint className="h-4 w-4" /> Authority
               </p>
               {group.userRole ? (
                 <div className={cn("flex items-center gap-2 text-[12px] font-black uppercase tracking-tight", getRoleLabel().color)}>
@@ -212,7 +196,7 @@ export function StudyGroupCard({
                 </div>
               ) : (
                 <div className="flex items-center gap-2 text-[12px] font-black text-slate-300 uppercase tracking-tight">
-                   <Network className="h-4 w-4" /> Unlinked
+                   <Icons.Network className="h-4 w-4" /> Unlinked
                 </div>
               )}
            </div>
@@ -226,7 +210,7 @@ export function StudyGroupCard({
                    <img src={group.owner.avatarUrl} alt="" className="h-full w-full object-cover rounded-xl" />
                  ) : (
                    <div className="h-full w-full flex items-center justify-center bg-slate-50 rounded-xl">
-                      <User className="h-8 w-8 text-slate-200" />
+                      <Icons.User className="h-8 w-8 text-slate-200" />
                    </div>
                  )}
               </div>
@@ -235,7 +219,7 @@ export function StudyGroupCard({
                  <p className="text-[10px] font-bold text-slate-400 uppercase truncate tracking-[0.1em] leading-none">{group.owner.institution}</p>
               </div>
               <div className="h-10 w-10 flex items-center justify-center text-emerald-500 opacity-0 group-hover/owner:opacity-100 transition-opacity">
-                <Crown className="h-6 w-6" />
+                <Icons.Crown className="h-6 w-6" />
               </div>
            </div>
 
@@ -247,7 +231,7 @@ export function StudyGroupCard({
                    className="flex-1 h-18 rounded-[2rem] bg-slate-900 text-white flex items-center justify-center gap-4 font-black text-[11px] uppercase tracking-[0.3em] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)] hover:bg-emerald-600 transition-all active:scale-95 group/btn overflow-hidden relative"
                  >
                    <div className="absolute inset-0 bg-gradient-to-r from-emerald-400/0 via-emerald-400/10 to-emerald-400/0 translate-x-[-100%] group-hover/btn:translate-x-[100%] transition-transform duration-1000 ease-in-out" />
-                   <UserPlus className="h-6 w-6 text-emerald-400 group-hover/btn:scale-110 transition-transform relative z-10" />
+                   <Icons.UserPlus className="h-6 w-6 text-emerald-400 group-hover/btn:scale-110 transition-transform relative z-10" />
                    <span className="relative z-10">Initiate Tactical Sync</span>
                  </button>
                )}
@@ -259,7 +243,7 @@ export function StudyGroupCard({
                      className="flex-1 h-18 rounded-[2rem] bg-white border border-slate-200 text-slate-900 flex items-center justify-center gap-4 font-black text-[11px] uppercase tracking-[0.3em] shadow-xl hover:bg-slate-900 hover:text-white hover:border-slate-900 transition-all group/hub active:scale-95 relative overflow-hidden"
                    >
                      <span className="relative z-10">Operational HQ</span>
-                     <ArrowUpRight className="h-6 w-6 group-hover/hub:translate-x-1 group-hover/hub:-translate-y-1 transition-transform text-emerald-500 relative z-10" />
+                     <Icons.ArrowUpRight className="h-6 w-6 group-hover/hub:translate-x-1 group-hover/hub:-translate-y-1 transition-transform text-emerald-500 relative z-10" />
                    </button>
                    
                    {group.userRole !== 'OWNER' && (
@@ -268,7 +252,7 @@ export function StudyGroupCard({
                        className="h-18 w-18 rounded-[2rem] glass border-rose-500/10 text-rose-400 hover:bg-rose-600 hover:text-white transition-all flex items-center justify-center shadow-xl active:scale-95"
                        title="Terminate Command"
                      >
-                       <Lock className="h-6 w-6" />
+                       <Icons.Lock className="h-6 w-6" />
                      </button>
                    )}
                  </div>
@@ -279,7 +263,7 @@ export function StudyGroupCard({
                    disabled
                    className="flex-1 h-18 rounded-[2rem] bg-slate-100 border border-slate-200 text-slate-400 font-black text-[11px] uppercase tracking-[0.3em] cursor-not-allowed flex items-center justify-center gap-4"
                  >
-                   <ShieldCheck className="h-6 w-6 opacity-30" />
+                   <Icons.ShieldCheck className="h-6 w-6 opacity-30" />
                    Capacity Saturated
                  </button>
                )}

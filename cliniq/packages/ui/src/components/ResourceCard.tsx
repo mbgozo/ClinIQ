@@ -1,25 +1,6 @@
 "use client";
 
-import { 
-  User, 
-  FileText, 
-  Presentation, 
-  Video, 
-  Image as ImageIcon, 
-  Mic, 
-  Link as LinkIcon, 
-  Book, 
-  Download, 
-  AlertTriangle, 
-  MoreVertical,
-  Layers,
-  Edit2,
-  Trash2,
-  Flag,
-  FileBadge,
-  Zap,
-  ArrowUpRight
-} from "lucide-react";
+import * as Icons from "lucide-react";
 import { cn } from "../lib/utils";
 import { motion } from "framer-motion";
 
@@ -70,17 +51,17 @@ export function ResourceCard({
 }: ResourceCardProps) {
   const getFileIcon = (fileType?: string) => {
     switch (fileType) {
-      case 'PRESENTATION': return <Presentation className="h-6 w-6" />;
-      case 'VIDEO': return <Video className="h-6 w-6" />;
-      case 'IMAGE': return <ImageIcon className="h-6 w-6" />;
-      case 'AUDIO': return <Mic className="h-6 w-6" />;
-      case 'LINK': return <LinkIcon className="h-6 w-6" />;
+      case 'PRESENTATION': return <Icons.Presentation className="h-6 w-6" />;
+      case 'VIDEO': return <Icons.Video className="h-6 w-6" />;
+      case 'IMAGE': return <Icons.Image className="h-6 w-6" />;
+      case 'AUDIO': return <Icons.Mic className="h-6 w-6" />;
+      case 'LINK': return <Icons.Link className="h-6 w-6" />;
       case 'STUDY_GUIDE':
       case 'CHEAT_SHEET':
       case 'CASE_STUDY':
       case 'RESEARCH_PAPER':
-      case 'CLINICAL_GUIDELINE': return <FileBadge className="h-6 w-6" />;
-      default: return <FileText className="h-6 w-6" />;
+      case 'CLINICAL_GUIDELINE': return <Icons.FileBadge className="h-6 w-6" />;
+      default: return <Icons.FileText className="h-6 w-6" />;
     }
   };
 
@@ -127,7 +108,7 @@ export function ResourceCard({
          
          <div className="absolute top-8 right-10">
             <div className="h-11 w-11 rounded-2xl glass border-white flex items-center justify-center text-slate-400 hover:bg-slate-900 hover:text-white cursor-pointer transition-all active:scale-90 shadow-sm">
-               <MoreVertical className="h-5 w-5" />
+               <Icons.MoreVertical className="h-5 w-5" />
             </div>
          </div>
 
@@ -142,12 +123,12 @@ export function ResourceCard({
         <div className="flex items-center gap-4 mb-8">
           {resource.category && (
             <span className="flex items-center gap-2 px-4 py-1.5 bg-emerald-50 border border-emerald-100/50 rounded-full text-[10px] font-black text-emerald-600 uppercase tracking-widest shadow-sm">
-              <Layers className="h-3.5 w-3.5" /> {resource.category.name}
+              <Icons.Layers className="h-3.5 w-3.5" /> {resource.category.name}
             </span>
           )}
           {resource.isFlagged && (
             <span className="flex items-center gap-2 px-4 py-1.5 bg-rose-50 border border-rose-100/50 rounded-full text-[10px] font-black text-rose-600 uppercase tracking-widest shadow-sm animate-pulse">
-              <AlertTriangle className="h-3.5 w-3.5" /> Integrity Check
+              <Icons.AlertTriangle className="h-3.5 w-3.5" /> Integrity Check
             </span>
           )}
         </div>
@@ -161,12 +142,12 @@ export function ResourceCard({
             <div className="flex flex-wrap items-center gap-x-8 gap-y-3 text-[11px] font-black text-slate-400 uppercase tracking-widest">
               {resource.course && (
                 <span className="flex items-center gap-2.5 px-3 py-1 rounded-xl hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-100">
-                  <Book className="h-4 w-4 text-indigo-500" /> {resource.course}
+                  <Icons.Book className="h-4 w-4 text-indigo-500" /> {resource.course}
                 </span>
               )}
               {resource.year && (
                 <span className="flex items-center gap-2.5 px-3 py-1 rounded-xl hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-100">
-                  <History className="h-4 w-4 text-amber-500" /> Archival {resource.year}
+                  <Icons.History className="h-4 w-4 text-amber-500" /> Archival {resource.year}
                 </span>
               )}
             </div>
@@ -207,7 +188,7 @@ export function ResourceCard({
                      <img src={resource.user.avatarUrl} alt="" className="h-full w-full object-cover rounded-[0.9rem]" />
                    ) : (
                      <div className="h-full w-full flex items-center justify-center bg-slate-50 rounded-[0.9rem]">
-                        <User className="h-7 w-7 text-slate-200" />
+                        <Icons.User className="h-7 w-7 text-slate-200" />
                      </div>
                    )}
                 </div>
@@ -220,7 +201,7 @@ export function ResourceCard({
              <div className="text-right space-y-1.5">
                 <div className="flex items-center justify-end gap-2">
                    <span className="text-xl font-black text-slate-900 tabular-nums">{resource.downloads.toLocaleString()}</span>
-                   <Zap className="h-4 w-4 text-emerald-500 animate-pulse" />
+                   <Icons.Zap className="h-4 w-4 text-emerald-500 animate-pulse" />
                 </div>
                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">High-Fidelity Syncs</p>
              </div>
@@ -234,14 +215,14 @@ export function ResourceCard({
                 className="flex-1 h-16 rounded-[1.5rem] bg-slate-900 text-white flex items-center justify-center gap-4 font-black text-[11px] uppercase tracking-[0.3em] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)] hover:bg-emerald-600 transition-all active:scale-95 group/btn overflow-hidden relative"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-emerald-400/0 via-emerald-400/10 to-emerald-400/0 translate-x-[-100%] group-hover/btn:translate-x-[100%] transition-transform duration-1000 ease-in-out" />
-                {isExternalLink ? <ArrowUpRight className="h-5 w-5 text-emerald-400 relative z-10" /> : <Download className="h-5 w-5 text-emerald-400 relative z-10 group-hover/btn:translate-y-0.5 transition-transform" />}
+                {isExternalLink ? <Icons.ArrowUpRight className="h-5 w-5 text-emerald-400 relative z-10" /> : <Icons.Download className="h-5 w-5 text-emerald-400 relative z-10 group-hover/btn:translate-y-0.5 transition-transform" />}
                 <span className="relative z-10">{isExternalLink ? 'Initiate Access' : 'Secure Sync'}</span>
               </button>
               
               <div className="flex gap-2 p-2 bg-slate-100/50 rounded-[1.5rem] border border-slate-100">
                 {onEdit && (
                   <button onClick={() => onEdit(resource.id)} className="h-12 w-12 rounded-2xl glass border-white text-slate-400 hover:text-emerald-600 hover:bg-white transition-all flex items-center justify-center shadow-lg hover:scale-105 active:scale-95">
-                    <Edit2 className="h-4 w-4" />
+                    <Icons.Edit2 className="h-4 w-4" />
                   </button>
                 )}
                 <button 
@@ -251,11 +232,11 @@ export function ResourceCard({
                     resource.isFlagged ? "text-rose-500 bg-rose-50" : "text-slate-400 hover:text-rose-600 hover:bg-white"
                   )}
                 >
-                  <Flag className="h-4 w-4" />
+                  <Icons.Flag className="h-4 w-4" />
                 </button>
                 {onDelete && (
                   <button onClick={() => onDelete(resource.id)} className="h-12 w-12 rounded-2xl glass border-white text-slate-300 hover:text-rose-700 hover:bg-white transition-all flex items-center justify-center shadow-lg hover:scale-105 active:scale-95">
-                    <Trash2 className="h-4 w-4" />
+                    <Icons.Trash2 className="h-4 w-4" />
                   </button>
                 )}
               </div>
@@ -266,6 +247,3 @@ export function ResourceCard({
     </motion.div>
   );
 }
-
-// Missing Lucide imports added: History, FileBadge, ArrowUpRight
-import { History } from "lucide-react";

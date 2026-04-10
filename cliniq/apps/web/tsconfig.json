@@ -9,6 +9,9 @@
     "noEmit": true,
     "baseUrl": ".",
     "paths": {
+      "@/*": [
+        "./*"
+      ],
       "@cliniq/shared-types": [
         "../../packages/shared-types/src"
       ],

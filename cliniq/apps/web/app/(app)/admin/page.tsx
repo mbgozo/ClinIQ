@@ -13,24 +13,9 @@ import {
   AdminRole,
   ModerationAction
 } from '@cliniq/ui';
-import { 
-  BarChart3, 
-  ShieldAlert, 
-  Users, 
-  PieChart, 
-  Settings, 
-  ShieldCheck, 
-  Zap, 
-  Clock, 
-  Search,
-  Activity,
-  Database,
-  Cpu,
-  RefreshCcw,
-  Terminal
-} from "lucide-react";
+import * as Icons from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "../../../lib/utils";
+import { cn } from "@/lib/utils";
 
 export default function AdminPage() {
   const [activeTab, setActiveTab] = useState<'dashboard' | 'moderation' | 'users' | 'analytics' | 'settings'>('dashboard');
@@ -55,11 +40,11 @@ export default function AdminPage() {
   const userPermissions = permissions?.allPermissions || [];
 
   const tabs = [
-    { id: 'dashboard', label: 'Command', icon: <BarChart3 className="h-4 w-4" /> },
-    { id: 'moderation', label: 'Oversight', icon: <ShieldAlert className="h-4 w-4" />, badge: queue?.total || 0 },
-    { id: 'users', label: 'Personnel', icon: <Users className="h-4 w-4" /> },
-    { id: 'analytics', label: 'Intelligence', icon: <PieChart className="h-4 w-4" /> },
-    { id: 'settings', label: 'Core System', icon: <Settings className="h-4 w-4" /> },
+    { id: 'dashboard', label: 'Command', icon: <Icons.BarChart3 className="h-4 w-4" /> },
+    { id: 'moderation', label: 'Oversight', icon: <Icons.ShieldAlert className="h-4 w-4" />, badge: queue?.total || 0 },
+    { id: 'users', label: 'Personnel', icon: <Icons.Users className="h-4 w-4" /> },
+    { id: 'analytics', label: 'Intelligence', icon: <Icons.PieChart className="h-4 w-4" /> },
+    { id: 'settings', label: 'Core System', icon: <Icons.Settings className="h-4 w-4" /> },
   ];
 
   return (
@@ -68,7 +53,7 @@ export default function AdminPage() {
       <section className="flex flex-col md:flex-row md:items-end justify-between gap-8">
         <div className="space-y-2">
           <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 w-fit">
-            <Terminal className="h-3 w-3 text-slate-600" />
+            <Icons.Terminal className="h-3 w-3 text-slate-600" />
             <span className="text-[10px] font-bold text-slate-700 uppercase tracking-widest">Administrative Command Layer</span>
           </div>
           <h1 className="text-4xl lg:text-5xl font-bold tracking-tight text-slate-900 heading">Operations Hub</h1>
@@ -83,7 +68,7 @@ export default function AdminPage() {
               <p className="text-xs font-bold text-slate-900">{new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</p>
            </div>
            <button className="h-14 px-8 bg-slate-900 text-white rounded-2xl font-bold text-xs uppercase tracking-[0.2em] shadow-2xl shadow-slate-200 hover:bg-emerald-700 transition-all flex items-center gap-3">
-              <Zap className="h-4 w-4 text-emerald-400" />
+              <Icons.Zap className="h-4 w-4 text-emerald-400" />
               Quick Directive
            </button>
         </div>
@@ -150,7 +135,7 @@ export default function AdminPage() {
                        Queue Depth: {queue?.total || 0} ITEMS
                     </div>
                     <button className="p-3 rounded-xl hover:bg-slate-100 transition-colors">
-                       <RefreshCcw className="h-5 w-5 text-slate-400" />
+                       <Icons.RefreshCcw className="h-5 w-5 text-slate-400" />
                     </button>
                  </div>
                </div>
@@ -176,9 +161,9 @@ export default function AdminPage() {
                
                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
                   {[
-                    { label: "Aggregate Personnel", value: stats?.users.total || 0, color: "text-slate-900", icon: Users },
-                    { label: "Active Nodes", value: stats?.users.active || 0, color: "text-emerald-600", icon: Activity },
-                    { label: "Verified Credentials", value: stats?.users.verified || 0, color: "text-indigo-600", icon: ShieldCheck }
+                    { label: "Aggregate Personnel", value: stats?.users.total || 0, color: "text-slate-900", icon: Icons.Users },
+                    { label: "Active Nodes", value: stats?.users.active || 0, color: "text-emerald-600", icon: Icons.Activity },
+                    { label: "Verified Credentials", value: stats?.users.verified || 0, color: "text-indigo-600", icon: Icons.ShieldCheck }
                   ].map((stat, i) => (
                     <motion.div 
                       key={i}
@@ -199,7 +184,7 @@ export default function AdminPage() {
                <div className="glass rounded-[2.5rem] p-10 border-white/40 bg-white/50 space-y-8">
                   <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
                      <div className="relative flex-1 w-full max-w-md group">
-                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-emerald-500 transition-colors" />
+                        <Icons.Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-emerald-500 transition-colors" />
                         <input 
                           type="text" 
                           placeholder="Personnel search by identifier or base..." 
@@ -234,7 +219,7 @@ export default function AdminPage() {
                          <h3 className="text-lg font-bold text-slate-900 heading">Personnel Retention</h3>
                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Active Node Telemetry</p>
                       </div>
-                      <div className="h-10 w-10 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600 shadow-sm"><Activity className="h-5 w-5" /></div>
+                      <div className="h-10 w-10 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600 shadow-sm"><Icons.Activity className="h-5 w-5" /></div>
                    </div>
                    
                    <div className="space-y-6">
@@ -263,7 +248,7 @@ export default function AdminPage() {
                          <h3 className="text-lg font-bold text-slate-900 heading">Operational Output</h3>
                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Manifested Intel Pulse</p>
                       </div>
-                      <div className="h-10 w-10 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600 shadow-sm"><Database className="h-5 w-5" /></div>
+                      <div className="h-10 w-10 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600 shadow-sm"><Icons.Database className="h-5 w-5" /></div>
                    </div>
                    
                    <div className="space-y-6">
@@ -307,7 +292,7 @@ export default function AdminPage() {
                  <div className="lg:col-span-2 glass rounded-[3rem] p-10 border-white/50 shadow-2xl space-y-12">
                     <div className="space-y-8">
                        <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
-                          <Terminal className="h-4 w-4" /> Global Policy Control
+                          <Icons.Terminal className="h-4 w-4" /> Global Policy Control
                        </h3>
                        <div className="space-y-8">
                          {[
@@ -334,17 +319,17 @@ export default function AdminPage() {
                  
                  <div className="glass rounded-[3rem] p-10 bg-slate-900 text-white shadow-2xl relative overflow-hidden group">
                     <div className="absolute top-0 right-0 p-10 opacity-10 pointer-events-none transform translate-x-1/2 -translate-y-1/2">
-                       <Cpu className="h-64 w-64" />
+                       <Icons.Cpu className="h-64 w-64" />
                     </div>
                     <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-10 flex items-center gap-2">
-                       <Activity className="h-4 w-4 text-emerald-400" /> Kernel Integrity
+                       <Icons.Activity className="h-4 w-4 text-emerald-400" /> Kernel Integrity
                     </h3>
                     <div className="grid grid-cols-2 gap-8">
                        {[
-                         { label: "Uptime", value: `${stats?.system.uptime || 0}%`, icon: <Zap className="h-4 w-4 text-emerald-400" /> },
-                         { label: "Signal Latency", value: `${stats?.system.responseTime || 0}ms`, icon: <Clock className="h-4 w-4 text-indigo-400" /> },
-                         { label: "Fault Rate", value: `${stats?.system.errorRate || 0}%`, icon: <ShieldAlert className="h-4 w-4 text-red-400" /> },
-                         { label: "Memory Usage", value: `${Math.round((stats?.system.storageUsed || 0) / 1024 / 1024)}MB`, icon: <Database className="h-4 w-4 text-amber-400" /> }
+                         { label: "Uptime", value: `${stats?.system.uptime || 0}%`, icon: <Icons.Zap className="h-4 w-4 text-emerald-400" /> },
+                         { label: "Signal Latency", value: `${stats?.system.responseTime || 0}ms`, icon: <Icons.Clock className="h-4 w-4 text-indigo-400" /> },
+                         { label: "Fault Rate", value: `${stats?.system.errorRate || 0}%`, icon: <Icons.ShieldAlert className="h-4 w-4 text-red-400" /> },
+                         { label: "Memory Usage", value: `${Math.round((stats?.system.storageUsed || 0) / 1024 / 1024)}MB`, icon: <Icons.Database className="h-4 w-4 text-amber-400" /> }
                        ].map((stat, i) => (
                          <div key={i} className="space-y-2">
                             <div className="flex items-center gap-2 text-[9px] font-bold text-slate-400 uppercase tracking-widest">

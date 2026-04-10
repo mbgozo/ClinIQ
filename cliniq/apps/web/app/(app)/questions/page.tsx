@@ -5,21 +5,9 @@ import { useState } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { getQuestions } from "./api";
 import { DebouncedInput, CategoryChip, AnsweredBadge } from "@cliniq/ui";
-import { 
-  Search, 
-  Filter, 
-  Plus, 
-  TrendingUp, 
-  MessageCircle, 
-  Clock, 
-  User, 
-  School, 
-  ChevronDown,
-  ChevronRight,
-  MoreHorizontal
-} from "lucide-react";
+import * as Icons from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "../../../lib/utils";
+import { cn } from "@/lib/utils";
 
 export default function QuestionsFeedPage() {
   const [search, setSearch] = useState("");
@@ -50,7 +38,7 @@ export default function QuestionsFeedPage() {
       <section className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div className="space-y-2">
           <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-100 w-fit">
-            <MessageCircle className="h-3 w-3 text-emerald-600" />
+            <Icons.MessageCircle className="h-3 w-3 text-emerald-600" />
             <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-widest">Knowledge Exchange</span>
           </div>
           <h1 className="text-4xl lg:text-5xl font-bold tracking-tight text-slate-900 heading">Consult the Collective</h1>
@@ -63,7 +51,7 @@ export default function QuestionsFeedPage() {
           href="/questions/ask" 
           className="flex items-center gap-2 px-6 py-3 bg-slate-900 text-white rounded-xl font-bold text-sm hover:bg-emerald-700 transition-all shadow-xl shadow-slate-200"
         >
-          <Plus className="h-4 w-4" />
+          <Icons.Plus className="h-4 w-4" />
           Post Question
         </Link>
       </section>
@@ -74,7 +62,7 @@ export default function QuestionsFeedPage() {
            <div className="glass rounded-[2rem] p-6 border-white/40 shadow-xl overflow-hidden relative">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500 to-indigo-500" />
               <div className="flex items-center gap-2 mb-6">
-                <Filter className="h-4 w-4 text-slate-900" />
+                <Icons.Filter className="h-4 w-4 text-slate-900" />
                 <h2 className="text-sm font-bold text-slate-900 uppercase tracking-widest">Refine Vault</h2>
               </div>
               
@@ -83,7 +71,7 @@ export default function QuestionsFeedPage() {
                  <div className="space-y-2">
                     <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Universal Search</label>
                     <div className="relative group">
-                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-emerald-500 transition-colors" />
+                      <Icons.Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-emerald-500 transition-colors" />
                       <DebouncedInput
                         placeholder="Diagnosis, drug..."
                         className="w-full pl-10 pr-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm font-medium focus:ring-2 focus:ring-emerald-500/20 transition-all"
@@ -108,7 +96,7 @@ export default function QuestionsFeedPage() {
                             <option value="demo-category">General Practice</option>
                             <option value="surgical">Surgery</option>
                           </select>
-                          <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
+                          <Icons.ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
                        </div>
                     </div>
 
@@ -133,7 +121,7 @@ export default function QuestionsFeedPage() {
                     <div className="space-y-2">
                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Origin Institution</label>
                        <div className="relative">
-                          <School className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                          <Icons.School className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                           <input
                             placeholder="Search facility..."
                             className="w-full pl-10 pr-4 py-2.5 bg-slate-100 border-none rounded-xl text-sm font-medium focus:ring-2 focus:ring-emerald-500/20 transition-all"
@@ -148,7 +136,7 @@ export default function QuestionsFeedPage() {
 
            <div className="p-6 bg-emerald-600 rounded-[2rem] text-white shadow-xl shadow-emerald-100 relative overflow-hidden group">
               <div className="absolute -top-10 -right-10 h-32 w-32 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700" />
-              <TrendingUp className="h-8 w-8 mb-4 opacity-50" />
+              <Icons.TrendingUp className="h-8 w-8 mb-4 opacity-50" />
               <h3 className="text-xl font-bold mb-2 heading">Mentor Assistance</h3>
               <p className="text-emerald-100 text-xs leading-relaxed mb-6">Need expert eyes on a case? High-priority questions get highlighted to active mentors.</p>
               <button className="w-full py-3 bg-white text-emerald-700 rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-emerald-50 transition-colors">Go Priority</button>
@@ -196,11 +184,11 @@ export default function QuestionsFeedPage() {
                           </div>
                           <div className="flex items-center gap-4 text-[10px] font-bold text-slate-400 uppercase">
                              <div className="flex items-center gap-1">
-                                <TrendingUp className="h-3 w-3 text-emerald-500" />
+                                <Icons.TrendingUp className="h-3 w-3 text-emerald-500" />
                                 {question.upvotes} Points
                              </div>
                              <div className="flex items-center gap-1">
-                                <Clock className="h-3 w-3" />
+                                <Icons.Clock className="h-3 w-3" />
                                 {new Date(question.createdAt).toLocaleDateString()}
                              </div>
                           </div>
@@ -214,7 +202,7 @@ export default function QuestionsFeedPage() {
                         <div className="pt-4 border-t border-slate-50 flex items-center justify-between">
                            <div className="flex items-center gap-3">
                               <div className="h-8 w-8 rounded-lg bg-slate-100 flex items-center justify-center border border-slate-200">
-                                 <User className="h-4 w-4 text-slate-400" />
+                                 <Icons.User className="h-4 w-4 text-slate-400" />
                               </div>
                               <div>
                                  <p className="text-[10px] font-bold text-slate-900 leading-none">{question.user?.name || "Dr. Anonymous"}</p>
@@ -222,7 +210,7 @@ export default function QuestionsFeedPage() {
                               </div>
                            </div>
                            <div className="h-10 w-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-inner">
-                              <ChevronRight className="h-5 w-5" />
+                              <Icons.ChevronRight className="h-5 w-5" />
                            </div>
                         </div>
                       </div>
@@ -255,7 +243,7 @@ export default function QuestionsFeedPage() {
               {query.isError && (
                 <div className="p-6 bg-red-50 rounded-2xl border border-red-100 flex items-center gap-4">
                    <div className="h-10 w-10 bg-red-100 rounded-xl flex items-center justify-center text-red-600">
-                      <MoreHorizontal className="h-5 w-5" />
+                      <Icons.MoreHorizontal className="h-5 w-5" />
                    </div>
                    <div>
                       <h4 className="font-bold text-red-900 text-sm">Transfer Interrupted</h4>

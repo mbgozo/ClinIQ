@@ -3,26 +3,8 @@
 import Link from "next/link";
 
 import { motion, useScroll, useTransform, Variants } from "framer-motion";
-import { 
-  MessageSquare, 
-  BookOpen, 
-  GraduationCap, 
-  ArrowRight, 
-  ShieldCheck, 
-  Activity,
-  Zap,
-  Target,
-  ChevronRight,
-  Hexagon,
-  Cpu,
-  BrainCircuit,
-  Network,
-  Orbit,
-  Bot,
-  Globe,
-  Fingerprint
-} from "lucide-react";
-import { cn } from "../lib/utils";
+import * as Icons from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default function HomePage() {
 
@@ -36,7 +18,7 @@ export default function HomePage() {
 
   const features = [
     { 
-      icon: MessageSquare, 
+      icon: Icons.MessageSquare, 
       title: "Consensus Synthesis", 
       desc: "Engage in peer-validated clinical inquiries. Receive authoritative insights from the global collaborative network.",
       color: "from-emerald-600/10 to-emerald-500/5",
@@ -44,7 +26,7 @@ export default function HomePage() {
       href: "/questions"
     },
     { 
-      icon: BookOpen, 
+      icon: Icons.BookOpen, 
       title: "Knowledge Vault", 
       desc: "Access a curated repository of high-fidelity clinical assets and research-grade intellectual vectors.",
       color: "from-indigo-600/10 to-indigo-500/5",
@@ -52,7 +34,7 @@ export default function HomePage() {
       href: "/resources"
     },
     { 
-      icon: GraduationCap, 
+      icon: Icons.GraduationCap, 
       title: "Executive Mentorship", 
       desc: "Direct link with field-leading clinical architects for career-defining guidance and research mastery.",
       color: "from-amber-600/10 to-amber-500/5",
@@ -60,7 +42,7 @@ export default function HomePage() {
       href: "/mentors"
     },
     { 
-      icon: BrainCircuit, 
+      icon: Icons.BrainCircuit, 
       title: "Neural Assist v4", 
       desc: "Elite AI-driven diagnostic synthesis and literature cross-referencing for the modern practitioner.",
       color: "from-emerald-900/10 to-indigo-900/5",
@@ -98,7 +80,7 @@ export default function HomePage() {
           <div className="flex items-center gap-5 group cursor-pointer">
             <div className="h-14 w-14 bg-slate-900 rounded-[1.2rem] flex items-center justify-center shadow-[0_20px_40px_-10px_rgba(0,0,0,0.3)] group-hover:bg-emerald-600 transition-all duration-1000 relative">
               <div className="absolute inset-x-0 bottom-0 h-1 bg-white/20 rounded-full mx-3 mb-2" />
-              <Activity className="text-white h-7 w-7 group-hover:scale-110 transition-transform" />
+              <Icons.Activity className="text-white h-7 w-7 group-hover:scale-110 transition-transform" />
             </div>
             <div className="flex flex-col">
               <span className="text-3xl font-black heading tracking-tight text-slate-900 leading-none mb-1">ClinIQ</span>
@@ -152,7 +134,7 @@ export default function HomePage() {
                 className="inline-flex items-center gap-4 px-6 py-3 rounded-full bg-slate-900 text-white shadow-3xl relative overflow-hidden group/pill"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/20 to-transparent opacity-0 group-hover/pill:opacity-100 transition-opacity" />
-                <ShieldCheck className="h-5 w-5 text-emerald-400 relative z-10" />
+                <Icons.ShieldCheck className="h-5 w-5 text-emerald-400 relative z-10" />
                 <span className="text-[11px] font-black uppercase tracking-[0.3em] relative z-10">Consensus-Driven Clinical Matrix</span>
               </motion.div>
               
@@ -180,10 +162,10 @@ export default function HomePage() {
               >
                  <Link href="/register" className="h-[4.5rem] px-12 bg-slate-900 text-white rounded-[2rem] font-black text-xs uppercase tracking-[0.3em] flex items-center justify-center gap-4 shadow-3xl hover:bg-emerald-600 transition-all active:scale-95 group relative overflow-hidden">
                    <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
-                   Initialize Specialization <ArrowRight className="h-5 w-5 group-hover:translate-x-3 transition-transform" />
+                   Initialize Specialization <Icons.ArrowRight className="h-5 w-5 group-hover:translate-x-3 transition-transform" />
                  </Link>
                  <Link href="/questions" className="h-[4.5rem] px-12 glass border-white text-slate-900 rounded-[2rem] font-black text-xs uppercase tracking-[0.3em] flex items-center justify-center gap-4 hover:bg-white transition-all active:scale-95 shadow-xl">
-                   Explore Consensuses <Network className="h-5 w-5" />
+                   Explore Consensuses <Icons.Network className="h-5 w-5" />
                  </Link>
               </motion.div>
               
@@ -196,7 +178,7 @@ export default function HomePage() {
                 <div className="flex -space-x-4">
                   {[1,2,3,4,5].map(i => (
                     <div key={i} className="h-12 w-12 rounded-2xl border-4 border-white bg-slate-50 flex items-center justify-center overflow-hidden shadow-xl">
-                       <Fingerprint className="h-6 w-6 text-slate-200" />
+                       <Icons.Fingerprint className="h-6 w-6 text-slate-200" />
                     </div>
                   ))}
                 </div>
@@ -227,7 +209,7 @@ export default function HomePage() {
                              <div className="h-8 w-1/2 glass bg-white/5 rounded-xl animate-pulse [animation-delay:0.2s]" />
                           </div>
                           <div className="h-20 w-20 rounded-[1.5rem] bg-emerald-500/20 flex items-center justify-center border border-emerald-500/30">
-                             <Target className="h-10 w-10 text-emerald-400 animate-spin-slow" />
+                             <Icons.Target className="h-10 w-10 text-emerald-400 animate-spin-slow" />
                           </div>
                        </div>
                        
@@ -237,7 +219,7 @@ export default function HomePage() {
                             transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
                             className="absolute inset-0 border-2 border-dashed border-white/10 rounded-full" 
                           />
-                          <Orbit className="h-24 w-24 text-emerald-500 animate-pulse" />
+                          <Icons.Orbit className="h-24 w-24 text-emerald-500 animate-pulse" />
                        </div>
 
                        <div className="space-y-6">
@@ -259,14 +241,14 @@ export default function HomePage() {
                 transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }} 
                 className="absolute -top-16 -left-16 h-32 w-32 glass rounded-[2.5rem] flex items-center justify-center border-white shadow-3xl z-20 group cursor-help"
               >
-                 <ShieldCheck className="h-14 w-14 text-emerald-500 group-hover:scale-110 transition-transform" />
+                 <Icons.ShieldCheck className="h-14 w-14 text-emerald-500 group-hover:scale-110 transition-transform" />
               </motion.div>
               <motion.div 
                 animate={{ y: [0, 30, 0], rotate: [0, -10, 0] }} 
                 transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }} 
                 className="absolute -bottom-16 -right-16 h-40 w-40 glass rounded-[3rem] flex items-center justify-center border-white shadow-3xl z-20 group cursor-help"
               >
-                 <Activity className="h-16 w-16 text-indigo-500 group-hover:scale-110 transition-transform" />
+                 <Icons.Activity className="h-16 w-16 text-indigo-500 group-hover:scale-110 transition-transform" />
               </motion.div>
             </motion.div>
           </div>
@@ -325,7 +307,7 @@ export default function HomePage() {
                 <h3 className="text-3xl font-black text-slate-900 mb-6 heading group-hover:text-emerald-800 transition-colors tracking-tight">{f.title}</h3>
                 <p className="text-slate-500 font-medium text-lg leading-relaxed mb-14 flex-1">{f.desc}</p>
                 <Link href={f.href} className="text-[11px] font-black text-slate-900 flex items-center gap-5 group-hover:gap-8 transition-all uppercase tracking-[0.3em] overflow-hidden">
-                   <span className="relative z-10">ENAGE MODULE</span> <ArrowRight className="h-5 w-5 text-emerald-600 relative z-10" />
+                   <span className="relative z-10">ENAGE MODULE</span> <Icons.ArrowRight className="h-5 w-5 text-emerald-600 relative z-10" />
                    <div className="absolute bottom-[-2px] left-0 w-full h-[6px] bg-emerald-500/10 -z-0 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-700" />
                 </Link>
               </motion.div>
@@ -348,7 +330,7 @@ export default function HomePage() {
                     className="flex items-center gap-5 text-emerald-400"
                   >
                      <div className="h-12 w-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
-                        <Bot className="h-7 w-7" />
+                        <Icons.Bot className="h-7 w-7" />
                      </div>
                      <span className="text-xs font-black uppercase tracking-[0.5em]">NEURAL SYNTHESIS ENGINE v4.2</span>
                   </motion.div>
@@ -378,7 +360,7 @@ export default function HomePage() {
                </div>
 
                <button className="h-[5rem] px-14 bg-white text-slate-950 rounded-[2.5rem] font-black text-xs uppercase tracking-[0.4em] shadow-3xl hover:bg-emerald-500 hover:text-white transition-all duration-500 flex items-center justify-center gap-5 group">
-                  INITIALIZE NEURAL CORE <Zap className="h-6 w-6 text-emerald-500 group-hover:text-white animate-pulse" />
+                  INITIALIZE NEURAL CORE <Icons.Zap className="h-6 w-6 text-emerald-500 group-hover:text-white animate-pulse" />
                </button>
             </div>
 
@@ -389,15 +371,15 @@ export default function HomePage() {
                  transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
                  className="h-[500px] w-[500px] lg:h-[750px] lg:w-[750px] relative z-10 opacity-40 pointer-events-none"
                >
-                  <Hexagon className="absolute inset-0 h-full w-full text-emerald-500/20 stroke-[1px]" />
+                  <Icons.Hexagon className="absolute inset-0 h-full w-full text-emerald-500/20 stroke-[1px]" />
                   <div className="absolute inset-24 border-[2px] border-emerald-500/10 rounded-full" />
                   <div className="absolute inset-48 border-[2px] border-indigo-500/10 rounded-full" />
-                  <Orbit className="absolute inset-0 m-auto h-40 w-40 text-emerald-500/20" />
+                  <Icons.Orbit className="absolute inset-0 m-auto h-40 w-40 text-emerald-500/20" />
                </motion.div>
                <div className="absolute inset-0 flex items-center justify-center">
                   <div className="relative">
                      <div className="absolute inset-0 bg-emerald-500/20 blur-3xl animate-pulse" />
-                     <Cpu className="h-48 w-48 text-emerald-500 relative z-10 drop-shadow-[0_0_50px_rgba(16,185,129,0.5)]" />
+                     <Icons.Cpu className="h-48 w-48 text-emerald-500 relative z-10 drop-shadow-[0_0_50px_rgba(16,185,129,0.5)]" />
                   </div>
                </div>
             </div>
@@ -418,7 +400,7 @@ export default function HomePage() {
                  </div>
                  <p className="text-2xl text-slate-500 leading-tight font-medium max-w-lg">Join the world's most sophisticated medical cohort. Precision collaboration is no longer optional.</p>
                  <button className="h-[4.5rem] px-14 bg-slate-900 text-white rounded-[2rem] font-black text-xs uppercase tracking-[0.3em] shadow-3xl hover:bg-emerald-600 transition-all duration-700 flex items-center gap-5 group">
-                   EXECUTIVE REPORT <ChevronRight className="h-6 w-6 group-hover:translate-x-3 transition-transform" />
+                   EXECUTIVE REPORT <Icons.ChevronRight className="h-6 w-6 group-hover:translate-x-3 transition-transform" />
                  </button>
               </div>
 
@@ -449,7 +431,7 @@ export default function HomePage() {
             <div className="lg:col-span-6 space-y-16">
               <div className="flex items-center gap-6">
                 <div className="h-16 w-16 bg-emerald-600 rounded-[1.5rem] flex items-center justify-center shadow-3xl shadow-emerald-500/30">
-                  <Activity className="text-white h-9 w-9" />
+                  <Icons.Activity className="text-white h-9 w-9" />
                 </div>
                 <div className="flex flex-col">
                   <span className="text-4xl font-black heading tracking-tighter leading-none mb-1">ClinIQ</span>
@@ -460,7 +442,7 @@ export default function HomePage() {
                 Pioneering the next generation of clinical collaboration. Architected for the high-performance medical mind.
               </p>
               <div className="flex gap-6">
-                {[Globe, Target, Hexagon, Fingerprint].map((Icon, i) => (
+                {[Icons.Globe, Icons.Target, Icons.Hexagon, Icons.Fingerprint].map((Icon, i) => (
                   <div key={i} className="h-16 w-16 rounded-[1.5rem] glass border-white/5 flex items-center justify-center text-slate-500 hover:text-white hover:border-emerald-500 hover:bg-emerald-500/10 transition-all duration-500 cursor-pointer group">
                     <Icon className="h-7 w-7 group-hover:scale-110 transition-transform" />
                   </div>
@@ -504,4 +486,3 @@ export default function HomePage() {
     </div>
   );
 }
-

@@ -11,7 +11,7 @@ import {
 } from "@cliniq/ui";
 import * as Icons from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "../../../lib/utils";
+import { cn } from "@/lib/utils";
 
 export default function ProfilePage() {
   const userId = "mock-user-id";

@@ -3,26 +3,9 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { 
-  Bell, 
-  MessageSquare, 
-  CheckCircle2, 
-  Award, 
-  ThumbsUp, 
-  UserPlus, 
-  Check, 
-  Eye, 
-  Clock,
-  Trash2,
-  Inbox,
-  Sparkles,
-  ChevronRight,
-  ShieldCheck,
-  AlertCircle,
-  RefreshCcw
-} from "lucide-react";
+import * as Icons from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "../../../lib/utils";
+import { cn } from "@/lib/utils";
 
 interface Notification {
   id: string;
@@ -150,17 +133,17 @@ export default function NotificationCenterPage() {
   const getNotificationIcon = (type: string) => {
     switch (type) {
       case 'ANSWER_POSTED':
-        return <div className="h-14 w-14 rounded-2xl bg-indigo-50 border border-indigo-100/50 flex items-center justify-center text-indigo-600 shadow-sm transition-transform group-hover:scale-110 duration-500"><MessageSquare className="h-6 w-6" /></div>;
+        return <div className="h-14 w-14 rounded-2xl bg-indigo-50 border border-indigo-100/50 flex items-center justify-center text-indigo-600 shadow-sm transition-transform group-hover:scale-110 duration-500"><Icons.MessageSquare className="h-6 w-6" /></div>;
       case 'ANSWER_ACCEPTED':
-        return <div className="h-14 w-14 rounded-2xl bg-emerald-50 border border-emerald-100/50 flex items-center justify-center text-emerald-600 shadow-sm transition-transform group-hover:scale-110 duration-500"><CheckCircle2 className="h-6 w-6" /></div>;
+        return <div className="h-14 w-14 rounded-2xl bg-emerald-50 border border-emerald-100/50 flex items-center justify-center text-emerald-600 shadow-sm transition-transform group-hover:scale-110 duration-500"><Icons.CheckCircle2 className="h-6 w-6" /></div>;
       case 'BADGE_EARNED':
-        return <div className="h-14 w-14 rounded-2xl bg-amber-50 border border-amber-100/50 flex items-center justify-center text-amber-600 shadow-sm transition-transform group-hover:scale-110 duration-500"><Award className="h-6 w-6" /></div>;
+        return <div className="h-14 w-14 rounded-2xl bg-amber-50 border border-amber-100/50 flex items-center justify-center text-amber-600 shadow-sm transition-transform group-hover:scale-110 duration-500"><Icons.Award className="h-6 w-6" /></div>;
       case 'QUESTION_UPVOTED':
-        return <div className="h-14 w-14 rounded-2xl bg-teal-50 border border-teal-100/50 flex items-center justify-center text-teal-600 shadow-sm transition-transform group-hover:scale-110 duration-500"><ThumbsUp className="h-6 w-6" /></div>;
+        return <div className="h-14 w-14 rounded-2xl bg-teal-50 border border-teal-100/50 flex items-center justify-center text-teal-600 shadow-sm transition-transform group-hover:scale-110 duration-500"><Icons.ThumbsUp className="h-6 w-6" /></div>;
       case 'MENTOR_REQUEST':
-        return <div className="h-14 w-14 rounded-2xl bg-violet-50 border border-violet-100/50 flex items-center justify-center text-violet-600 shadow-sm transition-transform group-hover:scale-110 duration-500"><UserPlus className="h-6 w-6" /></div>;
+        return <div className="h-14 w-14 rounded-2xl bg-violet-50 border border-violet-100/50 flex items-center justify-center text-violet-600 shadow-sm transition-transform group-hover:scale-110 duration-500"><Icons.UserPlus className="h-6 w-6" /></div>;
       default:
-        return <div className="h-14 w-14 rounded-2xl bg-slate-50 border border-slate-100/50 flex items-center justify-center text-slate-600 shadow-sm transition-transform group-hover:scale-110 duration-500"><Bell className="h-6 w-6" /></div>;
+        return <div className="h-14 w-14 rounded-2xl bg-slate-50 border border-slate-100/50 flex items-center justify-center text-slate-600 shadow-sm transition-transform group-hover:scale-110 duration-500"><Icons.Bell className="h-6 w-6" /></div>;
     }
   };
 
@@ -188,7 +171,7 @@ export default function NotificationCenterPage() {
             animate={{ opacity: 1, scale: 1 }}
             className="flex items-center gap-3 px-4 py-2 rounded-2xl bg-white border border-slate-100 shadow-sm w-fit"
           >
-            <Sparkles className="h-4 w-4 text-emerald-500" />
+            <Icons.Sparkles className="h-4 w-4 text-emerald-500" />
             <span className="text-[11px] font-black text-slate-900 uppercase tracking-[0.3em]">Telemetry Intelligence Flow</span>
           </motion.div>
           <div className="space-y-4">
@@ -212,7 +195,7 @@ export default function NotificationCenterPage() {
         >
            <div className="absolute inset-0 bg-emerald-500/5 translate-y-full group-hover:translate-y-0 transition-transform duration-700" />
            <div className="h-16 w-16 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center relative z-10 transition-transform group-hover:rotate-12">
-              <Bell className="h-8 w-8 text-emerald-400" />
+              <Icons.Bell className="h-8 w-8 text-emerald-400" />
               {unreadCount > 0 && <span className="absolute -top-1 -right-1 h-4 w-4 bg-rose-500 rounded-full border-4 border-slate-900 animate-pulse" />}
            </div>
            <div className="relative z-10">
@@ -258,7 +241,7 @@ export default function NotificationCenterPage() {
                  disabled={markAllAsReadMutation.isPending}
                  className="group flex items-center gap-3 px-8 py-3 bg-white border border-slate-100 text-slate-900 rounded-2xl text-[11px] font-black uppercase tracking-[0.3em] transition-all hover:bg-slate-900 hover:text-white hover:border-slate-900 shadow-sm active:scale-95 disabled:opacity-50"
                >
-                 {markAllAsReadMutation.isPending ? <RefreshCcw className="h-4 w-4 animate-spin" /> : <ShieldCheck className="h-5 w-5 text-emerald-500 group-hover:scale-110 transition-transform" />}
+                 {markAllAsReadMutation.isPending ? <Icons.RefreshCcw className="h-4 w-4 animate-spin" /> : <Icons.ShieldCheck className="h-5 w-5 text-emerald-500 group-hover:scale-110 transition-transform" />}
                  Acknowledge All Intel
                </button>
              )}
@@ -280,7 +263,7 @@ export default function NotificationCenterPage() {
             </motion.div>
           ) : query.isError ? (
             <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col items-center justify-center py-32 bg-rose-50/50 rounded-[3rem] border border-rose-100 text-center px-12 glass">
-               <AlertCircle className="h-16 w-16 text-rose-500 mb-6 animate-bounce" />
+               <Icons.AlertCircle className="h-16 w-16 text-rose-500 mb-6 animate-bounce" />
                <h3 className="text-2xl font-black text-slate-900 mb-3 heading uppercase tracking-tight">Signal Loss Detected</h3>
                <p className="text-slate-500 text-base font-medium max-w-md mx-auto">Failed to establish a secure link with the central telemetry node. Protocol manual reset required.</p>
                <button onClick={() => queryClient.invalidateQueries({ queryKey: ["notifications"] })} className="mt-8 px-10 py-4 bg-slate-900 text-white rounded-2xl text-[11px] font-black uppercase tracking-[0.3em] hover:bg-rose-600 transition-all active:scale-95 shadow-xl shadow-rose-500/10">
@@ -290,10 +273,10 @@ export default function NotificationCenterPage() {
           ) : notifications.length === 0 ? (
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col items-center justify-center py-32 glass rounded-[3.5rem] border-white/60 text-center px-12 bg-white/40 backdrop-blur-xl relative">
                <div className="absolute top-0 right-0 p-12 opacity-[0.03] pointer-events-none">
-                  <Inbox className="h-48 w-48" />
+                  <Icons.Inbox className="h-48 w-48" />
                </div>
                <div className="h-24 w-24 rounded-[2.5rem] bg-white shadow-2xl border border-slate-50 flex items-center justify-center mb-10 group cursor-default">
-                  <Inbox className="h-12 w-12 text-slate-200 group-hover:text-emerald-500 transition-color duration-700" />
+                  <Icons.Inbox className="h-12 w-12 text-slate-200 group-hover:text-emerald-500 transition-color duration-700" />
                </div>
                <h3 className="text-3xl font-black text-slate-900 mb-4 heading uppercase tracking-tighter">Telemetry Clean</h3>
                <p className="text-slate-500 text-lg font-medium max-w-sm mx-auto opacity-70">No new operational updates manifest at this time. Your profile is in optimal sync status.</p>
@@ -332,7 +315,7 @@ export default function NotificationCenterPage() {
                         {!notification.read && <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-100 text-[9px] font-black text-emerald-600 uppercase tracking-widest">Priority Intel</span>}
                      </div>
                      <span className="flex items-center gap-2 text-[11px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap bg-slate-50 px-3 py-1 rounded-xl">
-                        <Clock className="h-3.5 w-3.5" /> RECEIVED {formatTimeAgo(notification.createdAt)}
+                        <Icons.Clock className="h-3.5 w-3.5" /> RECEIVED {formatTimeAgo(notification.createdAt)}
                      </span>
                   </div>
                   
@@ -347,7 +330,7 @@ export default function NotificationCenterPage() {
                          className="flex items-center gap-3 text-[11px] font-black text-indigo-600 uppercase tracking-[0.2em] group/link"
                        >
                          <div className="h-8 w-8 rounded-xl bg-indigo-50 flex items-center justify-center group-hover/link:bg-indigo-600 group-hover/link:text-white transition-all duration-500">
-                            <ChevronRight className="h-4 w-4 group-hover/link:translate-x-0.5 transition-transform" />
+                            <Icons.ChevronRight className="h-4 w-4 group-hover/link:translate-x-0.5 transition-transform" />
                          </div>
                          <span className="group-hover/link:translate-x-1 transition-transform">Executive Sync Overview</span>
                        </Link>
@@ -363,14 +346,14 @@ export default function NotificationCenterPage() {
                       className="h-14 w-14 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center hover:bg-slate-900 hover:text-white transition-all shadow-sm active:scale-90 border border-emerald-100/50"
                       title="Mark as Processed"
                     >
-                      <Check className="h-6 w-6" />
+                      <Icons.Check className="h-6 w-6" />
                     </button>
                   ) : (
                     <button
                       className="h-14 w-14 rounded-2xl bg-slate-50 text-slate-400 flex items-center justify-center hover:bg-rose-600 hover:text-white transition-all shadow-sm active:scale-90 border border-slate-100"
                       title="Remove Record"
                     >
-                      <Trash2 className="h-6 w-6" />
+                      <Icons.Trash2 className="h-6 w-6" />
                     </button>
                   )}
                 </div>
@@ -394,9 +377,9 @@ export default function NotificationCenterPage() {
             className="relative px-12 py-5 bg-white border border-slate-100 rounded-[2rem] text-[11px] font-black text-slate-900 uppercase tracking-[0.3em] hover:bg-slate-900 hover:text-white transition-all shadow-xl flex items-center gap-4 mx-auto disabled:opacity-50 group/more"
           >
             {query.isFetchingNextPage ? (
-              <RefreshCcw className="h-5 w-5 animate-spin text-emerald-500" />
+              <Icons.RefreshCcw className="h-5 w-5 animate-spin text-emerald-500" />
             ) : (
-              <Eye className="h-5 w-5 group-hover:text-emerald-400 transition-colors" />
+              <Icons.Eye className="h-5 w-5 group-hover:text-emerald-400 transition-colors" />
             )}
             {query.isFetchingNextPage ? 'RECOVERING ARCHIVES...' : 'RETRIEVE LEGACY INTELLIGENCE'}
           </motion.button>

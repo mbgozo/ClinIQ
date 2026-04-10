@@ -1,10 +1,6 @@
 "use client";
 
-import { 
-  Award, 
-  TrendingUp, 
-  Sparkles
-} from "lucide-react";
+import * as Icons from "lucide-react";
 import { cn } from '../lib/utils';
 import { motion } from 'framer-motion';
 
@@ -42,7 +38,7 @@ export function ReputationDisplay({
           "h-12 w-12 rounded-2xl flex items-center justify-center shadow-lg transform -rotate-3 transition-transform hover:rotate-0",
           isDark ? "bg-white/10 text-emerald-400 border border-white/10" : "bg-emerald-500 text-white shadow-emerald-200"
         )}>
-          <Award className="h-6 w-6" />
+          <Icons.Award className="h-6 w-6" />
         </div>
         <div className="flex flex-col">
           <span className={cn("text-2xl font-black heading leading-none", isDark ? "text-emerald-400" : "text-slate-900")}>
@@ -52,7 +48,7 @@ export function ReputationDisplay({
             <span className={cn("text-[9px] font-black uppercase tracking-[0.2em]", isDark ? "text-slate-400" : "text-slate-500")}>
               {level}
             </span>
-            <Sparkles className="h-3 w-3 text-amber-500" />
+            <Icons.Sparkles className="h-3 w-3 text-amber-500" />
           </div>
         </div>
       </div>
@@ -87,7 +83,7 @@ export function ReputationDisplay({
           </div>
           
           <div className="flex items-center gap-2 px-1">
-            <TrendingUp className="h-3.5 w-3.5 text-emerald-500" />
+            <Icons.TrendingUp className="h-3.5 w-3.5 text-emerald-500" />
             <span className={cn("text-[9px] font-black uppercase tracking-widest", isDark ? "text-slate-500" : "text-slate-400")}>
               Syncing <span className={isDark ? "text-white" : "text-slate-900"}>{(nextLevelReputation - reputation).toLocaleString()} XP</span> to unlock next Distinction
             </span>

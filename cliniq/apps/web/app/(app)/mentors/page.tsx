@@ -3,21 +3,9 @@
 import { useState } from "react";
 import { useMentors, MentorCard, useCreateMentorshipRequest } from "@cliniq/ui";
 import { EXPERTISE_AREA_DEFINITIONS } from "@cliniq/shared-types";
-import { 
-  Search, 
-  Filter, 
-  Users, 
-  Sparkles, 
-  ChevronRight, 
-  X, 
-  ShieldCheck, 
-  MessageCircle,
-  AlertCircle,
-  CheckCircle2,
-  Target
-} from "lucide-react";
+import * as Icons from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "../../../lib/utils";
+import { cn } from "@/lib/utils";
 
 export default function MentorsPage() {
   const [filters, setFilters] = useState({
@@ -91,7 +79,7 @@ export default function MentorsPage() {
       <section className="flex flex-col md:flex-row md:items-end justify-between gap-8">
         <div className="space-y-3">
           <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-100 w-fit">
-            <Sparkles className="h-3.5 w-3.5 text-emerald-600" />
+            <Icons.Sparkles className="h-3.5 w-3.5 text-emerald-600" />
             <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-widest">Expert Guidance</span>
           </div>
           <h1 className="text-4xl lg:text-6xl font-bold tracking-tight text-slate-900 heading">Elite Clinical Mentors</h1>
@@ -102,7 +90,7 @@ export default function MentorsPage() {
 
         <div className="bg-slate-900 rounded-3xl p-6 text-white shadow-2xl shadow-slate-200 flex items-center gap-6">
            <div className="h-14 w-14 rounded-2xl bg-white/10 flex items-center justify-center">
-              <Users className="h-7 w-7 text-emerald-400" />
+              <Icons.Users className="h-7 w-7 text-emerald-400" />
            </div>
            <div>
               <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Active Faculty</p>
@@ -116,7 +104,7 @@ export default function MentorsPage() {
         <aside className="space-y-10">
            <div className="flex items-center justify-between mb-4">
               <h2 className="text-sm font-bold text-slate-900 uppercase tracking-[0.2em] flex items-center gap-2">
-                 <Filter className="h-4 w-4 text-emerald-500" />
+                 <Icons.Filter className="h-4 w-4 text-emerald-500" />
                  Discovery Filters
               </h2>
               <button 
@@ -139,7 +127,7 @@ export default function MentorsPage() {
               <div className="space-y-3">
                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">Base Institution</label>
                  <div className="relative group">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-emerald-500 transition-colors" />
+                    <Icons.Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-emerald-500 transition-colors" />
                     <input 
                       type="text" 
                       placeholder="Search facility..." 
@@ -167,7 +155,7 @@ export default function MentorsPage() {
                       >
                         <span className="text-base">{definition.icon}</span>
                         <span className="flex-1 text-left">{definition.name}</span>
-                        {filters.expertiseAreas.includes(area) && <CheckCircle2 className="h-4 w-4" />}
+                        {filters.expertiseAreas.includes(area) && <Icons.CheckCircle2 className="h-4 w-4" />}
                       </button>
                     ))}
                  </div>
@@ -213,7 +201,7 @@ export default function MentorsPage() {
            {/* Performance Tip Card */}
            <div className="p-8 bg-indigo-600 rounded-[2.5rem] text-white shadow-2xl shadow-indigo-100 relative overflow-hidden group">
               <div className="absolute -top-10 -right-10 h-32 w-32 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-all duration-700" />
-              <ShieldCheck className="h-10 w-10 mb-6 opacity-50" />
+              <Icons.ShieldCheck className="h-10 w-10 mb-6 opacity-50" />
               <h3 className="text-xl font-bold mb-3 heading leading-tight">Elite Guidance Protocol</h3>
               <p className="text-indigo-100 text-xs font-medium leading-relaxed mb-8 opacity-80">
                  Verified mentors maintain a 98% satisfaction rate. Request specific clinical cases to maximize your learning sessions.
@@ -234,14 +222,14 @@ export default function MentorsPage() {
                </motion.div>
              ) : error ? (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center justify-center py-40 glass rounded-[3rem] text-center px-10">
-                   <AlertCircle className="h-16 w-16 text-red-500 mb-6" />
+                   <Icons.AlertCircle className="h-16 w-16 text-red-500 mb-6" />
                    <h3 className="text-2xl font-bold text-slate-900 heading mb-2">Network Synchronization Failure</h3>
                    <p className="text-slate-500 max-w-sm">Unable to establish a secure link with the professional directory node.</p>
                 </motion.div>
              ) : mentors.length === 0 ? (
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col items-center justify-center py-40 glass rounded-[3rem] text-center px-10">
                    <div className="h-24 w-24 rounded-[2.5rem] bg-slate-50 flex items-center justify-center mb-8">
-                      <Search className="h-10 w-10 text-slate-200" />
+                      <Icons.Search className="h-10 w-10 text-slate-200" />
                    </div>
                    <h3 className="text-2xl font-bold text-slate-900 heading mb-2">No Profiles Matched</h3>
                    <p className="text-slate-500 max-w-sm font-medium">No mentors currently match your strategic parameters. Expand your discovery range.</p>
@@ -299,13 +287,13 @@ export default function MentorsPage() {
             >
                {/* Decorative background element */}
                <div className="absolute top-0 right-0 p-12 opacity-10 pointer-events-none transform translate-x-1/2 -translate-y-1/2">
-                  <Target className="h-64 w-64 text-emerald-400" />
+                  <Icons.Target className="h-64 w-64 text-emerald-400" />
                </div>
 
                <div className="flex items-center justify-between mb-10 relative">
                   <div className="space-y-2">
                      <div className="flex items-center gap-2">
-                        <MessageCircle className="h-5 w-5 text-emerald-400" />
+                        <Icons.MessageCircle className="h-5 w-5 text-emerald-400" />
                         <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-[0.3em]">Operational Directive</span>
                      </div>
                      <h3 className="text-3xl font-bold heading tracking-tight">
@@ -316,7 +304,7 @@ export default function MentorsPage() {
                     onClick={() => setShowRequestModal(false)}
                     className="h-12 w-12 rounded-2xl bg-white/5 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-all active:scale-95"
                   >
-                    <X className="h-6 w-6" />
+                    <Icons.X className="h-6 w-6" />
                   </button>
                </div>
                
@@ -394,7 +382,7 @@ export default function MentorsPage() {
                      {createRequestMutation.isPending ? 'Syncing...' : (
                         <>
                           Transmit Proposal
-                          <ChevronRight className="h-4 w-4" />
+                          <Icons.ChevronRight className="h-4 w-4" />
                         </>
                      )}
                    </button>

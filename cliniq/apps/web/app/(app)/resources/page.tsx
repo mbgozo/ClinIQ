@@ -10,18 +10,7 @@ import {
   ResourceCard, 
   ResourceUpload 
 } from "@cliniq/ui";
-import { 
-  Search, 
-  Filter, 
-  BookOpen, 
-  Layers, 
-  Calendar, 
-  ChevronDown, 
-  X,
-  RefreshCcw,
-  CloudUpload,
-  Library
-} from "lucide-react";
+import * as Icons from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function ResourcesPage() {
@@ -106,7 +95,7 @@ export default function ResourcesPage() {
             animate={{ opacity: 1, x: 0 }}
             className="flex items-center gap-4 px-4 py-2 rounded-2xl bg-white border border-slate-100 shadow-sm w-fit"
           >
-            <Library className="h-4 w-4 text-emerald-600" />
+            <Icons.Library className="h-4 w-4 text-emerald-600" />
             <span className="text-[11px] font-black text-emerald-700 uppercase tracking-[0.3em]">Neural Knowledge Registry</span>
           </motion.div>
           <motion.div
@@ -116,7 +105,7 @@ export default function ResourcesPage() {
           >
              <h1 className="text-6xl lg:text-7xl font-black tracking-tighter text-slate-900 heading leading-none mb-6">Academic Vault</h1>
              <p className="text-slate-500 text-xl font-medium leading-tight max-w-xl opacity-80">
-               Access the world&apos;s most comprehensive repository of peer-validated clinical intelligence and high-fidelity nursing protocols.
+                Access the world&apos;s most comprehensive repository of peer-validated clinical intelligence and high-fidelity nursing protocols.
              </p>
           </motion.div>
         </div>
@@ -129,7 +118,7 @@ export default function ResourcesPage() {
           className="group flex items-center gap-4 px-10 py-5 bg-slate-900 text-white rounded-[2rem] font-black text-xs uppercase tracking-[0.3em] hover:bg-emerald-600 transition-all shadow-[0_30px_60px_-15px_rgba(0,0,0,0.2)] hover:shadow-emerald-500/20 active:scale-95 relative overflow-hidden"
         >
           <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out" />
-          <CloudUpload className="h-5 w-5 text-emerald-400 group-hover:scale-110 transition-transform" />
+          <Icons.CloudUpload className="h-5 w-5 text-emerald-400 group-hover:scale-110 transition-transform" />
           <span className="relative z-10">CONTRIBUTE ASSET</span>
         </motion.button>
       </section>
@@ -139,14 +128,14 @@ export default function ResourcesPage() {
         <div className="absolute -inset-4 bg-gradient-to-r from-emerald-500/5 to-indigo-500/5 rounded-[4rem] blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
         <div className="glass rounded-[3.5rem] p-10 lg:p-14 border-white/60 shadow-2xl relative overflow-hidden bg-white/40 backdrop-blur-2xl">
           <div className="absolute top-0 right-0 p-8 opacity-[0.03] pointer-events-none">
-             <Layers className="h-40 w-40" />
+             <Icons.Layers className="h-40 w-40" />
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
             {/* Search Engine */}
             <div className="space-y-4">
               <label className="flex items-center gap-3 text-[11px] font-black text-slate-400 uppercase tracking-[0.3em] ml-2">
-                 <Search className="h-3.5 w-3.5" /> Intelligence Inquiry
+                 <Icons.Search className="h-3.5 w-3.5" /> Intelligence Inquiry
               </label>
               <div className="relative group/input">
                  <input
@@ -162,7 +151,7 @@ export default function ResourcesPage() {
             {/* Specialization Refinement */}
             <div className="space-y-4">
               <label className="flex items-center gap-3 text-[11px] font-black text-slate-400 uppercase tracking-[0.3em] ml-2">
-                 <Filter className="h-3.5 w-3.5" /> Domain Sector
+                 <Icons.Filter className="h-3.5 w-3.5" /> Domain Sector
               </label>
               <div className="relative">
                 <select
@@ -177,14 +166,14 @@ export default function ResourcesPage() {
                     </option>
                   ))}
                 </select>
-                <ChevronDown className="absolute right-5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
+                <Icons.ChevronDown className="absolute right-5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
               </div>
             </div>
 
             {/* Academic Core */}
             <div className="space-y-4">
               <label className="flex items-center gap-3 text-[11px] font-black text-slate-400 uppercase tracking-[0.3em] ml-2">
-                 <BookOpen className="h-3.5 w-3.5" /> Academic Node
+                 <Icons.BookOpen className="h-3.5 w-3.5" /> Academic Node
               </label>
               <div className="relative">
                  <input
@@ -200,7 +189,7 @@ export default function ResourcesPage() {
             {/* Temporal Index */}
             <div className="space-y-4">
               <label className="flex items-center gap-3 text-[11px] font-black text-slate-400 uppercase tracking-[0.3em] ml-2">
-                 <Calendar className="h-3.5 w-3.5" /> Temporal Sync
+                 <Icons.Calendar className="h-3.5 w-3.5" /> Temporal Sync
               </label>
               <div className="relative group/input">
                  <input
@@ -218,7 +207,7 @@ export default function ResourcesPage() {
           <div className="mt-12 flex flex-col md:flex-row justify-between items-center pt-10 border-t border-slate-100/50 gap-6">
             <div className="flex items-center gap-6">
                <div className="flex items-center gap-3 px-5 py-2 rounded-full bg-slate-900 text-white text-[10px] font-black uppercase tracking-[0.2em] shadow-xl">
-                  <Activity className="h-3.5 w-3.5 text-emerald-400 animate-pulse" />
+                  <Icons.Activity className="h-3.5 w-3.5 text-emerald-400 animate-pulse" />
                   Assets Identified: {total}
                </div>
                {(filters.search || filters.categoryId || filters.course || filters.year) && (
@@ -226,7 +215,7 @@ export default function ResourcesPage() {
                    onClick={clearFilters}
                    className="flex items-center gap-2 text-[11px] font-black text-emerald-600 uppercase tracking-widest hover:text-emerald-700 transition-all hover:scale-105"
                  >
-                   <RefreshCcw className="h-3.5 w-3.5" /> RESET ENGINE
+                   <Icons.RefreshCcw className="h-3.5 w-3.5" /> RESET ENGINE
                  </button>
                )}
             </div>
@@ -250,7 +239,7 @@ export default function ResourcesPage() {
           </div>
         ) : error ? (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center justify-center py-20 bg-rose-50 rounded-[4rem] border border-rose-100 text-center px-12 max-w-2xl mx-auto shadow-2xl">
-            <X className="h-16 w-16 text-rose-500 mb-6" />
+            <Icons.X className="h-16 w-16 text-rose-500 mb-6" />
             <h3 className="text-3xl font-black text-slate-900 mb-3 heading tracking-tight">Access Protocol Failure</h3>
             <p className="text-slate-500 text-lg font-medium leading-tight max-w-md mb-8">An error occurred while synchronizing with the central registry. Please verify your authentication link or retry.</p>
             <button
@@ -262,7 +251,7 @@ export default function ResourcesPage() {
           </motion.div>
         ) : resources.length === 0 ? (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center justify-center py-32 glass rounded-[4rem] border-white text-center px-12 shadow-3xl bg-white/20">
-            <BookOpen className="h-24 w-24 text-slate-200 mb-8" />
+            <Icons.BookOpen className="h-24 w-24 text-slate-200 mb-8" />
             <h3 className="text-4xl font-black text-slate-900 mb-4 heading tracking-tight">Registry Void</h3>
             <p className="text-slate-600 text-xl font-medium max-w-lg mb-12 opacity-80 leading-tight">No intelligence nodes match your current refinement parameters. Establish the first validated record for this domain.</p>
             <button
@@ -311,6 +300,3 @@ export default function ResourcesPage() {
     </div>
   );
 }
-
-// Added missing Lucide import
-import { Activity } from "lucide-react";

@@ -6,23 +6,9 @@ import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { acceptAnswer, createAnswer, getQuestion, getSimilarQuestions, voteAnswer } from "../api";
 import { AnsweredBadge, BadgePill, BadgeType } from "@cliniq/ui";
-import { 
-  ChevronLeft, 
-  ArrowBigUp, 
-  ArrowBigDown, 
-  CheckCircle2, 
-  PlusCircle, 
-  MessageSquare, 
-  Target, 
-  Sparkles, 
-  Clock, 
-  ChevronRight,
-  ShieldCheck,
-  Zap,
-  Quote
-} from "lucide-react";
+import * as Icons from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "../../../../lib/utils";
+import { cn } from "@/lib/utils";
 
 export default function QuestionDetailPage() {
   const params = useParams<{ id: string }>();
@@ -138,7 +124,7 @@ export default function QuestionDetailPage() {
   if (questionQuery.isError || !questionQuery.data) {
     return (
       <div className="flex flex-col items-center justify-center py-40 glass rounded-[3rem] text-center px-10">
-         <ShieldCheck className="h-16 w-16 text-red-500 mb-6" />
+         <Icons.ShieldCheck className="h-16 w-16 text-red-500 mb-6" />
          <h3 className="text-2xl font-bold text-slate-900 heading mb-2">Access Synchronization Failure</h3>
          <p className="text-slate-500 max-w-sm">Unable to verify the inquiry ID within the global clinical registry.</p>
          <Link href="/questions" className="mt-8 px-8 py-4 bg-slate-900 text-white rounded-2xl text-[10px] font-bold uppercase tracking-widest shadow-xl hover:bg-emerald-600 transition-all">
@@ -160,14 +146,14 @@ export default function QuestionDetailPage() {
           className="group flex items-center gap-3 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] transition-colors hover:text-emerald-600"
         >
           <div className="h-10 w-10 rounded-xl bg-white border border-slate-100 flex items-center justify-center group-hover:bg-emerald-50 group-hover:border-emerald-100 transition-all">
-             <ChevronLeft className="h-4 w-4 transform group-hover:-translate-x-1 transition-transform" />
+             <Icons.ChevronLeft className="h-4 w-4 transform group-hover:-translate-x-1 transition-transform" />
           </div>
           Back to Global Inquiry Registry
         </Link>
 
         <div className="flex items-center gap-4">
            <div className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-2xl bg-slate-900 text-white shadow-xl shadow-slate-200">
-              <ShieldCheck className="h-4 w-4 text-emerald-400" />
+              <Icons.ShieldCheck className="h-4 w-4 text-emerald-400" />
               <span className="text-[10px] font-bold uppercase tracking-widest">Protocol Verified</span>
            </div>
         </div>
@@ -183,18 +169,18 @@ export default function QuestionDetailPage() {
           >
             {/* Neural Background Accent */}
             <div className="absolute top-0 right-0 p-12 opacity-5 pointer-events-none transform translate-x-1/4 -translate-y-1/4">
-               <Sparkles className="h-64 w-64 text-emerald-400" />
+               <Icons.Sparkles className="h-64 w-64 text-emerald-400" />
             </div>
 
             <header className="space-y-6 relative">
               <div className="flex flex-wrap items-center gap-4">
                 <AnsweredBadge answered={question.answered} />
                 <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-100">
-                  <ArrowBigUp className="h-4 w-4 text-emerald-500" />
+                  <Icons.ArrowBigUp className="h-4 w-4 text-emerald-500" />
                   <span className="text-[10px] font-bold text-slate-700 uppercase tracking-widest">{question.upvotes} UPVOTES</span>
                 </div>
                 <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-100">
-                  <Clock className="h-4 w-4 text-indigo-500" />
+                  <Icons.Clock className="h-4 w-4 text-indigo-500" />
                   <span className="text-[10px] font-bold text-slate-700 uppercase tracking-widest">POSTED 2H AGO</span>
                 </div>
               </div>
@@ -206,7 +192,7 @@ export default function QuestionDetailPage() {
               <div className="h-[1px] w-full bg-gradient-to-r from-slate-200 via-slate-100 to-transparent" />
               
               <div className="relative group">
-                 <Quote className="absolute -top-4 -left-4 h-12 w-12 text-emerald-100 opacity-50 group-hover:scale-110 transition-transform" />
+                 <Icons.Quote className="absolute -top-4 -left-4 h-12 w-12 text-emerald-100 opacity-50 group-hover:scale-110 transition-transform" />
                  <p className="text-lg text-slate-600 leading-relaxed font-medium relative z-10 pl-4">
                    {question.body}
                  </p>
@@ -217,7 +203,7 @@ export default function QuestionDetailPage() {
           {/* Response Drafting Interface */}
           <section className="space-y-6">
             <h2 className="text-sm font-bold text-slate-900 uppercase tracking-[0.2em] flex items-center gap-2 px-1">
-               <PlusCircle className="h-4 w-4 text-emerald-500" />
+               <Icons.PlusCircle className="h-4 w-4 text-emerald-500" />
                Draft Clinical Response
             </h2>
             <div className="glass rounded-[2.5rem] p-8 lg:p-10 border-white shadow-xl shadow-slate-200/50 space-y-6">
@@ -238,7 +224,7 @@ export default function QuestionDetailPage() {
                   {createAnswerMutation.isPending ? "Transmitting..." : (
                     <>
                       Post Professional Answer
-                      <ChevronRight className="h-4 w-4" />
+                      <Icons.ChevronRight className="h-4 w-4" />
                     </>
                   )}
                 </button>
@@ -250,11 +236,11 @@ export default function QuestionDetailPage() {
           <section className="space-y-10">
             <div className="flex items-center justify-between px-1">
                <h2 className="text-sm font-bold text-slate-900 uppercase tracking-[0.2em] flex items-center gap-2">
-                  <MessageSquare className="h-4 w-4 text-indigo-500" />
+                  <Icons.MessageSquare className="h-4 w-4 text-indigo-500" />
                   Verified Responses ({question.answers?.length ?? 0})
                </h2>
                <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100">
-                  <Zap className="h-3 w-3 text-indigo-600" />
+                  <Icons.Zap className="h-3 w-3 text-indigo-600" />
                   <span className="text-[10px] font-bold text-indigo-700 uppercase tracking-widest">Active Synthesis</span>
                </div>
             </div>
@@ -274,7 +260,7 @@ export default function QuestionDetailPage() {
                   >
                     {answer.isAccepted && (
                       <div className="absolute -top-4 -right-4 h-12 w-12 rounded-2xl bg-emerald-500 text-white flex items-center justify-center shadow-xl shadow-emerald-200 z-10 border-4 border-white">
-                         <CheckCircle2 className="h-6 w-6" />
+                         <Icons.CheckCircle2 className="h-6 w-6" />
                       </div>
                     )}
 
@@ -282,7 +268,7 @@ export default function QuestionDetailPage() {
                       <div className="space-y-6 flex-1">
                         <div className="flex items-center gap-4">
                            <div className="h-12 w-12 rounded-2xl bg-white border border-slate-100 flex items-center justify-center text-slate-300">
-                              <ShieldCheck className="h-6 w-6" />
+                              <Icons.ShieldCheck className="h-6 w-6" />
                            </div>
                            <div className="space-y-1">
                               <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest">Faculty Contributor</p>
@@ -306,7 +292,7 @@ export default function QuestionDetailPage() {
                               "bg-white border-slate-200 text-slate-600 hover:bg-emerald-50 hover:border-emerald-200 hover:text-emerald-700"
                             )}
                           >
-                            <ArrowBigUp className="h-4 w-4" />
+                            <Icons.ArrowBigUp className="h-4 w-4" />
                             {voteMutation.isPending ? "..." : `Upvote (${answer.upvotes})`}
                           </button>
                           
@@ -319,7 +305,7 @@ export default function QuestionDetailPage() {
                               "bg-white border-slate-200 text-slate-600 hover:bg-red-50 hover:border-red-200 hover:text-red-700"
                             )}
                           >
-                            <ArrowBigDown className="h-4 w-4" />
+                            <Icons.ArrowBigDown className="h-4 w-4" />
                             {voteMutation.isPending ? "..." : "Downvote"}
                           </button>
 
@@ -338,7 +324,7 @@ export default function QuestionDetailPage() {
 
                       <div className="hidden lg:flex flex-col items-center gap-2 p-6 glass rounded-3xl border-white min-w-[120px] text-center bg-white/40">
                          <div className="h-10 w-10 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-600 mb-2">
-                            <Target className="h-5 w-5" />
+                            <Icons.Target className="h-5 w-5" />
                          </div>
                          <p className="text-2xl font-bold text-slate-900 heading leading-none">{answer.upvotes}</p>
                          <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">Quality Score</p>
@@ -355,7 +341,7 @@ export default function QuestionDetailPage() {
         <aside className="space-y-10">
           <div className="flex items-center justify-between mb-4 px-1">
              <h3 className="text-sm font-bold text-slate-900 uppercase tracking-[0.2em] flex items-center gap-2">
-                <Target className="h-4 w-4 text-emerald-500" />
+                <Icons.Target className="h-4 w-4 text-emerald-500" />
                 Related Cases
              </h3>
           </div>
@@ -375,7 +361,7 @@ export default function QuestionDetailPage() {
                   {item.title}
                 </h4>
                 <div className="flex items-center gap-2 mt-3 text-[9px] font-bold text-slate-400 uppercase tracking-wider">
-                   <ChevronRight className="h-3 w-3 text-emerald-500" />
+                   <Icons.ChevronRight className="h-3 w-3 text-emerald-500" />
                    Review Protocol
                 </div>
               </Link>
@@ -385,7 +371,7 @@ export default function QuestionDetailPage() {
           {/* Neural Assist Invite Card */}
           <div className="p-8 bg-slate-900 rounded-[2.5rem] text-white shadow-2xl shadow-slate-200 relative overflow-hidden group">
              <div className="absolute -top-10 -right-10 h-32 w-32 bg-emerald-500/20 rounded-full blur-2xl group-hover:scale-150 transition-all duration-700" />
-             <Sparkles className="h-10 w-10 mb-6 text-emerald-400" />
+             <Icons.Sparkles className="h-10 w-10 mb-6 text-emerald-400" />
              <h3 className="text-xl font-bold mb-3 heading leading-tight">Complex Clinical Scenario?</h3>
              <p className="text-slate-400 text-xs font-medium leading-relaxed mb-8">
                 Utilize ClinIQ Neural Assist to synthesize complex clinical data into actionable academic insights.
