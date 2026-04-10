@@ -12,20 +12,23 @@
     "format": "prettier --write ."
   },
   "peerDependencies": {
+    "next": "^14.2.3",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "next": "^14.2.3"
+    "react-dom": "^18.3.1"
   },
   "dependencies": {
-    "clsx": "^2.1.1"
+    "clsx": "^2.1.1",
+    "lucide-react": "^1.8.0",
+    "tailwind-merge": "^3.5.0"
   },
   "devDependencies": {
-    "typescript": "^5.6.3",
-    "eslint": "^9.5.0"
+    "eslint": "^9.5.0",
+    "typescript": "^5.6.3"
   },
   "eslintConfig": {
-    "extends": ["@cliniq/config/eslint-config-cliniq"]
+    "extends": [
+      "@cliniq/config/eslint-config-cliniq"
+    ]
   },
   "prettier": "@cliniq/config/prettier-config-cliniq"
 }
-

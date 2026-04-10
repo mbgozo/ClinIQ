@@ -17,6 +17,7 @@ export * from "./components/TypingIndicator";
 export * from "./components/AdminDashboard";
 export * from "./components/ModerationQueue";
 export * from "./components/ExpertiseAreaChip";
+export * from "./components/Sidebar";
 export * from "./hooks/useDebounce";
 export * from "./hooks/useStudyGroups";
 export * from "./hooks/useMentors";
