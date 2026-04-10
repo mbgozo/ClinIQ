@@ -37,7 +37,7 @@ import {
   Lock
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "../../lib/utils";
+import { cn } from "../../../lib/utils";
 
 export default function ChatPage() {
   const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);

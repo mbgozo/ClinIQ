@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { Conversation, OnlineStatus, formatChatTime, truncateMessage } from "@cliniq/shared-types";
 

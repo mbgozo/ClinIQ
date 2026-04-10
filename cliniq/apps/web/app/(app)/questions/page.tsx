@@ -19,7 +19,7 @@ import {
   MoreHorizontal
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "../../lib/utils";
+import { cn } from "../../../lib/utils";
 
 export default function QuestionsFeedPage() {
   const [search, setSearch] = useState("");

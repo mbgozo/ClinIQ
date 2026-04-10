@@ -15,7 +15,6 @@ import {
   Bot
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { cn } from '../lib/utils';
 
 interface Suggestion {
   id: string;

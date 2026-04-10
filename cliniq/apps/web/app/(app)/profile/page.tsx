@@ -29,7 +29,7 @@ import {
   Crown
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "../../lib/utils";
+import { cn } from "../../../lib/utils";
 
 export default function ProfilePage() {
   // Mock user ID - replace with actual auth context
@@ -346,6 +346,4 @@ export default function ProfilePage() {
       </div>
     </div>
   );
-}
-;
 }

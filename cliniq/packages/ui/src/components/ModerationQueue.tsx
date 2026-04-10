@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from 'react';
 import type { ModerationQueue } from '@cliniq/shared-types';
 import { 

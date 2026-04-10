@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from 'react';
 import { 
   FileText, 
@@ -18,10 +20,6 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '../lib/utils';
 
-// SVG icon helpers (keeping these if needed, but transitioning to Lucide)
-const DocumentIcon = () => (
-   <FileText className="h-10 w-10 text-slate-300" />
-);
 
 const UploadIcon = () => (
    <CloudUpload className="h-12 w-12 text-emerald-500" />

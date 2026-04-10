@@ -12,19 +12,12 @@ import {
   Download, 
   AlertTriangle, 
   MoreVertical,
-  Calendar,
   Layers,
-  Search,
-  ChevronRight,
-  ExternalLink,
   Edit2,
   Trash2,
   Flag,
   FileBadge,
-  Sparkles,
   Zap,
-  ShieldCheck,
-  Hexagon,
   ArrowUpRight
 } from "lucide-react";
 import { cn } from "../lib/utils";

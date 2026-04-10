@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from 'react';
 import { 
   Reply, 
@@ -10,9 +12,7 @@ import {
   CheckCheck,
   Clock,
   AlertCircle,
-  MoreHorizontal,
   CornerDownRight,
-  Sparkles,
   Zap
 } from 'lucide-react';
 import { Message, MessageType } from '@cliniq/shared-types';
@@ -40,7 +40,6 @@ const reactionLabels: Record<string, string> = {
 export function MessageBubble({ 
   message, 
   isOwn, 
-  showTimestamp = true,
   onReply,
   onReact,
   onEdit,

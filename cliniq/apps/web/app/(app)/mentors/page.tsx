@@ -23,7 +23,7 @@ import {
   Target
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "../../lib/utils";
+import { cn } from "../../../lib/utils";
 
 export default function MentorsPage() {
   const [filters, setFilters] = useState({
@@ -411,7 +411,5 @@ export default function MentorsPage() {
         )}
       </AnimatePresence>
     </div>
-  );
-}
   );
 }

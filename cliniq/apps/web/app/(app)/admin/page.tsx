@@ -30,7 +30,7 @@ import {
   Terminal
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "../../lib/utils";
+import { cn } from "../../../lib/utils";
 
 export default function AdminPage() {
   const [activeTab, setActiveTab] = useState<'dashboard' | 'moderation' | 'users' | 'analytics' | 'settings'>('dashboard');

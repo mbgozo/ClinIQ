@@ -1,11 +1,6 @@
-import React from 'react';
 import { 
   User, 
   Star, 
-  CheckCircle2, 
-  Tag as TagIcon, 
-  Languages, 
-  TrendingUp, 
   Quote,
   Target,
   Award,

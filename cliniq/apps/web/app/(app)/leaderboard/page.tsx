@@ -22,7 +22,7 @@ import {
   Orbit,
   ArrowUpRight
 } from "lucide-react";
-import { cn } from "../../lib/utils";
+import { cn } from "../../../lib/utils";
 
 export default function LeaderboardPage() {
   const [timeFilter, setTimeFilter] = useState<"all" | "month" | "week">("all");

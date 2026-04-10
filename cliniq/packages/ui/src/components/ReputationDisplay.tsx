@@ -1,11 +1,8 @@
 "use client";
 
 import { 
-  Trophy, 
   Award, 
   TrendingUp, 
-  Zap,
-  Hexagon,
   Sparkles
 } from "lucide-react";
 import { cn } from '../lib/utils';

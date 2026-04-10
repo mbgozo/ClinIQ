@@ -22,7 +22,7 @@ import {
   Quote
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "../../../lib/utils";
+import { cn } from "../../../../lib/utils";
 
 export default function QuestionDetailPage() {
   const params = useParams<{ id: string }>();
