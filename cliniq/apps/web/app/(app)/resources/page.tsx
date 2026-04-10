@@ -21,7 +21,10 @@ export default function ResourcesPage() {
     search: "",
   });
 
-  const { data: resourcesData, isLoading, error } = useResources(filters);
+  const { data: resourcesData, isLoading, error } = useResources({
+    ...filters,
+    year: filters.year ? parseInt(filters.year) : undefined
+  });
   const { data: categories } = useCategories();
   const createMutation = useCreateResource();
   const downloadMutation = useDownloadResource();

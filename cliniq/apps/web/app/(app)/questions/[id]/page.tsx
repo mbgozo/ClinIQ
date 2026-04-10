@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { acceptAnswer, createAnswer, getQuestion, getSimilarQuestions, voteAnswer } from "../api";
-import { AnsweredBadge, BadgePill, ReputationDisplay } from "@cliniq/ui";
+import { AnsweredBadge, BadgePill, BadgeType } from "@cliniq/ui";
 
 export default function QuestionDetailPage() {
   const params = useParams<{ id: string }>();
@@ -192,7 +192,7 @@ export default function QuestionDetailPage() {
                 </div>
                 {/* Mock user badges - replace with actual data */}
                 <div className="flex gap-1">
-                  <BadgePill type="FIRST_ANSWER" size="sm" />
+                  <BadgePill type={BadgeType.FIRST_ANSWER} size="sm" />
                 </div>
               </div>
               <p className="whitespace-pre-wrap text-sm text-gray-700">{answer.body}</p>

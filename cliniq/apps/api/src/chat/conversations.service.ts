@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import { Conversation, CreateConversationInput, ChatType } from '@cliniq/shared-types';
+import { CreateConversationInput, ChatType } from '@cliniq/shared-types';
 
 @Injectable()
 export class ConversationsService {
@@ -111,9 +111,10 @@ export class ConversationsService {
     }
 
     const userParticipant = conversation.participants.find((p: any) => p.userId === userId);
-    const unreadCount = userParticipant?.lastReadAt
+    const lastReadAt = userParticipant?.lastReadAt;
+    const unreadCount = lastReadAt
       ? conversation.messages.filter((m: any) => 
-          m.senderId !== userId && m.createdAt > userParticipant.lastReadAt
+          m.senderId !== userId && m.createdAt > lastReadAt
         ).length
       : conversation.messages.filter((m: any) => m.senderId !== userId).length;
 

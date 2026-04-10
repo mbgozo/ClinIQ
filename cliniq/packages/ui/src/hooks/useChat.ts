@@ -10,12 +10,15 @@ import {
   MessageType
 } from '@cliniq/shared-types';
 
-interface ChatHookOptions {
-  apiUrl?: string;
-}
+import { BaseHookOptions } from './types';
+
+export interface ChatHookOptions extends BaseHookOptions {}
 
 export function useConversations(options: ChatHookOptions = {}) {
-  const { apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000" } = options;
+  const { 
+    apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000",
+    enabled = true
+  } = options;
 
   return useQuery({
     queryKey: ['conversations'],
@@ -35,12 +38,16 @@ export function useConversations(options: ChatHookOptions = {}) {
       const result = await res.json();
       return result.data as Conversation[];
     },
+    enabled,
     staleTime: 2 * 60 * 1000, // 2 minutes
   });
 }
 
 export function useConversation(id: string, options: ChatHookOptions = {}) {
-  const { apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000" } = options;
+  const { 
+    apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000",
+    enabled = true
+  } = options;
 
   return useQuery({
     queryKey: ['conversation', id],
@@ -60,12 +67,16 @@ export function useConversation(id: string, options: ChatHookOptions = {}) {
       const result = await res.json();
       return result.data as Conversation;
     },
+    enabled,
     staleTime: 1 * 60 * 1000, // 1 minute
   });
 }
 
 export function useMessages(conversationId: string, options: ChatHookOptions = {}) {
-  const { apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000" } = options;
+  const { 
+    apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000",
+    enabled = true
+  } = options;
 
   return useQuery({
     queryKey: ['messages', conversationId],
@@ -85,6 +96,7 @@ export function useMessages(conversationId: string, options: ChatHookOptions = {
       const result = await res.json();
       return result.data as Message[];
     },
+    enabled,
     staleTime: 30 * 1000, // 30 seconds
   });
 }

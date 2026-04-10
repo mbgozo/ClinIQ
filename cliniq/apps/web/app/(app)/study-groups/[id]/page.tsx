@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { 
   useStudyGroup, 
   useGroupMembers, 
@@ -11,20 +11,18 @@ import {
   useDeleteGroupPost,
   usePinGroupPost,
   useUnpinGroupPost,
-  GroupPost,
-  StudyGroupCard
+  GroupPost
 } from "@cliniq/ui";
 
 export default function StudyGroupDetailPage() {
   const params = useParams();
-  const router = useRouter();
   const groupId = params.id as string;
 
   const [showNewPostModal, setShowNewPostModal] = useState(false);
-  const [editingPost, setEditingPost] = useState<any>(null);
+  const [, setEditingPost] = useState<any>(null);
 
   const { data: group, isLoading: groupLoading } = useStudyGroup(groupId);
-  const { data: members } = useGroupMembers(groupId);
+  const { data: _ } = useGroupMembers(groupId);
   const { data: posts, isLoading: postsLoading } = useGroupPosts(groupId);
   
   const createPostMutation = useCreateGroupPost();

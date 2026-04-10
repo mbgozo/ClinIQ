@@ -16,21 +16,21 @@ export class ChatController {
 
   @Get('conversations')
   async getConversations(@Request() req: any) {
-    const _userId = req.user.sub;
+    const userId = req.user.sub;
     const conversations = await this.conversationsService.getUserConversations(userId);
     return { data: conversations };
   }
 
   @Get('conversations/:id')
   async getConversation(@Param('id') id: string, @Request() req: any) {
-    const _userId = req.user.sub;
+    const userId = req.user.sub;
     const conversation = await this.conversationsService.getConversationById(id, userId);
     return { data: conversation };
   }
 
   @Post('conversations')
   async createConversation(@Request() req: any, @Body() data: any) {
-    const _userId = req.user.sub;
+    const userId = req.user.sub;
     const validatedData = CreateConversationSchema.parse(data);
     const conversation = await this.conversationsService.createConversation(userId, validatedData);
     return { data: conversation };
@@ -38,14 +38,14 @@ export class ChatController {
 
   @Put('conversations/:id')
   async updateConversation(@Param('id') id: string, @Request() req: any, @Body() data: any) {
-    const _userId = req.user.sub;
+    const userId = req.user.sub;
     const conversation = await this.conversationsService.updateConversation(id, userId, data);
     return { data: conversation };
   }
 
   @Delete('conversations/:id')
   async deleteConversation(@Param('id') id: string, @Request() req: any) {
-    const _userId = req.user.sub;
+    const userId = req.user.sub;
     await this.conversationsService.deleteConversation(id, userId);
     return { message: 'Conversation deleted successfully' };
   }
@@ -58,7 +58,7 @@ export class ChatController {
 
   @Post('conversations/:id/messages')
   async createMessage(@Param('id') id: string, @Request() req: any, @Body() data: any) {
-    const _userId = req.user.sub;
+    const userId = req.user.sub;
     const validatedData = CreateMessageSchema.parse({ ...data, conversationId: id });
     const message = await this.messagesService.createMessage(userId, validatedData);
     return { data: message };
@@ -66,35 +66,35 @@ export class ChatController {
 
   @Put('messages/:id')
   async updateMessage(@Param('id') id: string, @Request() req: any, @Body() data: any) {
-    const _userId = req.user.sub;
+    const userId = req.user.sub;
     const message = await this.messagesService.updateMessage(id, userId, data);
     return { data: message };
   }
 
   @Delete('messages/:id')
   async deleteMessage(@Param('id') id: string, @Request() req: any) {
-    const _userId = req.user.sub;
+    const userId = req.user.sub;
     await this.messagesService.deleteMessage(id, userId);
     return { message: 'Message deleted successfully' };
   }
 
   @Post('messages/:id/read')
   async markMessageAsRead(@Param('id') id: string, @Request() req: any) {
-    const _userId = req.user.sub;
+    const userId = req.user.sub;
     await this.messagesService.markMessageAsRead(id, userId);
     return { message: 'Message marked as read' };
   }
 
   @Post('conversations/:id/read-all')
   async markAllMessagesAsRead(@Param('id') id: string, @Request() req: any) {
-    const _userId = req.user.sub;
+    const userId = req.user.sub;
     await this.messagesService.markAllMessagesAsRead(id, userId);
     return { message: 'All messages marked as read' };
   }
 
   @Get('conversations/:id/participants')
   async getParticipants(@Param('id') id: string, @Request() req: any) {
-    const _userId = req.user.sub;
+    const userId = req.user.sub;
     const participants = await this.conversationsService.getParticipants(id, userId);
     return { data: participants };
   }
@@ -127,21 +127,21 @@ export class ChatController {
 
   @Post('conversations/:id/typing')
   async setTypingIndicator(@Param('id') id: string, @Body() body: { isTyping: boolean }, @Request() req: any) {
-    const _userId = req.user.sub;
+    const userId = req.user.sub;
     await this.chatService.setTypingIndicator(id, userId, body.isTyping);
     return { message: 'Typing indicator updated' };
   }
 
   @Get('search')
-  async searchMessages(@Query() query: { q: string; conversationId?: string; limit?: number }) {
-    const _userId = req.user.sub;
+  async searchMessages(@Query() query: { q: string; conversationId?: string; limit?: number }, @Request() req: any) {
+    const userId = req.user.sub;
     const results = await this.chatService.searchMessages(userId, query);
     return { data: results };
   }
 
   @Post('upload')
-  async uploadFile(@Request() req: any) {
-    const _userId = req.user.sub;
+  async uploadFile() {
+
     // File upload implementation would go here
     // For now, return a mock response
     return { 

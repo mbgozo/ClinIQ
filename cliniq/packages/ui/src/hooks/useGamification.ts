@@ -1,4 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
+import { BaseHookOptions } from './types';
+
+export interface GamificationHookOptions extends BaseHookOptions {}
+
+function getApiUrl(options: GamificationHookOptions = {}) {
+  return options.apiUrl || process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+}
 
 interface UserReputation {
   userId: string;
@@ -39,14 +46,16 @@ interface LeaderboardUser {
   nextLevelReputation: number;
 }
 
-export function useGamificationProfile(userId?: string) {
+export function useGamificationProfile(userId?: string, options: GamificationHookOptions = {}) {
+  const { enabled = true } = options;
+  const apiUrl = getApiUrl(options);
+
   return useQuery({
     queryKey: ['gamification-profile', userId],
     queryFn: async () => {
       const token = typeof window !== 'undefined' ? localStorage.getItem('cliniq_access_token') : null;
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
       
-      const res = await fetch(`${API_URL}/gamification/profile`, {
+      const res = await fetch(`${apiUrl}/gamification/profile`, {
         headers: {
           ...(token ? { Authorization: `Bearer ${token}` } : {})
         }
@@ -59,19 +68,21 @@ export function useGamificationProfile(userId?: string) {
       const result = await res.json();
       return result.data as UserReputation;
     },
-    enabled: !!userId,
+    enabled: !!userId && enabled,
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 
-export function useUserBadges(userId?: string) {
+export function useUserBadges(userId?: string, options: GamificationHookOptions = {}) {
+  const { enabled = true } = options;
+  const apiUrl = getApiUrl(options);
+
   return useQuery({
     queryKey: ['user-badges', userId],
     queryFn: async () => {
       const token = typeof window !== 'undefined' ? localStorage.getItem('cliniq_access_token') : null;
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
       
-      const res = await fetch(`${API_URL}/gamification/badges`, {
+      const res = await fetch(`${apiUrl}/gamification/badges`, {
         headers: {
           ...(token ? { Authorization: `Bearer ${token}` } : {})
         }
@@ -84,19 +95,21 @@ export function useUserBadges(userId?: string) {
       const result = await res.json();
       return result.data as UserBadge[];
     },
-    enabled: !!userId,
+    enabled: !!userId && enabled,
     staleTime: 10 * 60 * 1000, // 10 minutes
   });
 }
 
-export function useLeaderboard() {
+export function useLeaderboard(options: GamificationHookOptions = {}) {
+  const { enabled = true } = options;
+  const apiUrl = getApiUrl(options);
+
   return useQuery({
     queryKey: ['leaderboard'],
     queryFn: async () => {
       const token = typeof window !== 'undefined' ? localStorage.getItem('cliniq_access_token') : null;
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
       
-      const res = await fetch(`${API_URL}/gamification/leaderboard`, {
+      const res = await fetch(`${apiUrl}/gamification/leaderboard`, {
         headers: {
           ...(token ? { Authorization: `Bearer ${token}` } : {})
         }
@@ -109,18 +122,21 @@ export function useLeaderboard() {
       const result = await res.json();
       return result.data as LeaderboardUser[];
     },
+    enabled,
     staleTime: 15 * 60 * 1000, // 15 minutes
   });
 }
 
-export function useBadgeDefinitions() {
+export function useBadgeDefinitions(options: GamificationHookOptions = {}) {
+  const { enabled = true } = options;
+  const apiUrl = getApiUrl(options);
+
   return useQuery({
     queryKey: ['badge-definitions'],
     queryFn: async () => {
       const token = typeof window !== 'undefined' ? localStorage.getItem('cliniq_access_token') : null;
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
       
-      const res = await fetch(`${API_URL}/gamification/badge-definitions`, {
+      const res = await fetch(`${apiUrl}/gamification/badge-definitions`, {
         headers: {
           ...(token ? { Authorization: `Bearer ${token}` } : {})
         }
@@ -133,6 +149,7 @@ export function useBadgeDefinitions() {
       const result = await res.json();
       return result.data;
     },
+    enabled,
     staleTime: 60 * 60 * 1000, // 1 hour
   });
 }

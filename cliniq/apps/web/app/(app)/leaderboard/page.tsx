@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useLeaderboard } from "@cliniq/ui";
-import { BadgePill, ReputationDisplay } from "@cliniq/ui";
+import { ReputationDisplay } from "@cliniq/ui";
 
 export default function LeaderboardPage() {
   const [timeFilter, setTimeFilter] = useState<"all" | "month" | "week">("all");

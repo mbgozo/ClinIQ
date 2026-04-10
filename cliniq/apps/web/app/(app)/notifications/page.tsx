@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { AnsweredBadge } from "@cliniq/ui";
 
 interface Notification {
   id: string;

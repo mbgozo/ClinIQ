@@ -13,7 +13,7 @@ import { Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ChatService } from '../chat.service';
 import { MessagesService } from '../messages.service';
-import { SocketEvent, OnlineStatus } from '@cliniq/shared-types';
+import { OnlineStatus } from '@cliniq/shared-types';
 
 interface AuthenticatedSocket extends Socket {
   userId?: string;
@@ -27,7 +27,7 @@ interface AuthenticatedSocket extends Socket {
   namespace: '/chat',
 })
 export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
-  @WebSocketServer() server: Server;
+  @WebSocketServer() server!: Server;
   private readonly logger = new Logger(ChatGateway.name);
   private connectedClients = new Map<string, string>(); // socketId -> userId
 
@@ -85,20 +85,21 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   }
 
   async handleDisconnect(client: AuthenticatedSocket) {
-    if (client.userId as string) {
+    const userId = client.userId;
+    if (userId) {
       this.connectedClients.delete(client.id);
       
       // Set user offline
-      const onlineUsers = await this.chatService.handleSocketDisconnect(client.id, client.userId as string);
+      const onlineUsers = await this.chatService.handleSocketDisconnect(client.id, userId);
       
       // Notify others about user going offline
       client.broadcast.emit('user_offline', {
-        userId: client.userId,
+        userId,
         status: OnlineStatus.OFFLINE,
         onlineUsers,
       });
 
-      this.logger.log(`Client disconnected: ${client.id} (User: ${client.userId})`);
+      this.logger.log(`Client disconnected: ${client.id} (User: ${userId})`);
     }
   }
 
@@ -107,11 +108,12 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     @MessageBody() data: { conversationId: string },
     @ConnectedSocket() client: AuthenticatedSocket,
   ) {
-    if (!client.userId as string) return;
+    const userId = client.userId;
+    if (!userId) return;
 
     try {
       // Verify user is a participant in the conversation
-      await this.chatService.handleJoinRoom(client.id, client.userId, data.conversationId);
+      await this.chatService.handleJoinRoom(client.id, userId, data.conversationId);
       
       // Join the conversation room
       client.join(`conversation:${data.conversationId}`);
@@ -119,10 +121,10 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
       // Notify others in the room
       client.to(`conversation:${data.conversationId}`).emit('user_joined', {
         conversationId: data.conversationId,
-        userId: client.userId,
+        userId,
       });
 
-      this.logger.log(`User ${client.userId} joined room ${data.conversationId}`);
+      this.logger.log(`User ${userId} joined room ${data.conversationId}`);
     } catch (error) {
       client.emit('error', { message: 'Failed to join room' });
     }
@@ -133,10 +135,11 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     @MessageBody() data: { conversationId: string },
     @ConnectedSocket() client: AuthenticatedSocket,
   ) {
-    if (!client.userId as string) return;
+    const userId = client.userId;
+    if (!userId) return;
 
     try {
-      await this.chatService.handleLeaveRoom(client.id, client.userId, data.conversationId);
+      await this.chatService.handleLeaveRoom(client.id, userId, data.conversationId);
       
       // Leave the conversation room
       client.leave(`conversation:${data.conversationId}`);
@@ -144,10 +147,10 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
       // Notify others in the room
       client.to(`conversation:${data.conversationId}`).emit('user_left', {
         conversationId: data.conversationId,
-        userId: client.userId,
+        userId,
       });
 
-      this.logger.log(`User ${client.userId} left room ${data.conversationId}`);
+      this.logger.log(`User ${userId} left room ${data.conversationId}`);
     } catch (error) {
       client.emit('error', { message: 'Failed to leave room' });
     }
@@ -158,13 +161,14 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     @MessageBody() data: { conversationId: string; content: string; type: string; replyToId?: string },
     @ConnectedSocket() client: AuthenticatedSocket,
   ) {
-    if (!client.userId as string) return;
+    const userId = client.userId;
+    if (!userId) return;
 
     try {
-      await this.chatService.handleSendMessage(client.id, client.userId, data);
+      await this.chatService.handleSendMessage(client.id, userId, data);
       
       // Create the message in database
-      const message = await this.messagesService.createMessage(client.userId, {
+      const message = await this.messagesService.createMessage(userId, {
         conversationId: data.conversationId,
         type: data.type as any,
         content: data.content,
@@ -174,7 +178,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
       // Broadcast to all participants in the conversation
       this.server.to(`conversation:${data.conversationId}`).emit('new_message', message);
 
-      this.logger.log(`Message sent in conversation ${data.conversationId} by user ${client.userId}`);
+      this.logger.log(`Message sent in conversation ${data.conversationId} by user ${userId}`);
     } catch (error) {
       client.emit('error', { message: 'Failed to send message' });
     }
@@ -185,19 +189,20 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     @MessageBody() data: { conversationId: string },
     @ConnectedSocket() client: AuthenticatedSocket,
   ) {
-    if (!client.userId as string) return;
+    const userId = client.userId;
+    if (!userId) return;
 
     try {
-      const typingIndicators = await this.chatService.handleTypingStart(client.id, client.userId, data.conversationId);
+      const typingIndicators = await this.chatService.handleTypingStart(client.id, userId, data.conversationId);
       
       // Broadcast typing indicator to other participants
       client.to(`conversation:${data.conversationId}`).emit('typing_start', {
         conversationId: data.conversationId,
-        userId: client.userId,
+        userId,
         typingIndicators,
       });
 
-      this.logger.log(`User ${client.userId} started typing in conversation ${data.conversationId}`);
+      this.logger.log(`User ${userId} started typing in conversation ${data.conversationId}`);
     } catch (error) {
       client.emit('error', { message: 'Failed to update typing status' });
     }
@@ -208,19 +213,20 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     @MessageBody() data: { conversationId: string },
     @ConnectedSocket() client: AuthenticatedSocket,
   ) {
-    if (!client.userId as string) return;
+    const userId = client.userId;
+    if (!userId) return;
 
     try {
-      const typingIndicators = await this.chatService.handleTypingStop(client.id, client.userId, data.conversationId);
+      const typingIndicators = await this.chatService.handleTypingStop(client.id, userId, data.conversationId);
       
       // Broadcast typing indicator to other participants
       client.to(`conversation:${data.conversationId}`).emit('typing_stop', {
         conversationId: data.conversationId,
-        userId: client.userId,
+        userId,
         typingIndicators,
       });
 
-      this.logger.log(`User ${client.userId} stopped typing in conversation ${data.conversationId}`);
+      this.logger.log(`User ${userId} stopped typing in conversation ${data.conversationId}`);
     } catch (error) {
       client.emit('error', { message: 'Failed to update typing status' });
     }
@@ -231,19 +237,20 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     @MessageBody() data: { status: OnlineStatus },
     @ConnectedSocket() client: AuthenticatedSocket,
   ) {
-    if (!client.userId as string) return;
+    const userId = client.userId;
+    if (!userId) return;
 
     try {
-      const onlineUsers = await this.chatService.handleOnlineStatusUpdate(client.id, client.userId, data.status);
+      const onlineUsers = await this.chatService.handleOnlineStatusUpdate(client.id, userId, data.status);
       
       // Broadcast status update to all connected clients
       this.server.emit('status_update', {
-        userId: client.userId,
+        userId,
         status: data.status,
         onlineUsers,
       });
 
-      this.logger.log(`User ${client.userId} updated status to ${data.status}`);
+      this.logger.log(`User ${userId} updated status to ${data.status}`);
     } catch (error) {
       client.emit('error', { message: 'Failed to update status' });
     }
@@ -254,22 +261,23 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     @MessageBody() data: { messageId: string; conversationId: string },
     @ConnectedSocket() client: AuthenticatedSocket,
   ) {
-    if (!client.userId as string) return;
+    const userId = client.userId;
+    if (!userId) return;
 
     try {
-      await this.chatService.handleMessageRead(client.id, client.userId, data.messageId);
+      await this.chatService.handleMessageRead(client.id, userId, data.messageId);
       
       // Notify the message sender about read receipt
       const message = await this.messagesService.getMessageById(data.messageId);
-      if (message && message.senderId !== client.userId as string) {
+      if (message && message.senderId !== userId) {
         this.server.to(`user:${message.senderId}`).emit('message_read', {
           messageId: data.messageId,
           conversationId: data.conversationId,
-          readBy: client.userId,
+          readBy: userId,
         });
       }
 
-      this.logger.log(`Message ${data.messageId} marked as read by user ${client.userId}`);
+      this.logger.log(`Message ${data.messageId} marked as read by user ${userId}`);
     } catch (error) {
       client.emit('error', { message: 'Failed to mark message as read' });
     }
@@ -280,20 +288,21 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     @MessageBody() data: { messageId: string; emoji: string; conversationId: string },
     @ConnectedSocket() client: AuthenticatedSocket,
   ) {
-    if (!client.userId as string) return;
+    const userId = client.userId;
+    if (!userId) return;
 
     try {
-      const reaction = await this.messagesService.addReaction(data.messageId, client.userId, data.emoji);
+      const reaction = await this.messagesService.addReaction(data.messageId, userId, data.emoji);
       
       // Broadcast reaction to all participants in the conversation
       this.server.to(`conversation:${data.conversationId}`).emit('reaction_added', {
         messageId: data.messageId,
         emoji: data.emoji,
-        userId: client.userId,
+        userId,
         reaction,
       });
 
-      this.logger.log(`Reaction ${data.emoji} added to message ${data.messageId} by user ${client.userId}`);
+      this.logger.log(`Reaction ${data.emoji} added to message ${data.messageId} by user ${userId}`);
     } catch (error) {
       client.emit('error', { message: 'Failed to add reaction' });
     }
@@ -304,19 +313,20 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     @MessageBody() data: { messageId: string; emoji: string; conversationId: string },
     @ConnectedSocket() client: AuthenticatedSocket,
   ) {
-    if (!client.userId as string) return;
+    const userId = client.userId;
+    if (!userId) return;
 
     try {
-      await this.messagesService.removeReaction(data.messageId, client.userId, data.emoji);
+      await this.messagesService.removeReaction(data.messageId, userId, data.emoji);
       
       // Broadcast reaction removal to all participants in the conversation
       this.server.to(`conversation:${data.conversationId}`).emit('reaction_removed', {
         messageId: data.messageId,
         emoji: data.emoji,
-        userId: client.userId,
+        userId,
       });
 
-      this.logger.log(`Reaction ${data.emoji} removed from message ${data.messageId} by user ${client.userId}`);
+      this.logger.log(`Reaction ${data.emoji} removed from message ${data.messageId} by user ${userId}`);
     } catch (error) {
       client.emit('error', { message: 'Failed to remove reaction' });
     }

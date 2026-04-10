@@ -3,9 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import {
   AdminRole,
   Permission,
-  hasPermission,
   getRolePermissions,
-  canPerformAction,
 } from "@cliniq/shared-types";
 
 @Injectable()
@@ -14,7 +12,7 @@ export class AdminService {
   private prisma = new PrismaClient();
 
   // Simplified admin user management using existing User model
-  async getAdminUsers(requestingAdminId: string) {
+  async getAdminUsers(_requestingAdminId: string) {
     // For now, return users with admin-like permissions
     // In a real implementation, this would use a proper AdminUser model
     const users = await this.prisma.user.findMany({
@@ -31,6 +29,7 @@ export class AdminService {
         institution: true,
         program: true,
         year: true,
+        verified: true,
         createdAt: true,
       },
       orderBy: { createdAt: "desc" },
@@ -127,9 +126,9 @@ export class AdminService {
 
   async getRegularUsers(
     _requestingAdminId: string,
-    _query: { page?: number; limit?: number; search?: string; status?: string },
+    query: { page?: number; limit?: number; search?: string; status?: string },
   ) {
-    const { page = 1, limit = 20, search, status } = query;
+    const { page = 1, limit = 20, search, status: _status } = query;
     const skip = (page - 1) * limit;
 
     const where = {
@@ -173,7 +172,7 @@ export class AdminService {
     };
   }
 
-  async banUser(requestingAdminId: string, userId: string, reason: string, duration?: number) {
+  async banUser(requestingAdminId: string, userId: string, _reason: string, _duration?: number) {
     this.logger.log(`User ban requested for: ${userId} by ${requestingAdminId}`);
     // Simplified implementation - would update user.isBanned in real implementation
   }
@@ -209,7 +208,7 @@ export class AdminService {
   // Content Management Methods (simplified)
   async getQuestions(
     _requestingAdminId: string,
-    _query: { page?: number; limit?: number; status?: string; flagged?: boolean },
+    query: { page?: number; limit?: number; status?: string; flagged?: boolean },
   ) {
     const { page = 1, limit = 20 } = query;
     const skip = (page - 1) * limit;

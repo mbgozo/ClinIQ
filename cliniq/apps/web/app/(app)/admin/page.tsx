@@ -11,16 +11,15 @@ import {
   useDismissModerationItem,
   useAdminPermissions,
   AdminRole,
-  Permission,
   ModerationAction
 } from '@cliniq/ui';
-import { ModerationQueue as ModerationQueueType } from '@cliniq/shared-types';
+
 
 export default function AdminPage() {
   const [activeTab, setActiveTab] = useState<'dashboard' | 'moderation' | 'users' | 'analytics' | 'settings'>('dashboard');
   
-  const { data: stats, isLoading: statsLoading } = useSystemStats();
-  const { data: alerts, isLoading: alertsLoading } = useSystemAlerts();
+  const { data: stats } = useSystemStats();
+  const { data: alerts } = useSystemAlerts();
   const { data: queue, isLoading: queueLoading } = useModerationQueue({ status: 'PENDING' });
   const { data: permissions } = useAdminPermissions();
   
@@ -55,7 +54,7 @@ export default function AdminPage() {
             <div>
               <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
               <p className="text-sm text-gray-600">
-                {ADMIN_ROLE_DEFINITIONS[userRole]?.name} • {userPermissions.length} permissions
+                {userRole} • {userPermissions.length} permissions
               </p>
             </div>
             <div className="flex items-center gap-4">

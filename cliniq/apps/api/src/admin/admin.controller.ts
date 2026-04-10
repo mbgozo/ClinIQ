@@ -7,9 +7,7 @@ import { SystemService } from './system.service';
 import { 
   CreateAdminUserSchema, 
   UpdateAdminUserSchema, 
-  CreateSystemAlertSchema,
-  AdminRole,
-  Permission
+  CreateSystemAlertSchema
 } from '@cliniq/shared-types';
 
 @Controller('admin')

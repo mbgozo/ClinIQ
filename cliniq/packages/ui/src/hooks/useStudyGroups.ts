@@ -1,4 +1,11 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { BaseHookOptions } from './types';
+
+export interface StudyGroupHookOptions extends BaseHookOptions {}
+
+function getApiUrl(options: StudyGroupHookOptions = {}) {
+  return options.apiUrl || process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+}
 
 interface StudyGroup {
   id: string;
@@ -100,12 +107,14 @@ interface GroupFilter {
   limit?: number;
 }
 
-export function useStudyGroups(filters: GroupFilter = {}) {
+export function useStudyGroups(filters: GroupFilter = {}, options: StudyGroupHookOptions = {}) {
+  const { enabled = true } = options;
+  const apiUrl = getApiUrl(options);
+
   return useQuery({
     queryKey: ['study-groups', filters],
     queryFn: async () => {
       const token = typeof window !== 'undefined' ? localStorage.getItem('cliniq_access_token') : null;
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
       
       const params = new URLSearchParams();
       Object.entries(filters).forEach(([key, value]) => {
@@ -114,7 +123,7 @@ export function useStudyGroups(filters: GroupFilter = {}) {
         }
       });
       
-      const res = await fetch(`${API_URL}/study-groups?${params}`, {
+      const res = await fetch(`${apiUrl}/study-groups?${params}`, {
         headers: {
           ...(token ? { Authorization: `Bearer ${token}` } : {})
         }
@@ -127,18 +136,21 @@ export function useStudyGroups(filters: GroupFilter = {}) {
       const result = await res.json();
       return result.data as { groups: StudyGroup[], total: number };
     },
+    enabled,
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 
-export function useMyStudyGroups() {
+export function useMyStudyGroups(options: StudyGroupHookOptions = {}) {
+  const { enabled = true } = options;
+  const apiUrl = getApiUrl(options);
+
   return useQuery({
     queryKey: ['my-study-groups'],
     queryFn: async () => {
       const token = typeof window !== 'undefined' ? localStorage.getItem('cliniq_access_token') : null;
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
       
-      const res = await fetch(`${API_URL}/study-groups/my-groups`, {
+      const res = await fetch(`${apiUrl}/study-groups/my-groups`, {
         headers: {
           ...(token ? { Authorization: `Bearer ${token}` } : {})
         }
@@ -151,18 +163,21 @@ export function useMyStudyGroups() {
       const result = await res.json();
       return result.data as StudyGroup[];
     },
+    enabled,
     staleTime: 2 * 60 * 1000, // 2 minutes
   });
 }
 
-export function useStudyGroup(id: string) {
+export function useStudyGroup(id: string, options: StudyGroupHookOptions = {}) {
+  const { enabled = true } = options;
+  const apiUrl = getApiUrl(options);
+
   return useQuery({
     queryKey: ['study-group', id],
     queryFn: async () => {
       const token = typeof window !== 'undefined' ? localStorage.getItem('cliniq_access_token') : null;
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
       
-      const res = await fetch(`${API_URL}/study-groups/${id}`, {
+      const res = await fetch(`${apiUrl}/study-groups/${id}`, {
         headers: {
           ...(token ? { Authorization: `Bearer ${token}` } : {})
         }
@@ -175,6 +190,7 @@ export function useStudyGroup(id: string) {
       const result = await res.json();
       return result.data as StudyGroup;
     },
+    enabled,
     staleTime: 2 * 60 * 1000, // 2 minutes
   });
 }
@@ -275,14 +291,16 @@ export function useLeaveStudyGroup() {
   });
 }
 
-export function useGroupMembers(groupId: string) {
+export function useGroupMembers(groupId: string, options: StudyGroupHookOptions = {}) {
+  const { enabled = true } = options;
+  const apiUrl = getApiUrl(options);
+
   return useQuery({
     queryKey: ['group-members', groupId],
     queryFn: async () => {
       const token = typeof window !== 'undefined' ? localStorage.getItem('cliniq_access_token') : null;
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
       
-      const res = await fetch(`${API_URL}/study-groups/${groupId}/members`, {
+      const res = await fetch(`${apiUrl}/study-groups/${groupId}/members`, {
         headers: {
           ...(token ? { Authorization: `Bearer ${token}` } : {})
         }
@@ -295,6 +313,7 @@ export function useGroupMembers(groupId: string) {
       const result = await res.json();
       return result.data as GroupMember[];
     },
+    enabled,
     staleTime: 2 * 60 * 1000, // 2 minutes
   });
 }
@@ -470,14 +489,16 @@ export function useUnpinGroupPost() {
 }
 
 // Invite hooks
-export function useSentInvites() {
+export function useSentInvites(options: StudyGroupHookOptions = {}) {
+  const { enabled = true } = options;
+  const apiUrl = getApiUrl(options);
+
   return useQuery({
     queryKey: ['sent-invites'],
     queryFn: async () => {
       const token = typeof window !== 'undefined' ? localStorage.getItem('cliniq_access_token') : null;
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
       
-      const res = await fetch(`${API_URL}/study-groups/invites/sent`, {
+      const res = await fetch(`${apiUrl}/study-groups/invites/sent`, {
         headers: {
           ...(token ? { Authorization: `Bearer ${token}` } : {})
         }
@@ -490,18 +511,21 @@ export function useSentInvites() {
       const result = await res.json();
       return result.data as GroupInvite[];
     },
+    enabled,
     staleTime: 2 * 60 * 1000, // 2 minutes
   });
 }
 
-export function useReceivedInvites() {
+export function useReceivedInvites(options: StudyGroupHookOptions = {}) {
+  const { enabled = true } = options;
+  const apiUrl = getApiUrl(options);
+
   return useQuery({
     queryKey: ['received-invites'],
     queryFn: async () => {
       const token = typeof window !== 'undefined' ? localStorage.getItem('cliniq_access_token') : null;
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
       
-      const res = await fetch(`${API_URL}/study-groups/invites/received`, {
+      const res = await fetch(`${apiUrl}/study-groups/invites/received`, {
         headers: {
           ...(token ? { Authorization: `Bearer ${token}` } : {})
         }
@@ -514,6 +538,7 @@ export function useReceivedInvites() {
       const result = await res.json();
       return result.data as GroupInvite[];
     },
+    enabled,
     staleTime: 2 * 60 * 1000, // 2 minutes
   });
 }

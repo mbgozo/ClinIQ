@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
 import { OnlineStatus, TypingIndicator } from '@cliniq/shared-types';
 
 @Injectable()
@@ -106,8 +106,8 @@ export class ChatService {
       },
       ...(conversationId && { conversationId }),
       OR: [
-        { content: { contains: q, mode: 'insensitive' } },
-        { sender: { name: { contains: q, mode: 'insensitive' } } }
+        { content: { contains: q, mode: Prisma.QueryMode.insensitive } },
+        { sender: { name: { contains: q, mode: Prisma.QueryMode.insensitive } } }
       ]
     };
 
@@ -156,9 +156,6 @@ export class ChatService {
         messages: {
           where: {
             senderId: { not: userId },
-            createdAt: {
-              gt: this.prisma.conversation.fields.participants.lastReadAt
-            }
           },
           select: { id: true }
         }
@@ -240,7 +237,7 @@ export class ChatService {
   }
 
   // WebSocket event handlers
-  async handleSocketConnect(_socketId: string, userId: string) {
+  async handleSocketConnect(socketId: string, userId: string) {
     await this.setUserOnline(userId, socketId);
     return this.getOnlineUsers();
   }

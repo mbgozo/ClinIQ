@@ -21,7 +21,7 @@ import {
 export default function ChatPage() {
   const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
   const [messageInput, setMessageInput] = useState("");
-  const [showNewConversationModal, setShowNewConversationModal] = useState(false);
+
   const [replyingTo, setReplyingTo] = useState<Message | null>(null);
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -29,7 +29,7 @@ export default function ChatPage() {
 
   const { data: conversations } = useConversations();
   const { data: messages, isLoading: messagesLoading } = useMessages(selectedConversation?.id || '', { enabled: !!selectedConversation });
-  const { data: conversation } = useConversation(selectedConversation?.id || '', { enabled: !!selectedConversation });
+  const { data: _conversation } = useConversation(selectedConversation?.id || '', { enabled: !!selectedConversation });
   
   const sendMessageMutation = useSendMessage();
   const markAllAsReadMutation = useMarkAllMessagesAsRead();
@@ -41,15 +41,15 @@ export default function ChatPage() {
     joinRoom, 
     leaveRoom, 
     sendMessage, 
-    startTyping, 
-    stopTyping, 
+    startTyping: _startTyping, 
+    stopTyping: _stopTyping, 
     updateStatus,
-    markAsRead,
+    markAsRead: _markAsRead,
     addReaction,
-    removeReaction
+    removeReaction: _removeReaction
   } = useWebSocket();
   
-  const { isTyping, handleTypingStart, handleTypingStop } = useTypingIndicator(selectedConversation?.id || '');
+  const { handleTypingStart, handleTypingStop } = useTypingIndicator(selectedConversation?.id || '');
 
   const [currentUserStatus, setCurrentUserStatus] = useState<OnlineStatus>(OnlineStatus.ONLINE);
 
@@ -78,14 +78,12 @@ export default function ChatPage() {
   const handleSendMessage = () => {
     if (!messageInput.trim() || !selectedConversation) return;
 
-    const messageData = {
-      conversationId: selectedConversation.id,
-      content: messageInput.trim(),
-      type: MessageType.TEXT,
-      replyToId: replyingTo?.id,
-    };
-
-    sendMessage(messageData);
+    sendMessage(
+      selectedConversation.id,
+      messageInput.trim(),
+      MessageType.TEXT,
+      replyingTo?.id
+    );
     setMessageInput("");
     setReplyingTo(null);
     handleTypingStop();
@@ -98,9 +96,12 @@ export default function ChatPage() {
     }
   };
 
-  const handleReply = (message: Message) => {
-    setReplyingTo(message);
-    inputRef.current?.focus();
+  const handleReply = (messageId: string) => {
+    const message = messages?.find(m => m.id === messageId);
+    if (message) {
+      setReplyingTo(message);
+      inputRef.current?.focus();
+    }
   };
 
   const handleReact = (messageId: string, emoji: string) => {
@@ -119,9 +120,6 @@ export default function ChatPage() {
     }
   };
 
-  const handleRead = (messageId: string) => {
-    markAsRead(messageId, selectedConversation?.id || '');
-  };
 
   const getTypingUsers = () => {
     if (!selectedConversation) return [];
@@ -136,18 +134,7 @@ export default function ChatPage() {
       }));
   };
 
-  const getOtherParticipant = (conversation: Conversation) => {
-    // For direct messages, get the other participant
-    if (conversation.type === 'DIRECT' && conversation.participantIds.length === 2) {
-      const otherUserId = conversation.participantIds.find(id => id !== 'current-user'); // This would be actual user ID
-      return {
-        id: otherUserId || '',
-        name: `User ${otherUserId}`, // This would be actual user name
-        avatarUrl: undefined,
-      };
-    }
-    return null;
-  };
+  // Removed unused getOtherParticipant function
 
   return (
     <div className="flex h-screen bg-gray-50">

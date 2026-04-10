@@ -1,7 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { 
-  ModerationQueue, 
   ModerationAction, 
   ContentType, 
   ReportReason,
@@ -20,7 +19,7 @@ export class ModerationService {
       where: { userId: requestingAdminId }
     });
 
-    if (!requestingAdmin || !hasPermission(requestingAdmin.permissions as any, Permission.VIEW_FLAGS)) {
+    if (!requestingAdmin || !hasPermission(requestingAdmin.permissions as Permission[], Permission.VIEW_FLAGS)) {
       throw new Error('Insufficient permissions to view moderation queue');
     }
 
@@ -91,7 +90,7 @@ export class ModerationService {
       where: { userId: requestingAdminId }
     });
 
-    if (!requestingAdmin || !hasPermission(requestingAdmin.permissions, Permission.MANAGE_FLAGS)) {
+    if (!requestingAdmin || !hasPermission(requestingAdmin.permissions as Permission[], Permission.MANAGE_FLAGS)) {
       throw new Error('Insufficient permissions to resolve moderation items');
     }
 
@@ -176,7 +175,7 @@ export class ModerationService {
       where: { userId: requestingAdminId }
     });
 
-    if (!requestingAdmin || !hasPermission(requestingAdmin.permissions, Permission.MANAGE_FLAGS)) {
+    if (!requestingAdmin || !hasPermission(requestingAdmin.permissions as Permission[], Permission.MANAGE_FLAGS)) {
       throw new Error('Insufficient permissions to dismiss moderation items');
     }
 
@@ -270,7 +269,7 @@ export class ModerationService {
         break;
       case 'Resource':
         const resource = await this.prisma.resource.findFirst({ where: { id: entityId } });
-        userId = resource?.uploadedById || '';
+        userId = resource?.userId || '';
         break;
       case 'GroupPost':
         const post = await this.prisma.groupPost.findFirst({ where: { id: entityId } });
@@ -353,7 +352,7 @@ export class ModerationService {
       where: { userId: requestingAdminId }
     });
 
-    if (!requestingAdmin || !hasPermission(requestingAdmin.permissions, Permission.VIEW_ANALYTICS)) {
+    if (!requestingAdmin || !hasPermission(requestingAdmin.permissions as Permission[], Permission.VIEW_ANALYTICS)) {
       throw new Error('Insufficient permissions');
     }
 

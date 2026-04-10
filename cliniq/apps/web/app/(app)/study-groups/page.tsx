@@ -246,7 +246,7 @@ export default function StudyGroupsPage() {
       {showJoinModal && selectedGroup && (
         <JoinGroupModal
           group={selectedGroup}
-          onSubmit={(inviteCode) => handleJoinGroup(selectedGroup.id, inviteCode)}
+          onSubmit={(inviteCode: string) => handleJoinGroup(selectedGroup.id, inviteCode)}
           onCancel={() => setShowJoinModal(false)}
           isLoading={joinMutation.isPending}
         />

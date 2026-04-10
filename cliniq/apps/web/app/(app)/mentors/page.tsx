@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useMentors, ExpertiseAreaChip, MentorCard, useCreateMentorshipRequest } from "@cliniq/ui";
-import { ExpertiseArea, EXPERTISE_AREA_DEFINITIONS } from "@cliniq/shared-types";
+import { useMentors, MentorCard, useCreateMentorshipRequest } from "@cliniq/ui";
+import { EXPERTISE_AREA_DEFINITIONS } from "@cliniq/shared-types";
 
 export default function MentorsPage() {
   const [filters, setFilters] = useState({

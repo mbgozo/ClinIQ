@@ -1,10 +1,16 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { PrismaClient } from "@prisma/client";
+import { Resend } from "resend";
 
 @Injectable()
 export class EmailService {
   private readonly logger = new Logger(EmailService.name);
   private prisma = new PrismaClient();
+  private resend: Resend;
+
+  constructor() {
+    this.resend = new Resend(process.env.RESEND_API_KEY);
+  }
 
   async sendNotificationEmail(
     to: string,
@@ -21,17 +27,25 @@ export class EmailService {
     }
 
     try {
-      // TODO: Implement actual Postmark integration
-      const templateId = this.getTemplateId(template);
-      // const client = new postmark.ServerClient(process.env.POSTMARK_API_KEY);
-      // await client.sendEmailWithTemplate({
-      //   From: process.env.POSTMARK_FROM_EMAIL,
-      //   To: to,
-      //   TemplateId: templateId,
-      //   TemplateModel: data,
-      // });
+      // Basic HTML rendering based on template data
+      const htmlContent = `
+        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2>${subject}</h2>
+          <p><strong>Template:</strong> ${template}</p>
+          <pre style="background: #f4f4f4; padding: 15px; border-radius: 5px;">${JSON.stringify(data, null, 2)}</pre>
+          <br/>
+          <p style="color: #666; font-size: 12px;">Sent via ClinIQ Notifications</p>
+        </div>
+      `;
 
-      this.logger.log(`Email sent successfully to ${to} with template ID ${templateId}`);
+      await this.resend.emails.send({
+        from: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
+        to: to,
+        subject: subject,
+        html: htmlContent,
+      });
+
+      this.logger.log(`Email sent successfully to ${to} for template ${template}`);
     } catch (error) {
       this.logger.error(`Failed to send email to ${to}:`, error);
       throw error;
@@ -93,22 +107,6 @@ export class EmailService {
     );
   }
 
-  private getTemplateId(templateName: string): number {
-    // Map template names to Postmark template IDs
-    const templateIds = {
-      "answer-posted": 123456, // Replace with actual template ID
-      "answer-accepted": 123457,
-      "badge-earned": 123458,
-      digest: 123459,
-    };
-
-    const templateId = templateIds[templateName as keyof typeof templateIds];
-    if (!templateId) {
-      throw new Error(`Unknown template: ${templateName}`);
-    }
-
-    return templateId;
-  }
 
   async getUserEmailPreferences(userId: string) {
     const user = await this.prisma.user.findUnique({

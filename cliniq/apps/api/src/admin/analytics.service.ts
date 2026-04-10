@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { SystemStats } from '@cliniq/shared-types';
 
@@ -154,7 +154,7 @@ export class AnalyticsService {
     };
   }
 
-  async exportData(_requestingAdminId: string, type: string, filters?: any, format: string = 'json') {
+  async exportData(requestingAdminId: string, type: string, filters?: any, format: string = 'json') {
     // Check permissions
     const admin = await this.prisma.user.findFirst({
       where: { id: requestingAdminId, verified: true }
@@ -405,7 +405,7 @@ export class AnalyticsService {
     ];
   }
 
-  private async getEngagementMetrics(period: string) {
+  private async getEngagementMetrics(_period: string) {
     return {
       avgSessionDuration: Math.floor(Math.random() * 300) + 120, // seconds
       bounceRate: Math.random() * 30 + 20, // percentage

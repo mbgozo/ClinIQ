@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useChat } from "@cliniq/ui";
 
 export default function ChatSearchPage() {
   const [searchQuery, setSearchQuery] = useState("");

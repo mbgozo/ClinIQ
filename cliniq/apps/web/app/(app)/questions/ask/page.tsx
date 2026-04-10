@@ -35,7 +35,7 @@ export default function AskQuestionPage() {
   } = useForm<AskQuestionInput>({
     mode: "onChange",
     resolver: zodResolver(AskQuestionSchema),
-    defaultValues: { body: "", anonymous: false, categoryId: "", tags: "" },
+    defaultValues: { title: "", body: "", anonymous: false, categoryId: "", tags: "" },
   });
 
   const body = watch("body");
@@ -70,7 +70,7 @@ export default function AskQuestionPage() {
         },
       ];
     },
-    enabled: debouncedTitle.length >= 10,
+    enabled: !!debouncedTitle && debouncedTitle.length >= 10,
   });
 
   const onSubmit = async (values: AskQuestionInput) => {
@@ -100,7 +100,7 @@ export default function AskQuestionPage() {
         </div>
 
         {/* AI Assist Panel */}
-        {title && (
+        {title && showAIAssist && (
           <AIAssistPanel
             query={title}
             suggestions={aiSuggestions}

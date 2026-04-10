@@ -1,4 +1,11 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { BaseHookOptions } from './types';
+
+export interface ResourceHookOptions extends BaseHookOptions {}
+
+function getApiUrl(options: ResourceHookOptions = {}) {
+  return options.apiUrl || process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+}
 
 interface Resource {
   id: string;
@@ -69,12 +76,14 @@ interface Flag {
   };
 }
 
-export function useResources(filters: ResourceFilter = {}) {
+export function useResources(filters: ResourceFilter = {}, options: ResourceHookOptions = {}) {
+  const { enabled = true } = options;
+  const apiUrl = getApiUrl(options);
+
   return useQuery({
     queryKey: ['resources', filters],
     queryFn: async () => {
       const token = typeof window !== 'undefined' ? localStorage.getItem('cliniq_access_token') : null;
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
       
       const params = new URLSearchParams();
       Object.entries(filters).forEach(([key, value]) => {
@@ -85,7 +94,7 @@ export function useResources(filters: ResourceFilter = {}) {
         }
       });
       
-      const res = await fetch(`${API_URL}/resources?${params}`, {
+      const res = await fetch(`${apiUrl}/resources?${params}`, {
         headers: {
           ...(token ? { Authorization: `Bearer ${token}` } : {})
         }
@@ -98,18 +107,21 @@ export function useResources(filters: ResourceFilter = {}) {
       const result = await res.json();
       return result.data as { resources: Resource[], total: number };
     },
+    enabled,
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 
-export function useResource(id: string) {
+export function useResource(id: string, options: ResourceHookOptions = {}) {
+  const { enabled = true } = options;
+  const apiUrl = getApiUrl(options);
+
   return useQuery({
     queryKey: ['resource', id],
     queryFn: async () => {
       const token = typeof window !== 'undefined' ? localStorage.getItem('cliniq_access_token') : null;
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
       
-      const res = await fetch(`${API_URL}/resources/${id}`, {
+      const res = await fetch(`${apiUrl}/resources/${id}`, {
         headers: {
           ...(token ? { Authorization: `Bearer ${token}` } : {})
         }
@@ -122,18 +134,21 @@ export function useResource(id: string) {
       const result = await res.json();
       return result.data as Resource;
     },
+    enabled,
     staleTime: 10 * 60 * 1000, // 10 minutes
   });
 }
 
-export function useCategories() {
+export function useCategories(options: ResourceHookOptions = {}) {
+  const { enabled = true } = options;
+  const apiUrl = getApiUrl(options);
+
   return useQuery({
     queryKey: ['categories'],
     queryFn: async () => {
       const token = typeof window !== 'undefined' ? localStorage.getItem('cliniq_access_token') : null;
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
       
-      const res = await fetch(`${API_URL}/resources/categories`, {
+      const res = await fetch(`${apiUrl}/resources/categories`, {
         headers: {
           ...(token ? { Authorization: `Bearer ${token}` } : {})
         }
@@ -146,6 +161,7 @@ export function useCategories() {
       const result = await res.json();
       return result.data as Category[];
     },
+    enabled,
     staleTime: 60 * 60 * 1000, // 1 hour
   });
 }
@@ -291,14 +307,16 @@ export function useFlagResource() {
 }
 
 // Admin hooks for flag management
-export function usePendingFlags() {
+export function usePendingFlags(options: ResourceHookOptions = {}) {
+  const { enabled = true } = options;
+  const apiUrl = getApiUrl(options);
+
   return useQuery({
     queryKey: ['pending-flags'],
     queryFn: async () => {
       const token = typeof window !== 'undefined' ? localStorage.getItem('cliniq_access_token') : null;
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
       
-      const res = await fetch(`${API_URL}/resources/flags/pending`, {
+      const res = await fetch(`${apiUrl}/resources/flags/pending`, {
         headers: {
           ...(token ? { Authorization: `Bearer ${token}` } : {})
         }
@@ -311,6 +329,7 @@ export function usePendingFlags() {
       const result = await res.json();
       return result.data as Flag[];
     },
+    enabled,
     staleTime: 2 * 60 * 1000, // 2 minutes
   });
 }

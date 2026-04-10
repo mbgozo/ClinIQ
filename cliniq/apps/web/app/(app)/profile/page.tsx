@@ -10,8 +10,8 @@ export default function ProfilePage() {
   
   const { data: profile, isLoading: profileLoading } = useGamificationProfile(userId);
   const { data: badges, isLoading: badgesLoading } = useUserBadges(userId);
-  const { data: leaderboard, isLoading: leaderboardLoading } = useLeaderboard();
-  const { data: badgeDefinitions, isLoading: definitionsLoading } = useBadgeDefinitions();
+  const { data: leaderboard } = useLeaderboard();
+  const { data: badgeDefinitions } = useBadgeDefinitions();
 
   if (profileLoading || badgesLoading) {
     return (
@@ -117,7 +117,7 @@ export default function ProfilePage() {
           <h2 className="text-xl font-semibold text-gray-900 mb-4">All Badges</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {badgeDefinitions.map((definition) => {
+            {badgeDefinitions.map((definition: any) => {
               const isEarned = badges?.some(b => b.type === definition.type);
               
               return (

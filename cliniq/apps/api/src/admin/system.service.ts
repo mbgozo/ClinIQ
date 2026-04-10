@@ -3,9 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import { 
   SystemAlert, 
   CreateSystemAlertInput,
-  SystemAlertType,
-  Permission,
-  hasPermission
+  SystemAlertType
 } from '@cliniq/shared-types';
 
 @Injectable()

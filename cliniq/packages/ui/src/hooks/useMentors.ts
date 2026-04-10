@@ -1,4 +1,11 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { BaseHookOptions } from './types';
+
+export interface MentorHookOptions extends BaseHookOptions {}
+
+function getApiUrl(options: MentorHookOptions = {}) {
+  return options.apiUrl || process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+}
 
 interface Mentor {
   id: string;
@@ -92,12 +99,14 @@ interface MentorFilter {
   limit?: number;
 }
 
-export function useMentors(filters: MentorFilter = {}) {
+export function useMentors(filters: MentorFilter = {}, options: MentorHookOptions = {}) {
+  const { enabled = true } = options;
+  const apiUrl = getApiUrl(options);
+
   return useQuery({
     queryKey: ['mentors', filters],
     queryFn: async () => {
       const token = typeof window !== 'undefined' ? localStorage.getItem('cliniq_access_token') : null;
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
       
       const params = new URLSearchParams();
       Object.entries(filters).forEach(([key, value]) => {
@@ -108,7 +117,7 @@ export function useMentors(filters: MentorFilter = {}) {
         }
       });
       
-      const res = await fetch(`${API_URL}/mentors?${params}`, {
+      const res = await fetch(`${apiUrl}/mentors?${params}`, {
         headers: {
           ...(token ? { Authorization: `Bearer ${token}` } : {})
         }
@@ -121,18 +130,21 @@ export function useMentors(filters: MentorFilter = {}) {
       const result = await res.json();
       return result.data as { mentors: Mentor[], total: number };
     },
+    enabled,
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 
-export function useMentorProfile(userId?: string) {
+export function useMentorProfile(userId?: string, options: MentorHookOptions = {}) {
+  const { enabled = true } = options;
+  const apiUrl = getApiUrl(options);
+
   return useQuery({
     queryKey: ['mentor-profile', userId],
     queryFn: async () => {
       const token = typeof window !== 'undefined' ? localStorage.getItem('cliniq_access_token') : null;
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
       
-      const res = await fetch(`${API_URL}/mentors/profile`, {
+      const res = await fetch(`${apiUrl}/mentors/profile`, {
         headers: {
           ...(token ? { Authorization: `Bearer ${token}` } : {})
         }
@@ -145,19 +157,21 @@ export function useMentorProfile(userId?: string) {
       const result = await res.json();
       return result.data as MentorProfile;
     },
-    enabled: !!userId,
+    enabled: !!userId && enabled,
     staleTime: 10 * 60 * 1000, // 10 minutes
   });
 }
 
-export function useMentorById(mentorId: string) {
+export function useMentorById(mentorId: string, options: MentorHookOptions = {}) {
+  const { enabled = true } = options;
+  const apiUrl = getApiUrl(options);
+
   return useQuery({
     queryKey: ['mentor', mentorId],
     queryFn: async () => {
       const token = typeof window !== 'undefined' ? localStorage.getItem('cliniq_access_token') : null;
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
       
-      const res = await fetch(`${API_URL}/mentors/${mentorId}`, {
+      const res = await fetch(`${apiUrl}/mentors/${mentorId}`, {
         headers: {
           ...(token ? { Authorization: `Bearer ${token}` } : {})
         }
@@ -170,6 +184,7 @@ export function useMentorById(mentorId: string) {
       const result = await res.json();
       return result.data as Mentor;
     },
+    enabled,
     staleTime: 10 * 60 * 1000, // 10 minutes
   });
 }
@@ -213,12 +228,14 @@ export function useCreateMentorProfile() {
   });
 }
 
-export function useMentorshipRequests(type: 'sent' | 'received', filters: any = {}) {
+export function useMentorshipRequests(type: 'sent' | 'received', filters: any = {}, options: MentorHookOptions = {}) {
+  const { enabled = true } = options;
+  const apiUrl = getApiUrl(options);
+
   return useQuery({
     queryKey: ['mentorship-requests', type, filters],
     queryFn: async () => {
       const token = typeof window !== 'undefined' ? localStorage.getItem('cliniq_access_token') : null;
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
       
       const endpoint = type === 'sent' ? 'requests/sent' : 'requests/received';
       const params = new URLSearchParams();
@@ -228,7 +245,7 @@ export function useMentorshipRequests(type: 'sent' | 'received', filters: any = 
         }
       });
       
-      const res = await fetch(`${API_URL}/mentors/${endpoint}?${params}`, {
+      const res = await fetch(`${apiUrl}/mentors/${endpoint}?${params}`, {
         headers: {
           ...(token ? { Authorization: `Bearer ${token}` } : {})
         }
@@ -241,6 +258,7 @@ export function useMentorshipRequests(type: 'sent' | 'received', filters: any = 
       const result = await res.json();
       return result.data as { requests: MentorshipRequest[], total: number };
     },
+    enabled,
     staleTime: 2 * 60 * 1000, // 2 minutes
   });
 }
